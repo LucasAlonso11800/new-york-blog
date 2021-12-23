@@ -1,0 +1,28 @@
+.article {
+    margin-bottom: 24px;
+    display: flex;
+    font-family: playfair display, serif;
+    justify-content: space-between;
+}
+
+.article img {
+    cursor: pointer;
+}
+
+.title {
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: left;
+    font-weight: 400;
+    max-width: 80px;
+}
+
+@media all and (max-width: 1250px) {
+    .article {
+        justify-content: flex-start;
+    }
+    .title {
+        max-width: none;
+        padding-left: 30px;
+    }
+}

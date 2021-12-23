@@ -1,0 +1,7 @@
+main.main {
+    background-color: #FFF;
+    margin-bottom: 15px;
+    padding-top: 30px;
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}

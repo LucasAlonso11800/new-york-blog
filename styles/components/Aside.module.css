@@ -1,0 +1,40 @@
+aside.aside{
+    grid-column: 4 / 5;
+    grid-row: 2 / 3;
+    padding-top: 30px;
+    font-family: 'Raleway', serif;
+    margin-bottom: 15px;
+}
+
+@media all and (max-width: 1250px) {
+    aside.aside {
+        grid-column: 2 / 3;
+        grid-row: 3 / 4;
+    }
+}
+
+.about {
+    margin-bottom: 20px;
+    padding: 20px 0;
+    word-wrap: break-word
+}
+
+.about img {
+    cursor: pointer;
+}
+
+.title {
+    border-bottom: 5px solid var(--light-blue);
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    padding: 0 0 7px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.featuredArticles {
+    margin-bottom: 20px;
+    padding: 20px 0;
+}

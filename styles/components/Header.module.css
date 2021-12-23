@@ -1,9 +1,17 @@
-.header {
+header.header {
     width: 100%;
     font-family: 'Playfair Display', serif;
     font-size: 18px;
     color: var(--black);
     background-color: var(--light-blue);
+    grid-column: 1 / 6;
+    grid-row: 1 / 2;
+}
+
+@media all and (max-width: 1250px) {
+    header.header {
+        grid-column: 1 / 4;
+    }
 }
 
 /* Navbar */
@@ -54,7 +62,7 @@
 .sublist .listItem a:hover {
     text-decoration: underline;
     cursor: pointer;
-} 
+}
 
 .input {
     background: 0 0;
@@ -76,34 +84,42 @@
     .nav {
         justify-content: center;
     }
+
     .list {
         flex-grow: 1;
         display: flex;
         justify-content: center;
     }
+
     .sublist {
         width: 100%;
     }
+
     .sublist.open {
         animation: open .4s forwards ease-in-out;
         opacity: 0;
         left: 0;
     }
+
     .sublist.open .listItem {
         animation: display .4s forwards ease-in-out;
     }
+
     @keyframes open {
         0% {
             opacity: 0;
         }
+
         100% {
             opacity: 1;
         }
     }
+
     @keyframes display {
         0% {
             height: 0;
         }
+
         100% {
             height: 42px;
         }
@@ -135,10 +151,10 @@
 .siteLogo a {
     display: block;
     margin: 0 auto;
-    min-height: 175px!important;
-    max-height: 175px!important;
+    min-height: 175px !important;
+    max-height: 175px !important;
     width: 100%;
     text-indent: -9999px;
-    background: url(https://www.tracysnewyorklife.com/wp-content/uploads/2018/03/cropped-logo2018-header-tracysnewyorklife-2.png)50% no-repeat!important;
-    background-size: contain!important;
+    background: url(https://www.tracysnewyorklife.com/wp-content/uploads/2018/03/cropped-logo2018-header-tracysnewyorklife-2.png)50% no-repeat !important;
+    background-size: contain !important;
 }
