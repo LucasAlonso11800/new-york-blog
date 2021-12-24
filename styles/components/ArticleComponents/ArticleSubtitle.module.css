@@ -1,0 +1,12 @@
+.subtitle {
+    color: #000;
+    font-family: var(--montserrat);
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 1px;
+    line-height: 1.25;
+    margin: 0;
+    margin-bottom: 10px;
+    padding: 0;
+    text-transform: uppercase;
+}

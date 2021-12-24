@@ -3,6 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ReadMoreButton from './ReadMoreButton';
+import ArticleMeta from './ArticleComponents/ArticleMeta';
 // Styles
 import classes from '../styles/components/ArticlePreview.module.css';
 // Types
@@ -30,12 +31,7 @@ export default function ArticlePreview(props: { layout: 'column' | 'row' }) {
             </Link>
             <div className={classes.content}>
                 <h2 className={classes.title}><Link href="/">Why I Still Love Living in Manhattan</Link></h2>
-                <p className={classes.subtitle}>
-                    <span className={classes.in}>in </span>
-                    <span className={classes.categories}><Link href="/">Living</Link>, <Link href="/">NYC Life </Link></span>
-                    by
-                    <span className={classes.author}> Tracy Kaler</span>
-                </p>
+                <ArticleMeta />
                 <p className={classes.body}>Why I Still Love Living in Manhattan….  &nbsp;My pipe dream came true in 2007 when I arrived in New York. Some days that iconic moment feels like decades ago, and other times, just yesterday. When I moved to the Upper East Side in 2007, I can’t recall if I thought about how long I’d stay. Would it be a…</p>
                 <ReadMoreButton />
             </div>

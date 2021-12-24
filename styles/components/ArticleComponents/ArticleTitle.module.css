@@ -1,0 +1,10 @@
+.title {
+    text-transform: uppercase;
+    margin: 36px auto 60px;
+    text-align: center;
+    font-size: 19px;
+    font-weight: 400;
+    font-family: var(--montserrat);
+    letter-spacing: 1px;
+}
+

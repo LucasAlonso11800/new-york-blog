@@ -1,8 +1,10 @@
+import React from 'react';
+// Components
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
-import classes from '../styles/components/Aside.module.css';
-import AsideArticle from './AsideArticle';
+import AsideArticle from '../AsideArticle';
+// Styles
+import classes from '../../styles/components/LayoutComponents/Aside.module.css';
 
 export default function Aside() {
     // Get favorite posts from backend

@@ -1,0 +1,22 @@
+.article {
+    display: flex;
+    flex-direction: column;
+}
+
+.article span {
+    max-width: 800px!important;
+    margin-bottom: 24px!important;
+}
+
+.title {
+    font-family: var(--playfair);
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: .5px;
+    text-align: left;
+    text-transform: none;
+    padding-top: 10px;
+    margin-bottom: 10px;
+    font-weight: 400;
+    width: 100%;
+}

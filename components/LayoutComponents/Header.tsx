@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import classes from '../styles/components/Header.module.css';
 import Link from 'next/link';
+import classes from '../../styles/components/LayoutComponents/Header.module.css';
 
 export default function Header() {
     const [width, setWidth] = useState<number>();
