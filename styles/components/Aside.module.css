@@ -10,6 +10,7 @@ aside.aside{
     aside.aside {
         grid-column: 2 / 3;
         grid-row: 3 / 4;
+        padding-top: 0;
     }
 }
 

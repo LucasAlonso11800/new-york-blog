@@ -21,7 +21,7 @@ type Props = {
 export default function ArticlePreview(props: { layout: 'column' | 'row' }) {
     const { layout } = props;
 
-    const imageDimensions = layout === 'column' ? { width: '750', height: '475' } : { width: '400', height: '400' };
+    const imageDimensions = layout === 'column' ? { width: '850', height: '475' } : { width: '400', height: '400' };
 
     return (
         <article className={`${classes.article} ${classes[layout]}`}>

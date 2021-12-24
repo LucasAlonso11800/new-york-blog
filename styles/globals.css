@@ -37,7 +37,7 @@
 @media all and (max-width: 1023px) {
     #__next {
         grid-template-rows: auto 1fr auto auto;
-        grid-template-columns: minmax(40px, 1fr) minmax(300px, 768px) minmax(40px, 1fr);
+        grid-template-columns: minmax(40px, 1fr) minmax(300px, 688px) minmax(40px, 1fr);
     }
 }
 

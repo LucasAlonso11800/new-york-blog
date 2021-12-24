@@ -13,6 +13,8 @@ footer.footer {
     justify-content: flex-end;
     grid-column: 1 / 6;
     grid-row: 3 / 4;
+    margin-top: 47.5px;
+    height: 77px;
 }
 
 @media all and (max-width: 1250px){

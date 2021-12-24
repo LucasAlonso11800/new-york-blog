@@ -3,6 +3,10 @@
     margin-bottom: 40px;
 }
 
+.article.row span {
+    max-height: 400px!important;
+}
+
 .article.column {
     flex-direction: column;
     align-items: center;
@@ -24,7 +28,7 @@
 
 @media all and (max-width: 1023px) {
     .article.row .content {
-        max-width: 368px;
+        max-width: 288px;
     }
 }
 
