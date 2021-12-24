@@ -2,7 +2,7 @@ aside.aside{
     grid-column: 4 / 5;
     grid-row: 2 / 3;
     padding-top: 30px;
-    font-family: 'Raleway', serif;
+    font-family: var(--raleway);
     margin-bottom: 15px;
 }
 
@@ -32,6 +32,7 @@ aside.aside{
     padding: 0 0 7px;
     text-align: center;
     text-transform: uppercase;
+    line-height: 22.5px;
 }
 
 .featuredArticles {

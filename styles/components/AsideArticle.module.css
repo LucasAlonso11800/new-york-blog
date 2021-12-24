@@ -1,7 +1,7 @@
 .article {
     margin-bottom: 24px;
     display: flex;
-    font-family: playfair display, serif;
+    font-family: var(--playfair);
     justify-content: space-between;
 }
 
@@ -14,7 +14,9 @@
     line-height: 1.5;
     text-align: left;
     font-weight: 400;
-    max-width: 80px;
+    flex-grow: 1;
+    padding-left: 24px;
+    max-width: 110px;
 }
 
 @media all and (max-width: 1250px) {
@@ -23,6 +25,5 @@
     }
     .title {
         max-width: none;
-        padding-left: 30px;
     }
 }

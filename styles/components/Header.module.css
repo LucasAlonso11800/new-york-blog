@@ -1,6 +1,6 @@
 header.header {
     width: 100%;
-    font-family: 'Playfair Display', serif;
+    font-family: var(--playfair);
     font-size: 18px;
     color: var(--black);
     background-color: var(--light-blue);
@@ -71,7 +71,7 @@ header.header {
     color: #000;
     font-size: 12px;
     font-style: italic;
-    font-family: 'Playfair Display', serif;
+    font-family: var(--playfair);
     font-weight: 300;
     letter-spacing: 2px;
     padding: 10px 2px;
@@ -139,7 +139,7 @@ header.header {
 }
 
 .siteLogo {
-    font-family: montserrat, sans-serif;
+    font-family: var(--montserrat);
     font-size: 65px;
     font-weight: 100;
     letter-spacing: 3px;

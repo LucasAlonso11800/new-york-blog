@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import classes from '../styles/components/Aside.module.css';
-import FeaturedAsideArticle from './FeaturedAsideArticle';
+import AsideArticle from './AsideArticle';
 
 export default function Aside() {
     // Get favorite posts from backend
@@ -18,10 +18,10 @@ export default function Aside() {
             </section>
             <section className={classes.featuredArticles}>
                 <h2 className={classes.title}>Favorite posts</h2>
-                <FeaturedAsideArticle />
-                <FeaturedAsideArticle />
-                <FeaturedAsideArticle />
-                <FeaturedAsideArticle />
+                <AsideArticle />
+                <AsideArticle />
+                <AsideArticle />
+                <AsideArticle />
             </section>
         </aside>
     )

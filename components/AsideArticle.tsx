@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import classes from '../styles/components/FeaturedAsideArticle.module.css';
+import classes from '../styles/components/AsideArticle.module.css';
 
 type Props = {
     href: string;
@@ -9,7 +9,7 @@ type Props = {
     title: string;
 };
 
-export default function FeaturedAsideArticle() {
+export default function dAsideArticle() {
     return (
         <article className={classes.article}>
             <Link href="/about">
