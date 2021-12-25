@@ -23,13 +23,13 @@ export default function Header() {
                         <li className={classes.listItem}>
                             <a className={classes.link}>Categories</a>
                             <ul className={classes.sublist}>
-                                <li className={classes.listItem}><Link href="/living">NYC Life</Link></li>
-                                <li className={classes.listItem}><Link href="/travel" >Travel</Link></li>
-                                <li className={classes.listItem}><Link href="/guides" >Guides</Link></li>
-                                <li className={classes.listItem}><Link href="/food" >Food and Drink</Link></li>
-                                <li className={classes.listItem}><Link href="/art-and-culture" >Art and Culture</Link></li>
-                                <li className={classes.listItem}><Link href="/out-and-about" >Out and About</Link></li>
-                                <li className={classes.listItem}><Link href="/style" >Style</Link></li>
+                                <li className={classes.listItem}><Link href="categories/living">NYC Life</Link></li>
+                                <li className={classes.listItem}><Link href="categories/travel" >Travel</Link></li>
+                                <li className={classes.listItem}><Link href="categories/guides" >Guides</Link></li>
+                                <li className={classes.listItem}><Link href="categories/food" >Food and Drink</Link></li>
+                                <li className={classes.listItem}><Link href="categories/art-and-culture" >Art and Culture</Link></li>
+                                <li className={classes.listItem}><Link href="categories/out-and-about" >Out and About</Link></li>
+                                <li className={classes.listItem}><Link href="categories/style" >Style</Link></li>
                             </ul>
                         </li>
                         :
@@ -37,13 +37,13 @@ export default function Header() {
                             <a className={classes.link} onClick={() => setMenuOpen(!menuOpen)}>Menu</a>
                             {menuOpen &&
                                 <ul className={`${classes.sublist} ${classes.open}`}>
-                                    <li className={classes.listItem}><Link href="/living">NYC Life</Link></li>
-                                    <li className={classes.listItem}><Link href="/travel" >Travel</Link></li>
-                                    <li className={classes.listItem}><Link href="/guides" >Guides</Link></li>
-                                    <li className={classes.listItem}><Link href="/food" >Food and Drink</Link></li>
-                                    <li className={classes.listItem}><Link href="/art-and-culture" >Art and Culture</Link></li>
-                                    <li className={classes.listItem}><Link href="/out-and-about" >Out and About</Link></li>
-                                    <li className={classes.listItem}><Link href="/style" >Style</Link></li>
+                                    <li className={classes.listItem}><Link href="categories/living">NYC Life</Link></li>
+                                    <li className={classes.listItem}><Link href="categories/travel" >Travel</Link></li>
+                                    <li className={classes.listItem}><Link href="categories/guides" >Guides</Link></li>
+                                    <li className={classes.listItem}><Link href="categories/food" >Food and Drink</Link></li>
+                                    <li className={classes.listItem}><Link href="categories/art-and-culture" >Art and Culture</Link></li>
+                                    <li className={classes.listItem}><Link href="categories/out-and-about" >Out and About</Link></li>
+                                    <li className={classes.listItem}><Link href="categories/style" >Style</Link></li>
                                 </ul>
                             }
                         </li>

@@ -1,7 +1,7 @@
 import React from 'react';
 // Components
-import Head from '../components/Head';
-import Main from '../components/Main';
+import Head from '../components/LayoutComponents/Head';
+import Main from '../components/LayoutComponents/Main';
 import ArticlePreview from '../components/ArticlePreview';
 import Pagination from '../components/Pagination';
 
@@ -19,7 +19,7 @@ export default function HomePage() {
                 <ArticlePreview layout='row' />
                 <ArticlePreview layout='row' />
                 <ArticlePreview layout='row' />
-                <Pagination />
+                <Pagination index={1}/>
             </Main>
         </>
     )

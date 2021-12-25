@@ -1,8 +1,8 @@
 import React from 'react';
 // Components
-import Head from '../components/LayoutComponents/Head';
-import Main from '../components/LayoutComponents/Main';
-import MainArticle from '../components/MainArticle';
+import Head from '../../components/LayoutComponents/Head';
+import Main from '../../components/LayoutComponents/Main';
+import MainArticle from '../../components/MainArticle';
 // Types
 import { GetStaticPropsResult } from 'next';
 

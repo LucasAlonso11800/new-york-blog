@@ -31,6 +31,7 @@ header.header {
 .listItem {
     padding: 19px;
     background-color: var(--light-blue);
+    line-height: 23px;
 }
 
 .sublist {

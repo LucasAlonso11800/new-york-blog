@@ -1,0 +1,23 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    column-gap: 21px;
+}
+
+.article {
+    margin-bottom: 80px;
+}
+
+.title {
+    font-size: 15px;
+    font-family: var(--playfair);
+    font-weight: 400;
+    text-align: left;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+
+.title:hover {
+    color: var(--light-blue);
+}
