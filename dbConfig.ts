@@ -10,12 +10,13 @@ const db = mysql({
     }
 });
 
-export default async function executeQuery(query: string, values?: any[]) {
+export default async function executeQuery(query: string, values?: any[]): Promise<any[]> {
     try {
-        const results = await db.query(query, values);
+        const results = await db.query(query, values) as any[];
         await db.end();
         return results;
-    } catch (error) {
-        return { error };
+    } 
+    catch (err: any) {
+        throw new Error(err)
     }
 };

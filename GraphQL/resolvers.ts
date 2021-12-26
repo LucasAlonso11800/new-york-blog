@@ -1,10 +1,14 @@
-import executeQuery from "../dbConfig";
+import { getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles } from "./Querys";
 import { hi } from "./Mutations/hi";
-import { hello } from "./Querys/hello";
 
 export const resolvers = {
     Query: {
-        hello,
+        getSingleArticle,
+        getLatestArticles, 
+        getMostVisitedArticles,
+        getCategoryArticles,
+        getRelatedArticles,
+        getSearchedArticles
     },
     Mutation: {
         hi,
