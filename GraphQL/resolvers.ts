@@ -1,14 +1,17 @@
-import { getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles } from "./Querys";
+import { getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles, getCategories } from "./Querys";
 import { hi } from "./Mutations/hi";
 
 export const resolvers = {
     Query: {
+        // Articles
         getSingleArticle,
         getLatestArticles, 
         getMostVisitedArticles,
         getCategoryArticles,
         getRelatedArticles,
-        getSearchedArticles
+        getSearchedArticles,
+        // Categories
+        getCategories
     },
     Mutation: {
         hi,

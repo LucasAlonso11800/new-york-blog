@@ -6,3 +6,7 @@ export {
     getRelatedArticles,
     getSearchedArticles
 } from './articles';
+
+export {
+    getCategories
+} from './categories';

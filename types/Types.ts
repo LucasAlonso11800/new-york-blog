@@ -1,10 +1,11 @@
-export type Category = {
-    name: string;
-    link: string;
+export type CategoryType = {
+    id: number
+    name: string
+    path: string
 };
 
 export type CountType = {
-    count: number;
+    count: number
 };
 
 export type ArticleType = {
