@@ -5,9 +5,16 @@ import Link from 'next/link';
 import AsideArticle from '../AsideArticle';
 // Styles
 import classes from '../../styles/components/LayoutComponents/Aside.module.css';
+// GraphQL
+import { client } from '../../const/ApolloConfig';
+import { gql } from '@apollo/client';
+import { ArticleType } from '../../types/Types';
 
-export default function Aside() {
-    // Get favorite posts from backend
+type Props = {
+    articles: ArticleType[]
+}
+
+export default function Aside({ articles }: Props) {
     // Get about image from backend
 
     return (
@@ -15,16 +22,45 @@ export default function Aside() {
             <section className={classes.about}>
                 <h2 className={classes.title}>About the blog</h2>
                 <Link href="/about">
-                    <Image src="https://www.tracysnewyorklife.com/wp-content/uploads/2016/10/015-resize-400x400.jpg" width="400" height="400"/>
+                    <Image src="https://www.tracysnewyorklife.com/wp-content/uploads/2016/10/015-resize-400x400.jpg" width="400" height="400" />
                 </Link>
             </section>
             <section className={classes.featuredArticles}>
                 <h2 className={classes.title}>Favorite posts</h2>
-                <AsideArticle />
-                <AsideArticle />
-                <AsideArticle />
-                <AsideArticle />
+                {articles.map(article => {
+                    return <AsideArticle key={article.id} title={article.title} slug={article.slug} image={article.image} />
+                })}
             </section>
         </aside>
     )
+};
+
+export async function getStaticProps() {
+    try {
+        const articles = await client.query({
+            query: gql`
+                query Query {
+                    getMostVisitedArticles {
+                        id
+                        title
+                        image
+                        slug
+                    }
+                }
+            `
+        });
+        return {
+            props: {
+                articles: articles.data.getMostVisitedArticles
+            }
+        }
+    }
+    catch (err) {
+        console.log(err);
+        return {
+            props: {
+                articles: []
+            }
+        }
+    }
 };

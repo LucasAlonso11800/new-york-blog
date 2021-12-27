@@ -3,25 +3,29 @@ import React from 'react';
 import Head from '../components/LayoutComponents/Head';
 import Main from '../components/LayoutComponents/Main';
 import ArticlePreview from '../components/ArticlePreview';
+import Header from '../components/LayoutComponents/Header';
+import Aside from '../components/LayoutComponents/Aside';
+import Footer from '../components/LayoutComponents/Footer';
 import Pagination from '../components/Pagination';
-// GraphQL
-import { client } from '../const/ApolloConfig';
-import { gql } from '@apollo/client';
+// Querys
+import { getLatestArticles, getMostVisitedArticles } from '../Apollo/querys';
 // Types
 import { ArticleType } from '../types/Types';
 
 type Props = {
-    articles: ArticleType[],
+    mainArticles: ArticleType[],
+    asideArticles: ArticleType[],
     index: number
 };
 
-export default function HomePage({ articles, index }: Props) {
+export default function HomePage({ index, mainArticles, asideArticles }: Props) {
     return (
-        <>
+        <div id="page-container">
             <Head title='' />
+            <Header />
             <Main>
                 <>
-                    {articles.map((article, index) => {
+                    {mainArticles.map((article, index) => {
                         return <ArticlePreview
                             key={article.id}
                             layout={index === 0 ? 'column' : 'row'}
@@ -36,33 +40,21 @@ export default function HomePage({ articles, index }: Props) {
                 </>
                 <Pagination index={index} />
             </Main>
-        </>
+            <Aside articles={asideArticles}/>
+            <Footer />
+        </div>
     )
 };
 
 export async function getStaticProps() {
     try {
-        const articles = await client.query({
-            query: gql`
-                query Query ($index: Int!){
-                    getLatestArticles(index: $index){
-                        id
-                        title
-                        categoryName
-                        categoryPath
-                        image
-                        authorName
-                        slug
-                    }
-                }
-            `,
-            variables: {
-                index: 1
-            }
-        });
+        const mainArticles = await getLatestArticles(1);
+        const asideArticles = await getMostVisitedArticles();
+
         return {
             props: {
-                articles: articles.data.getLatestArticles,
+                mainArticles: mainArticles.data.getLatestArticles,
+                asideArticles: asideArticles.data.getMostVisitedArticles,
                 index: 1
             }
         }
@@ -71,7 +63,8 @@ export async function getStaticProps() {
         console.log(err)
         return {
             props: {
-                articles: [],
+                mainArticles: [],
+                asideArticles: [],
                 index: 1
             }
         }

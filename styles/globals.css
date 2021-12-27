@@ -16,7 +16,7 @@
     --raleway: raleway, serif;
 }
 
-#__next {
+div#page-container {
     min-width: 300px;
     width: 100%;
     display: grid;
@@ -28,21 +28,21 @@
 }
 
 @media all and (max-width: 1250px) {
-    #__next {
+    div#page-container {
         grid-template-rows: auto 1fr auto auto;
         grid-template-columns: minmax(40px, 1fr) minmax(300px, 920px) minmax(40px, 1fr);
     }
 }
 
 @media all and (max-width: 1023px) {
-    #__next {
+    div#page-container {
         grid-template-rows: auto 1fr auto auto;
         grid-template-columns: minmax(40px, 1fr) minmax(300px, 688px) minmax(40px, 1fr);
     }
 }
 
 @media all and (max-width: 767px) {
-    #__next {
+    div#page-container {
         grid-template-rows: auto 1fr auto auto;
         grid-template-columns: minmax(40px, 1fr) minmax(300px, 600px) minmax(40px, 1fr);
     }

@@ -94,7 +94,6 @@ export const getMostVisitedArticles = async () => {
 
     const values: [number] = [FAVORITE_ARTICLE_LIMIT];
     const articles: ArticleType[] = await executeQuery(query, values);
-
     return articles;
 };
 
