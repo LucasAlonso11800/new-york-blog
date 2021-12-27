@@ -1,6 +1,21 @@
 import { gql } from "apollo-server-micro";
 import { client } from "../const/ApolloConfig";
 
+// Articles
+
+export async function getAllArticles() {
+    return await client.query({
+        query: gql`
+            query Query {
+                getAllArticles {
+                    id
+                    slug
+                }
+            }
+        `
+    });
+};
+
 export async function getTotalArticleCount() {
     return await client.query({
         query: gql`
@@ -8,6 +23,26 @@ export async function getTotalArticleCount() {
                 getTotalArticleCount
             } 
         `
+    });
+};
+
+export async function getSingleArticle(slug: string) {
+    return await client.query({
+        query: gql`
+            query Query ($slug: String!){
+                getSingleArticle(slug: $slug){
+                    id
+                    title
+                    categoryName
+                    categoryPath
+                    image
+                    authorName
+                }
+            }
+        `,
+        variables: {
+            slug
+        }
     });
 };
 
@@ -44,5 +79,28 @@ export async function getMostVisitedArticles() {
                     }
                 }
             `
+    });
+};
+
+// Article Components
+
+export async function getArticleComponents(articleId: number){
+    return await client.query({
+        query: gql`
+            query Query ($articleId: ID!) {
+                getArticleComponents(articleId: $articleId) {
+                    id
+                    componentName
+	                order
+	                image
+	                text
+	                fontWeight
+	                textAlign
+                }
+            }
+        `,
+        variables: {
+            articleId
+        }
     });
 };

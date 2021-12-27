@@ -21,3 +21,15 @@ export type ArticleType = {
     authorName: string
     slug: string
 };
+
+export type ArticleComponentType = {
+    id: number,
+    componentId: number | string,
+    componentName: string
+    articleId: number | string,
+    order: number,
+    image: string,
+    text: string,
+    fontWeight: 400 | 600,
+    textAlign: string
+}

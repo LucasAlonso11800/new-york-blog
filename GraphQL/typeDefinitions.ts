@@ -3,7 +3,8 @@ import { gql } from "apollo-server-micro";
 export const typeDefs = gql`
     type Query {
         # Articles
-        getSingleArticle(id: ID!): Article
+        getAllArticles: [Article]
+        getSingleArticle(slug: String!): Article
         getLatestArticles(index: Int!): [Article]
         getMostVisitedArticles: [Article]
         getCategoryArticles(categoryId: ID!, index: Int!): [Article]
@@ -12,6 +13,8 @@ export const typeDefs = gql`
         getTotalArticleCount: Int
         # Categories
         getCategories: [Category]
+        # ArticleComponents
+        getArticleComponents(articleId: ID!): [ArticleComponent]
     }
 
     type Mutation {
@@ -36,5 +39,17 @@ export const typeDefs = gql`
         id: ID
         name: String
         path: String
+    }
+
+    type ArticleComponent {
+        id: ID,
+        componentId: ID,
+        componentName: String,
+        articleId: ID,
+	    order: Int,
+	    image: String,
+	    text: String,
+	    fontWeight: String,
+	    textAlign: String
     }
 `;

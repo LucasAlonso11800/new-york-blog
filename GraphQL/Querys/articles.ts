@@ -7,10 +7,35 @@ type Args = {
     index: number
     categoryId: number | string
     search: string
+    slug: string
 };
 
+export const getAllArticles = async () => {
+    const query: string = `
+        SELECT         
+            article_id as id,
+            article_title as title,
+            article_visits as visits,
+            article_category_id as categoryId,
+            category_name as categoryName,
+            article_main_image as image,
+            article_created_at as createdAt,
+            article_user_id as authorId,
+            user_username as authorName,
+            article_slug as slug
+        FROM articles
+        JOIN categories
+            ON categories.category_id = article_category_id
+        JOIN users
+            ON users.user_id = article_user_id
+    `;
+    const articles: ArticleType[] = await executeQuery(query, []);
+    return articles;
+};
+
+
 export const getSingleArticle = async (_: any, args: Args) => {
-    const { id } = args;
+    const { slug } = args;
 
     const query: string = `
         SELECT         
@@ -29,9 +54,9 @@ export const getSingleArticle = async (_: any, args: Args) => {
             ON categories.category_id = article_category_id
         JOIN users
             ON users.user_id = article_user_id
-        WHERE article_id = ?
+        WHERE article_slug = ?
     `;
-    const values: [number] = [typeof id === 'number' ? id : parseInt(id)];
+    const values: [string] = [slug];
     const article: ArticleType[] = await executeQuery(query, values);
     return article[0];
 };

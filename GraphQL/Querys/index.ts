@@ -1,4 +1,5 @@
 export { 
+    getAllArticles,
     getSingleArticle, 
     getLatestArticles, 
     getMostVisitedArticles,
@@ -11,3 +12,7 @@ export {
 export {
     getCategories
 } from './categories';
+
+export {
+    getArticleComponents
+} from './articleComponents';
