@@ -9,11 +9,11 @@ type Props = {
     link: string
 };
 
-export default function ReadMoreButton() {
+export default function ReadMoreButton({ link }: Props) {
     return (
         <button className={classes.button}>
-            <Link href="/">Read more</Link>
-            <Icon icon="dashicons:arrow-right" color='#FFF' fontSize={14}/>
+            <Link href={link}>Read more</Link>
+            <Icon icon="dashicons:arrow-right" color='#FFF' fontSize={14} />
         </button>
     )
 };

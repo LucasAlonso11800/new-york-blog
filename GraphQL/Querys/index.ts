@@ -4,7 +4,8 @@ export {
     getMostVisitedArticles,
     getCategoryArticles,
     getRelatedArticles,
-    getSearchedArticles
+    getSearchedArticles,
+    getTotalArticleCount
 } from './articles';
 
 export {

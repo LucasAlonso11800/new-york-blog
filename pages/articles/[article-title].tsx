@@ -9,7 +9,7 @@ import { GetStaticPropsResult } from 'next';
 export default function ArticlePage() {
     return (
         <>
-            <Head title="Title" keywords="" />
+            <Head title="Title" />
             <Main>
                 <MainArticle />
             </Main>
@@ -21,7 +21,7 @@ export async function getStaticPaths() {
     return {
         paths: [{
             params: {
-                'article-title': 'how-to-sleep-better-in-the-city-that-never-sleeps',
+                'article-title': 'first-article',
                 id: 1
             }
         }],

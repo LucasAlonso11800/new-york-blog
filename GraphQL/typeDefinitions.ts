@@ -9,6 +9,7 @@ export const typeDefs = gql`
         getCategoryArticles(categoryId: ID!, index: Int!): [Article]
         getRelatedArticles(categoryId: ID!): [Article]
         getSearchedArticles(search: String!, index: Int!): [Article]
+        getTotalArticleCount: Int
         # Categories
         getCategories: [Category]
     }
@@ -23,6 +24,7 @@ export const typeDefs = gql`
         visits: Int
         categoryId: Int
         categoryName: String
+        categoryPath: String
         image: String
         createdAt: String
         authorId: Int

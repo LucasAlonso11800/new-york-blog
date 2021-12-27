@@ -5,7 +5,7 @@ import { SERVER_URL } from './ServerURL';
 export const httpLink = createHttpLink({ uri: SERVER_URL });
 
 export const authLink = setContext((_, { headers }) => {
-    const token = localStorage.getItem("token");
+    const token = typeof window !== 'undefined' ? window.localStorage.getItem("token") : '';
     return {
         headers: {
             ...headers,

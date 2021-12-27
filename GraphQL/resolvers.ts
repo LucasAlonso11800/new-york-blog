@@ -1,4 +1,4 @@
-import { getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles, getCategories } from "./Querys";
+import { getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles, getCategories, getTotalArticleCount } from "./Querys";
 import { hi } from "./Mutations/hi";
 
 export const resolvers = {
@@ -10,6 +10,7 @@ export const resolvers = {
         getCategoryArticles,
         getRelatedArticles,
         getSearchedArticles,
+        getTotalArticleCount,
         // Categories
         getCategories
     },

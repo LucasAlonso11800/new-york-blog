@@ -4,13 +4,15 @@ import Link from 'next/link';
 import { Icon } from '@iconify/react';
 // Styles
 import classes from '../styles/components/Pagination.module.css';
+import { ARTICLE_LIMIT_PER_PAGE } from '../const/Limits';
 
 type Props = {
     index: number,
-    category?: string
+    category?: string,
+    articleCount?: number
 };
 
-export default function Pagination({ index, category }: Props) {
+export default function Pagination({ index, category, articleCount }: Props) {
     const forwardLink: string = category ? `/categories/${category}/page/${index + 1}` : `/page/${index + 1}`;
     const previousLink: string = category ? index === 2 ? `/categories/${category}` : `/categories/${category}/page/${index - 1}` : index === 2 ? '/' : `/page/${index + 1}`;
 
@@ -24,10 +26,13 @@ export default function Pagination({ index, category }: Props) {
                 :
                 <div className={classes.placeholder}></div>
             }
-            <button className={classes.button}>
-                <Link href={forwardLink}>Load More Posts</Link>
-                <Icon icon="grommet-icons:form-next" color="#000" fontSize={14} />
-            </button>
+            {articleCount && articleCount > index * ARTICLE_LIMIT_PER_PAGE || !articleCount ?
+                <button className={classes.button}>
+                    <Link href={forwardLink}>Load More Posts</Link>
+                    <Icon icon="grommet-icons:form-next" color="#000" fontSize={14} />
+                </button>
+                : null
+            }
         </div>
     )
 };

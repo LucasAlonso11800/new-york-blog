@@ -14,6 +14,7 @@ export type ArticleType = {
     visits: number
     categoryId: number
     categoryName: string
+    categoryPath: string
     image: string
     createdAt: string
     authorId: number
