@@ -1,28 +1,23 @@
 import React from 'react';
 // Components
-import Head from '../components/LayoutComponents/Head';
+import Layout from '../components/LayoutComponents/Layout';
 import Main from '../components/LayoutComponents/Main';
 import ArticlePreview from '../components/ArticlePreview';
-import Header from '../components/LayoutComponents/Header';
-import Aside from '../components/LayoutComponents/Aside';
-import Footer from '../components/LayoutComponents/Footer';
 import Pagination from '../components/Pagination';
 // Querys
 import { getLatestArticles, getMostVisitedArticles } from '../Apollo/querys';
 // Types
-import { ArticleType } from '../types/Types';
+import { ArticleType, LayoutProps } from '../types/Types';
 
 type Props = {
     mainArticles: ArticleType[],
-    asideArticles: ArticleType[],
+    layoutProps: LayoutProps,
     index: number
 };
 
-export default function HomePage({ index, mainArticles, asideArticles }: Props) {
+export default function HomePage({ index, mainArticles, layoutProps }: Props) {
     return (
-        <div id="page-container">
-            <Head title='' />
-            <Header />
+        <Layout {...layoutProps}>
             <Main>
                 <>
                     {mainArticles.map((article, index) => {
@@ -40,9 +35,7 @@ export default function HomePage({ index, mainArticles, asideArticles }: Props) 
                 </>
                 <Pagination index={index} />
             </Main>
-            <Aside articles={asideArticles}/>
-            <Footer />
-        </div>
+        </Layout>
     )
 };
 
@@ -54,7 +47,10 @@ export async function getStaticProps() {
         return {
             props: {
                 mainArticles: mainArticles.data.getLatestArticles,
-                asideArticles: asideArticles.data.getMostVisitedArticles,
+                layoutProps: {
+                    asideArticles: asideArticles.data.getMostVisitedArticles,
+                    title: ""
+                },
                 index: 1
             }
         }
@@ -64,7 +60,10 @@ export async function getStaticProps() {
         return {
             props: {
                 mainArticles: [],
-                asideArticles: [],
+                layoutProps: {
+                    asideArticles: [],
+                    title: ""
+                },
                 index: 1
             }
         }

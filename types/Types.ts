@@ -32,4 +32,15 @@ export type ArticleComponentType = {
     text: string,
     fontWeight: 400 | 600,
     textAlign: string
-}
+};
+
+export type LayoutProps = {
+    title: string
+    children: JSX.Element | JSX.Element[]
+    asideArticles: ArticleType[]
+    // categories: CategoryType[]
+    // headerImage: string
+    // footerText: string
+    // aboutImage: string
+    // aboutText: string
+};

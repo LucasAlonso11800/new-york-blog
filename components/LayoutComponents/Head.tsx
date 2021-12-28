@@ -12,7 +12,8 @@ export default function CustomHead({ title }: Props) {
             <meta name="keywords" content="New York, NYC, Traveling, Lifestyle" />
             <meta name="description" content="Tracysnewyorklife.com is a lifestyle and travel blog based in NYC. Creator Tracy Kaler and bloggers feature the best of living, food, culture, travel, and more to readers around the world. The blog offers the best of New York City life, Tracy's adventures in the Big Apple and beyond, as well as musings and opinions from New Yorkers. Tracy informs and entertains on this top New York-centric blog." />
             <meta name="author" content="Lucas Alonso" />
-            <title>{title} Tracy Kaler's New York Life + Travel Blog | Top NYC Blog</title>
+            <link rel="icon" href="https://www.tracysnewyorklife.com/wp-content/uploads/2016/09/cropped-header-subtitle-final-tracys-new-york-life2-32x32.png" sizes="32x32" />
+            <title>{title}Tracy Kaler's New York Life + Travel Blog | Top NYC Blog</title>
         </Head>
     )
 }

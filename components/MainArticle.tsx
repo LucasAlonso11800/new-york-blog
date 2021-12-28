@@ -33,11 +33,11 @@ export default function MainArticle(props: Props) {
             <Image src={image} height="533" width="800" />
             {articleComponents.map(component => {
                 switch (component.componentName) {
-                    case "ArticleQuote": return <ArticleQuote text={component.text} />
-                    case "ArticleSubtitle": return <ArticleSubtitle text={component.text} textAlign={component.textAlign === 'L' ? 'left' : 'center'} fontWeight={component.fontWeight} />
-                    case "ArticleText": return <ArticleText text={component.text} />
-                    case "ArticleTitle": return <ArticleTitle text={component.text} />
-                    case "Image": return <Image src={component.image} height="533" width="800"/>
+                    case "ArticleQuote": return <ArticleQuote key={component.id} text={component.text} />
+                    case "ArticleSubtitle": return <ArticleSubtitle key={component.id} text={component.text} textAlign={component.textAlign === 'L' ? 'left' : 'center'} fontWeight={component.fontWeight} />
+                    case "ArticleText": return <ArticleText key={component.id} text={component.text} />
+                    case "ArticleTitle": return <ArticleTitle key={component.id} text={component.text} />
+                    case "Image": return <Image key={component.id} src={component.image} height="533" width="800"/>
                 }
             })}
         </article>

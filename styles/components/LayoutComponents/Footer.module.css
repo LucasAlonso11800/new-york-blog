@@ -7,10 +7,10 @@ footer.footer {
     font-weight: 300;
     letter-spacing: 1px;
     padding: 20px 0;
-    text-align: center;
     text-transform: uppercase;
-    display: flex;
-    justify-content: flex-end;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr minmax(300px, 1200px) 1fr;
     grid-column: 1 / 6;
     grid-row: 3 / 4;
     margin-top: 47.5px;
@@ -25,12 +25,6 @@ footer.footer {
 }
 
 .copyright {
-    width: 30%;
     padding: 4px;
-}
-
-@media all and (max-width: 768px) {
-    .copyright {
-        width: 100%;
-    }
+    text-align: right;
 }

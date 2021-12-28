@@ -1,27 +1,22 @@
 import React from 'react';
 // Components
-import Head from '../../components/LayoutComponents/Head';
-import Header from '../../components/LayoutComponents/Header';
+import Layout from '../../components/LayoutComponents/Layout';
 import Main from '../../components/LayoutComponents/Main';
-import Aside from '../../components/LayoutComponents/Aside';
-import Footer from '../../components/LayoutComponents/Footer';
 import MainArticle from '../../components/MainArticle';
 // Querys
 import { getAllArticles, getArticleComponents, getMostVisitedArticles, getSingleArticle } from '../../Apollo/querys';
 // Types
-import { ArticleComponentType, ArticleType } from '../../types/Types';
+import { ArticleComponentType, ArticleType, LayoutProps } from '../../types/Types';
 
 type Props = {
     mainArticle: ArticleType
-    asideArticles: ArticleType[]
+    layoutProps: LayoutProps
     articleComponents: ArticleComponentType[]
 };
 
-export default function ArticlePage({ mainArticle, asideArticles, articleComponents }: Props) {
+export default function ArticlePage({ mainArticle, layoutProps, articleComponents }: Props) {
     return (
-        <div id="page-container">
-            <Head title={`${mainArticle.title} ||`} />
-            <Header />
+        <Layout {...layoutProps}>
             <Main>
                 <MainArticle
                     title={mainArticle.title}
@@ -32,9 +27,7 @@ export default function ArticlePage({ mainArticle, asideArticles, articleCompone
                     articleComponents={articleComponents}
                 />
             </Main>
-            <Aside articles={asideArticles} />
-            <Footer />
-        </div>
+        </Layout>
     )
 };
 
@@ -69,7 +62,10 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         return {
             props: {
                 mainArticle: article.data.getSingleArticle,
-                asideArticles: asideArticles.data.getMostVisitedArticles,
+                layoutProps: {
+                    asideArticles: asideArticles.data.getMostVisitedArticles,
+                    title: article.data.getSingleArticle.title + " - "
+                },
                 articleComponents: components.data.getArticleComponents
             }
         }
@@ -79,7 +75,11 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         return {
             props: {
                 mainArticle: {},
-                asideArticles: []
+                layoutProps: {
+                    asideArticles: [],
+                    title: ""
+                },
+                articleComponents: []
             }
         }
     }

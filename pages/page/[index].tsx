@@ -1,10 +1,7 @@
 import React from 'react'
 // Components
-import Head from '../../components/LayoutComponents/Head';
+import Layout from '../../components/LayoutComponents/Layout';
 import Main from '../../components/LayoutComponents/Main';
-import Header from '../../components/LayoutComponents/Header';
-import Aside from '../../components/LayoutComponents/Aside';
-import Footer from '../../components/LayoutComponents/Footer';
 import Pagination from '../../components/Pagination'
 import ArticlePreview from '../../components/ArticlePreview';
 // Querys
@@ -12,20 +9,18 @@ import { getLatestArticles, getMostVisitedArticles, getTotalArticleCount } from 
 // Const
 import { ARTICLE_LIMIT_PER_PAGE } from '../../const/Limits';
 // Types
-import { ArticleType } from '../../types/Types';
+import { ArticleType, LayoutProps } from '../../types/Types';
 
 type Props = {
-    mainArticles: ArticleType[],
-    asideArticles: ArticleType[],
-    index: number,
+    mainArticles: ArticleType[]
+    layoutProps: LayoutProps
+    index: number
     articleCount: number
 };
 
-export default function LatestArticlesPage({ mainArticles, asideArticles, index, articleCount }: Props) {
+export default function LatestArticlesPage({ mainArticles, layoutProps, index, articleCount }: Props) {
     return (
-        <div id="page-container">
-            <Head title="" />
-            <Header />
+        <Layout {...layoutProps}>
             <Main>
                 <>
                     {mainArticles.map((article, index) => {
@@ -43,10 +38,8 @@ export default function LatestArticlesPage({ mainArticles, asideArticles, index,
                 </>
                 <Pagination index={index} articleCount={articleCount} />
             </Main>
-            <Aside articles={asideArticles} />
-            <Footer />
-        </div>
-    )
+        </Layout>
+    );
 };
 
 export async function getStaticPaths() {
@@ -87,11 +80,14 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         const articleCount = await getTotalArticleCount();
         const articles = await getLatestArticles(parseInt(params.index));
         const asideArticles = await getMostVisitedArticles();
-        
+
         return {
             props: {
                 mainArticles: articles.data.getLatestArticles,
-                asideArticles: asideArticles.data.getMostVisitedArticles,
+                layoutProps: {
+                    asideArticles: asideArticles.data.getMostVisitedArticles,
+                    title: ""
+                },
                 index: parseInt(params.index),
                 articleCount
             }
@@ -102,7 +98,10 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         return {
             props: {
                 mainArticles: [],
-                asideArticles: [],
+                layoutProps: {
+                    asideArticles: [],
+                    title: ""
+                },
                 index: parseInt(params.index),
                 articleCount: 0
             }
