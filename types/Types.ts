@@ -20,6 +20,7 @@ export type ArticleType = {
     authorId: number
     authorName: string
     slug: string
+    description: string
 };
 
 export type ArticleComponentType = {

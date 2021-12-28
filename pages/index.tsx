@@ -32,6 +32,7 @@ export default function HomePage({ index, mainArticles, layoutProps }: Props) {
                             image={article.image}
                             authorName={article.authorName}
                             slug={article.slug}
+                            description={article.description}
                         />
                     })}
                 </>

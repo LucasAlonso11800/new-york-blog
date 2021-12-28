@@ -14,23 +14,23 @@ type Props = {
     image: string;
     authorName: string;
     slug: string;
+    description: string;
     layout: 'column' | 'row';
 };
 
 export default function ArticlePreview(props: Props) {
-    const { title, categoryName, categoryPath, image, authorName, slug, layout } = props;
+    const { title, categoryName, categoryPath, image, authorName, slug, description, layout } = props;
 
     const imageDimensions = layout === 'column' ? { width: '850', height: '475' } : { width: '400', height: '400' };
-
     return (
         <article className={`${classes.article} ${classes[layout]}`}>
             <Link href={`/articles/${slug}`}>
                 <Image src={image} {...imageDimensions} />
             </Link>
             <div className={classes.content}>
-                <h2 className={classes.title}><Link href={slug}>{title}</Link></h2>
+                <h2 className={classes.title}><Link href={`/articles/${slug}`}>{title}</Link></h2>
                 <ArticleMeta categoryName={categoryName} categoryPath={categoryPath} authorName={authorName}/>
-                <p className={classes.body}>Why I Still Love Living in Manhattan….  &nbsp;My pipe dream came true in 2007 when I arrived in New York. Some days that iconic moment feels like decades ago, and other times, just yesterday. When I moved to the Upper East Side in 2007, I can’t recall if I thought about how long I’d stay. Would it be a…</p>
+                <p className={classes.body}>{description ? `${description.substring(0, 320)}...` : ''}</p>
                 <ReadMoreButton link={`/articles/${slug}`}/>
             </div>
         </article>

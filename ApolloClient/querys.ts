@@ -50,18 +50,19 @@ export async function getSingleArticle(slug: string) {
 export async function getLatestArticles(index: number) {
     return await client.query({
         query: gql`
-                query Query ($index: Int!){
-                    getLatestArticles(index: $index){
-                        id
-                        title
-                        categoryName
-                        categoryPath
-                        image
-                        authorName
-                        slug
-                    }
+            query Query ($index: Int!){
+                getLatestArticles(index: $index){
+                    id
+                    title
+                    categoryName
+                    categoryPath
+                    image
+                    authorName
+                    slug
+                    description
                 }
-            `,
+            }
+        `,
         variables: {
             index
         }

@@ -34,6 +34,7 @@ export default function LatestArticlesPage({ mainArticles, layoutProps, index, a
                             image={article.image}
                             authorName={article.authorName}
                             slug={article.slug}
+                            description={article.description}
                         />
                     })}
                 </>

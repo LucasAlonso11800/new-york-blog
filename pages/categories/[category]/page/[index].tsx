@@ -1,11 +1,15 @@
 import React from 'react'
-import { getCategories, getCategoryArticleCount, getCategoryArticles, getMetadata, getMostVisitedArticles, getTotalArticleCount } from '../../../../ApolloClient/querys';
+// Components
 import CategoryArticles from '../../../../components/CategoryArticles';
 import Layout from '../../../../components/LayoutComponents/Layout';
 import Main from '../../../../components/LayoutComponents/Main';
 import Pagination from '../../../../components/Pagination';
+// Querys
+import { getCategories, getCategoryArticleCount, getCategoryArticles, getMetadata, getMostVisitedArticles, getTotalArticleCount } from '../../../../ApolloClient/querys';
+// Const
 import { DEFAULT_METADATA } from '../../../../const/defaultMetadata';
 import { CATEGORY_ARTICLE_LIMIT } from '../../../../const/Limits';
+// Types
 import { ArticleType, CategoryType, LayoutProps } from '../../../../types/Types';
 
 type Props = {

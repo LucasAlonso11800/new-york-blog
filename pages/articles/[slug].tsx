@@ -4,7 +4,9 @@ import Layout from '../../components/LayoutComponents/Layout';
 import Main from '../../components/LayoutComponents/Main';
 import MainArticle from '../../components/MainArticle';
 // Querys
-import { getAllArticles, getArticleComponents, getCategories, getMostVisitedArticles, getSingleArticle } from '../../ApolloClient/querys';
+import { getAllArticles, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getSingleArticle } from '../../ApolloClient/querys';
+// Const
+import { DEFAULT_METADATA } from '../../const/defaultMetadata';
 // Types
 import { ArticleComponentType, ArticleType, LayoutProps } from '../../types/Types';
 
@@ -59,6 +61,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         const asideArticles = await getMostVisitedArticles();
         const components = await getArticleComponents(article.data.getSingleArticle.id);
         const categories = await getCategories();
+        const metadata = await getMetadata();
 
         return {
             props: {
@@ -66,7 +69,8 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                 layoutProps: {
                     asideArticles: asideArticles.data.getMostVisitedArticles,
                     title: article.data.getSingleArticle.title + " - ",
-                    categories: categories.data.getCategories
+                    categories: categories.data.getCategories,
+                    ...metadata
                 },
                 articleComponents: components.data.getArticleComponents
             }
@@ -80,7 +84,8 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                 layoutProps: {
                     asideArticles: [],
                     title: "",
-                    categories: []
+                    categories: [],
+                    ...DEFAULT_METADATA
                 },
                 articleComponents: []
             }

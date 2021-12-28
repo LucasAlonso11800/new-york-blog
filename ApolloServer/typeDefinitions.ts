@@ -37,6 +37,7 @@ export const typeDefs = gql`
         authorId: Int
         authorName: String
         slug: String
+        description: String
     }
     
     type Category {

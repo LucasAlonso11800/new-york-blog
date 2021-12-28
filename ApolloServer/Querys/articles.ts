@@ -13,16 +13,16 @@ type Args = {
 export const getAllArticles = async () => {
     const query: string = `
         SELECT         
-            article_id as id,
-            article_title as title,
-            article_visits as visits,
-            article_category_id as categoryId,
-            category_name as categoryName,
-            article_main_image as image,
-            article_created_at as createdAt,
-            article_user_id as authorId,
-            user_username as authorName,
-            article_slug as slug
+            article_id AS id,
+            article_title AS title,
+            article_visits AS visits,
+            article_category_id AS categoryId,
+            category_name AS categoryName,
+            article_main_image AS image,
+            article_created_at AS createdAt,
+            article_user_id AS authorId,
+            user_username AS authorName,
+            article_slug AS slug
         FROM articles
         JOIN categories
             ON categories.category_id = article_category_id
@@ -38,16 +38,16 @@ export const getSingleArticle = async (_: any, args: Args) => {
 
     const query: string = `
         SELECT         
-            article_id as id,
-            article_title as title,
-            article_visits as visits,
-            article_category_id as categoryId,
-            category_name as categoryName,
-            article_main_image as image,
-            article_created_at as createdAt,
-            article_user_id as authorId,
-            user_username as authorName,
-            article_slug as slug
+            article_id AS id,
+            article_title AS title,
+            article_visits AS visits,
+            article_category_id AS categoryId,
+            category_name AS categoryName,
+            article_main_image AS image,
+            article_created_at AS createdAt,
+            article_user_id AS authorId,
+            user_username AS authorName,
+            article_slug AS slug
         FROM articles
         JOIN categories
             ON categories.category_id = article_category_id
@@ -63,50 +63,48 @@ export const getSingleArticle = async (_: any, args: Args) => {
 export const getLatestArticles = async (_: any, args: Args) => {
     const { index } = args;
 
-    const getNumberOfArticlesQuery: string = 'SELECT COUNT(*) as count FROM articles';
-    const numberOfArticles: CountType[] = await executeQuery(getNumberOfArticlesQuery, []);
-
-    const limit: number = Math.ceil(numberOfArticles[0].count / ARTICLE_LIMIT_PER_PAGE) * index + (ARTICLE_LIMIT_PER_PAGE - 1);
     const query: string = `
         SELECT         
-            article_id as id,
-            article_title as title,
-            article_visits as visits,
-            article_category_id as categoryId,
-            category_name as categoryName,
-            category_path as categoryPath,
-            article_main_image as image,
-            article_created_at as createdAt,
-            article_user_id as authorId,
-            user_username as authorName,
-            article_slug as slug
-        FROM articles
-        JOIN categories
-            ON categories.category_id = article_category_id
-        JOIN users
-            ON users.user_id = article_user_id
-        ORDER BY article_created_at DESC, article_id DESC
-        LIMIT ? 
-    `;
+            article_id AS id,
+            article_title AS title,
+            article_visits AS visits,
+            article_category_id AS categoryId,
+            category_name AS categoryName,
+            category_path AS categoryPath,
+            article_main_image AS image,
+            article_created_at AS createdAt,
+            article_user_id AS authorId,
+            user_username AS authorName,
+            article_slug AS slug,
+            article_component_text AS description
+            FROM articles
+            JOIN categories
+                ON categories.category_id = article_category_id
+            JOIN users
+                ON users.user_id = article_user_id
+            LEFT JOIN article_components
+                ON article_components.article_component_article_id = article_id 
+                AND article_components.article_component_order = 2
+            ORDER BY article_created_at DESC, article_id DESC
+        `;
 
-    const values: [number] = [limit];
-    const articles: ArticleType[] = await executeQuery(query, values);
+    const articles: ArticleType[] = await executeQuery(query, []);
     return articles.slice((index - 1) * ARTICLE_LIMIT_PER_PAGE, (index - 1) * ARTICLE_LIMIT_PER_PAGE + ARTICLE_LIMIT_PER_PAGE);
 };
 
 export const getMostVisitedArticles = async () => {
     const query: string = `
         SELECT         
-            article_id as id,
-            article_title as title,
-            article_visits as visits,
-            article_category_id as categoryId,
-            category_name as categoryName,
-            article_main_image as image,
-            article_created_at as createdAt,
-            article_user_id as authorId,
-            user_username as authorName,
-            article_slug as slug
+            article_id AS id,
+            article_title AS title,
+            article_visits AS visits,
+            article_category_id AS categoryId,
+            category_name AS categoryName,
+            article_main_image AS image,
+            article_created_at AS createdAt,
+            article_user_id AS authorId,
+            user_username AS authorName,
+            article_slug AS slug
         FROM articles
         JOIN categories
             ON categories.category_id = article_category_id
@@ -124,23 +122,18 @@ export const getMostVisitedArticles = async () => {
 export const getCategoryArticles = async (_: any, args: Args) => {
     const { categoryId, index } = args;
 
-    const getNumberOfArticlesQuery: string = 'SELECT COUNT(*) as count FROM articles WHERE article_category_id = ?';
-    const numberOfArticles: CountType[] = await executeQuery(getNumberOfArticlesQuery, [typeof categoryId === 'number' ? categoryId : parseInt(categoryId)]);
-
-    const limit: number = Math.ceil(numberOfArticles[0].count / CATEGORY_ARTICLE_LIMIT) * index + (CATEGORY_ARTICLE_LIMIT - 1);
-
     const query: string = `
         SELECT         
-            article_id as id,
-            article_title as title,
-            article_visits as visits,
-            article_category_id as categoryId,
-            category_name as categoryName,
-            article_main_image as image,
-            article_created_at as createdAt,
-            article_user_id as authorId,
-            user_username as authorName,
-            article_slug as slug
+            article_id AS id,
+            article_title AS title,
+            article_visits AS visits,
+            article_category_id AS categoryId,
+            category_name AS categoryName,
+            article_main_image AS image,
+            article_created_at AS createdAt,
+            article_user_id AS authorId,
+            user_username AS authorName,
+            article_slug AS slug
         FROM articles
         JOIN categories
             ON categories.category_id = article_category_id
@@ -148,10 +141,9 @@ export const getCategoryArticles = async (_: any, args: Args) => {
             ON users.user_id = article_user_id
         WHERE article_category_id = ?
         ORDER BY article_created_at DESC, article_id DESC
-        LIMIT ? 
     `;
 
-    const values: [number, number] = [typeof categoryId === 'number' ? categoryId : parseInt(categoryId), limit];
+    const values: [number] = [typeof categoryId === 'number' ? categoryId : parseInt(categoryId)];
     const articles: ArticleType[] = await executeQuery(query, values);
 
     return articles.slice((index - 1) * CATEGORY_ARTICLE_LIMIT, (index - 1) * CATEGORY_ARTICLE_LIMIT + CATEGORY_ARTICLE_LIMIT);
@@ -162,16 +154,16 @@ export const getRelatedArticles = async (_: any, args: Args) => {
 
     const query: string = `
         SELECT         
-            article_id as id,
-            article_title as title,
-            article_visits as visits,
-            article_category_id as categoryId,
-            category_name as categoryName,
-            article_main_image as image,
-            article_created_at as createdAt,
-            article_user_id as authorId,
-            user_username as authorName,
-            article_slug as slug
+            article_id AS id,
+            article_title AS title,
+            article_visits AS visits,
+            article_category_id AS categoryId,
+            category_name AS categoryName,
+            article_main_image AS image,
+            article_created_at AS createdAt,
+            article_user_id AS authorId,
+            user_username AS authorName,
+            article_slug AS slug
         FROM articles
         JOIN categories
             ON categories.category_id = article_category_id
@@ -191,23 +183,18 @@ export const getRelatedArticles = async (_: any, args: Args) => {
 export const getSearchedArticles = async (_: any, args: Args) => {
     const { search, index } = args;
 
-    const getNumberOfArticlesQuery: string = 'SELECT COUNT(*) as count FROM articles';
-    const numberOfArticles: CountType[] = await executeQuery(getNumberOfArticlesQuery, []);
-
-    const limit: number = Math.ceil(numberOfArticles[0].count / ARTICLE_LIMIT_PER_PAGE) * index + 6;
-
     const query: string = `
         SELECT         
-            article_id as id,
-            article_title as title,
-            article_visits as visits,
-            article_category_id as categoryId,
-            category_name as categoryName,
-            article_main_image as image,
-            article_created_at as createdAt,
-            article_user_id as authorId,
-            user_username as authorName,
-            article_slug as slug
+            article_id AS id,
+            article_title AS title,
+            article_visits AS visits,
+            article_category_id AS categoryId,
+            category_name AS categoryName,
+            article_main_image AS image,
+            article_created_at AS createdAt,
+            article_user_id AS authorId,
+            user_username AS authorName,
+            article_slug AS slug
         FROM articles
         JOIN categories
             ON categories.category_id = article_category_id
@@ -218,7 +205,7 @@ export const getSearchedArticles = async (_: any, args: Args) => {
         LIMIT ? 
     `;
 
-    const values: [string, number] = [search, limit];
+    const values: [string] = [search];
     const articles: ArticleType[] = await executeQuery(query, values);
 
     return articles.slice((index - 1) * ARTICLE_LIMIT_PER_PAGE, (index - 1) * ARTICLE_LIMIT_PER_PAGE + 7);
