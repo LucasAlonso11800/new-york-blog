@@ -38,7 +38,7 @@ export type LayoutProps = {
     title: string
     children: JSX.Element | JSX.Element[]
     asideArticles: ArticleType[]
-    // categories: CategoryType[]
+    categories: CategoryType[]
     // headerImage: string
     // footerText: string
     // aboutImage: string

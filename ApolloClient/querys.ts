@@ -82,6 +82,22 @@ export async function getMostVisitedArticles() {
     });
 };
 
+// Categories
+
+export async function getCategories(){
+    return await client.query({
+        query: gql`
+            query Query {
+                getCategories {
+                    id
+                    name
+                    path
+                }
+            }
+        ` 
+    });
+};
+
 // Article Components
 
 export async function getArticleComponents(articleId: number){

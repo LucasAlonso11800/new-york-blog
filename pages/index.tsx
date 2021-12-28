@@ -5,7 +5,7 @@ import Main from '../components/LayoutComponents/Main';
 import ArticlePreview from '../components/ArticlePreview';
 import Pagination from '../components/Pagination';
 // Querys
-import { getLatestArticles, getMostVisitedArticles } from '../ApolloClient/querys';
+import { getCategories, getLatestArticles, getMostVisitedArticles } from '../ApolloClient/querys';
 // Types
 import { ArticleType, LayoutProps } from '../types/Types';
 
@@ -43,13 +43,15 @@ export async function getStaticProps() {
     try {
         const mainArticles = await getLatestArticles(1);
         const asideArticles = await getMostVisitedArticles();
+        const categories = await getCategories();
 
         return {
             props: {
                 mainArticles: mainArticles.data.getLatestArticles,
                 layoutProps: {
                     asideArticles: asideArticles.data.getMostVisitedArticles,
-                    title: ""
+                    title: "",
+                    categories: categories.data.getCategories
                 },
                 index: 1
             }
@@ -62,7 +64,8 @@ export async function getStaticProps() {
                 mainArticles: [],
                 layoutProps: {
                     asideArticles: [],
-                    title: ""
+                    title: "",
+                    categories: []
                 },
                 index: 1
             }

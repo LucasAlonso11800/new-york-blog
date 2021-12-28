@@ -4,7 +4,7 @@ import Layout from '../../components/LayoutComponents/Layout';
 import Main from '../../components/LayoutComponents/Main';
 import MainArticle from '../../components/MainArticle';
 // Querys
-import { getAllArticles, getArticleComponents, getMostVisitedArticles, getSingleArticle } from '../../ApolloClient/querys';
+import { getAllArticles, getArticleComponents, getCategories, getMostVisitedArticles, getSingleArticle } from '../../ApolloClient/querys';
 // Types
 import { ArticleComponentType, ArticleType, LayoutProps } from '../../types/Types';
 
@@ -58,13 +58,15 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         const article = await getSingleArticle(params.slug);
         const asideArticles = await getMostVisitedArticles();
         const components = await getArticleComponents(article.data.getSingleArticle.id);
+        const categories = await getCategories();
 
         return {
             props: {
                 mainArticle: article.data.getSingleArticle,
                 layoutProps: {
                     asideArticles: asideArticles.data.getMostVisitedArticles,
-                    title: article.data.getSingleArticle.title + " - "
+                    title: article.data.getSingleArticle.title + " - ",
+                    categories: categories.data.getCategories
                 },
                 articleComponents: components.data.getArticleComponents
             }
@@ -77,7 +79,8 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                 mainArticle: {},
                 layoutProps: {
                     asideArticles: [],
-                    title: ""
+                    title: "",
+                    categories: []
                 },
                 articleComponents: []
             }

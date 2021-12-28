@@ -8,8 +8,10 @@ export const getCategories = async (_: any, args: any) => {
             category_name AS name,
             category_path AS path
         FROM categories
+        WHERE category_name NOT IN(?, ?)
     `;
 
-    const categories: CategoryType[] = await executeQuery(query, []);
+    const values: [string, string] = ["Dev", "About"]
+    const categories: CategoryType[] = await executeQuery(query, values);
     return categories;
 };
