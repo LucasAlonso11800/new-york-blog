@@ -6,7 +6,8 @@ export {
     getCategoryArticles,
     getRelatedArticles,
     getSearchedArticles,
-    getTotalArticleCount
+    getTotalArticleCount,
+    getCategoryArticleCount
 } from './articles';
 
 export {

@@ -1,5 +1,5 @@
 import executeQuery from "../../dbConfig";
-import { ARTICLE_LIMIT_PER_PAGE, FAVORITE_ARTICLE_LIMIT, RELATED_ARTICLE_LIMIT } from "../../const/Limits";
+import { ARTICLE_LIMIT_PER_PAGE, CATEGORY_ARTICLE_LIMIT, FAVORITE_ARTICLE_LIMIT, RELATED_ARTICLE_LIMIT } from "../../const/Limits";
 import { ArticleType, CountType } from "../../types/Types";
 
 type Args = {
@@ -67,7 +67,7 @@ export const getLatestArticles = async (_: any, args: Args) => {
     const getNumberOfArticlesQuery: string = 'SELECT COUNT(*) as count FROM articles';
     const numberOfArticles: CountType[] = await executeQuery(getNumberOfArticlesQuery, []);
 
-    const limit: number = Math.ceil(numberOfArticles[0].count / ARTICLE_LIMIT_PER_PAGE) * index + 6;
+    const limit: number = Math.ceil(numberOfArticles[0].count / ARTICLE_LIMIT_PER_PAGE) * index + (ARTICLE_LIMIT_PER_PAGE - 1);
     const query: string = `
         SELECT         
             article_id as id,
@@ -92,7 +92,7 @@ export const getLatestArticles = async (_: any, args: Args) => {
 
     const values: [number] = [limit];
     const articles: ArticleType[] = await executeQuery(query, values);
-    return articles.slice((index - 1) * ARTICLE_LIMIT_PER_PAGE,  (index - 1) * ARTICLE_LIMIT_PER_PAGE + 7);
+    return articles.slice((index - 1) * ARTICLE_LIMIT_PER_PAGE, (index - 1) * ARTICLE_LIMIT_PER_PAGE + ARTICLE_LIMIT_PER_PAGE);
 };
 
 export const getMostVisitedArticles = async () => {
@@ -128,7 +128,7 @@ export const getCategoryArticles = async (_: any, args: Args) => {
     const getNumberOfArticlesQuery: string = 'SELECT COUNT(*) as count FROM articles WHERE article_category_id = ?';
     const numberOfArticles: CountType[] = await executeQuery(getNumberOfArticlesQuery, [typeof categoryId === 'number' ? categoryId : parseInt(categoryId)]);
 
-    const limit: number = Math.ceil(numberOfArticles[0].count / ARTICLE_LIMIT_PER_PAGE) * index + 6;
+    const limit: number = Math.ceil(numberOfArticles[0].count / CATEGORY_ARTICLE_LIMIT) * index + (CATEGORY_ARTICLE_LIMIT - 1);
 
     const query: string = `
         SELECT         
@@ -155,7 +155,7 @@ export const getCategoryArticles = async (_: any, args: Args) => {
     const values: [number, number] = [typeof categoryId === 'number' ? categoryId : parseInt(categoryId), limit];
     const articles: ArticleType[] = await executeQuery(query, values);
 
-    return articles.slice((index - 1) * ARTICLE_LIMIT_PER_PAGE, (index - 1) * ARTICLE_LIMIT_PER_PAGE + 7);
+    return articles.slice((index - 1) * CATEGORY_ARTICLE_LIMIT, (index - 1) * CATEGORY_ARTICLE_LIMIT + CATEGORY_ARTICLE_LIMIT);
 };
 
 export const getRelatedArticles = async (_: any, args: Args) => {
@@ -228,5 +228,13 @@ export const getSearchedArticles = async (_: any, args: Args) => {
 export const getTotalArticleCount = async () => {
     const query: string = 'SELECT COUNT(*) as count FROM articles';
     const count: CountType[] = await executeQuery(query, []);
+    return count[0].count;
+};
+
+export const getCategoryArticleCount = async (_: any, args: Args) => {
+    const { categoryId } = args;
+    const query: string = 'SELECT COUNT(*) as count FROM articles WHERE article_category_id = ?';
+    const values: [number] = [typeof categoryId === 'number' ? categoryId : parseInt(categoryId)];
+    const count: CountType[] = await executeQuery(query, values);
     return count[0].count;
 };

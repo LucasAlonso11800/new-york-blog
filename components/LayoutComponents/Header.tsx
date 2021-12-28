@@ -33,7 +33,7 @@ export default function Header({ categories }: Props) {
                                 {categories.map(category => {
                                     return (
                                         <li key={category.id} className={classes.listItem}>
-                                            <Link href={`categories/${category.path}`}>{category.name}</Link>
+                                            <Link href={`/categories/${category.path}`}>{category.name}</Link>
                                         </li>
                                     );
                                 })}
@@ -47,7 +47,7 @@ export default function Header({ categories }: Props) {
                                     {categories.map(category => {
                                         return (
                                             <li key={category.id} className={classes.listItem}>
-                                                <Link href={`categories/${category.path}`}>{category.name}</Link>
+                                                <Link href={`/categories/${category.path}`}>{category.name}</Link>
                                             </li>
                                         );
                                     })}

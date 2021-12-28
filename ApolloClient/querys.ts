@@ -82,6 +82,38 @@ export async function getMostVisitedArticles() {
     });
 };
 
+export async function getCategoryArticles(categoryId: number, index: number){
+    return await client.query({
+        query: gql`
+            query Query ($categoryId: ID!, $index: Int!){
+                getCategoryArticles(categoryId: $categoryId, index: $index){
+                    id
+                    title
+                    image
+                    slug
+                }
+            }
+        `,
+        variables: {
+            categoryId,
+            index
+        }
+    });
+};
+
+export async function getCategoryArticleCount(categoryId: number){
+    return await client.query({
+        query: gql`
+            query Query ($categoryId: ID!) {
+                getCategoryArticleCount (categoryId: $categoryId)
+            } 
+        `,
+        variables: {
+            categoryId
+        }
+    });
+};
+
 // Categories
 
 export async function getCategories(){
