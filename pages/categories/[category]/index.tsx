@@ -5,7 +5,9 @@ import CategoryArticles from '../../../components/CategoryArticles';
 import Pagination from '../../../components/Pagination';
 import Layout from '../../../components/LayoutComponents/Layout';
 // Querys
-import { getCategories, getCategoryArticleCount, getCategoryArticles, getMostVisitedArticles } from '../../../ApolloClient/querys';
+import { getCategories, getCategoryArticleCount, getCategoryArticles, getMetadata, getMostVisitedArticles } from '../../../ApolloClient/querys';
+// Const
+import { DEFAULT_METADATA } from '../../../const/defaultMetadata';
 // Types
 import { ArticleType, CategoryType, LayoutProps } from '../../../types/Types';
 
@@ -57,6 +59,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         const categoryArticleCount = await getCategoryArticleCount(category.id);
 
         const asideArticles = await getMostVisitedArticles();
+        const metadata = await getMetadata();
 
         return {
             props: {
@@ -66,7 +69,8 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                 layoutProps: {
                     asideArticles: asideArticles.data.getMostVisitedArticles,
                     title,
-                    categories: categories.data.getCategories
+                    categories: categories.data.getCategories,
+                    ...metadata
                 }
             }
         };
@@ -81,7 +85,8 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                 layoutProps: {
                     asideArticles: [],
                     title,
-                    categories: []
+                    categories: [],
+                    ...DEFAULT_METADATA
                 }
             }
         }

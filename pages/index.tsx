@@ -6,8 +6,10 @@ import ArticlePreview from '../components/ArticlePreview';
 import Pagination from '../components/Pagination';
 // Querys
 import { getCategories, getLatestArticles, getMetadata, getMostVisitedArticles } from '../ApolloClient/querys';
+// Const
+import { DEFAULT_METADATA } from '../const/defaultMetadata';
 // Types
-import { ArticleType, LayoutProps, MetadataType } from '../types/Types';
+import { ArticleType, LayoutProps } from '../types/Types';
 
 type Props = {
     mainArticles: ArticleType[],
@@ -67,11 +69,7 @@ export async function getStaticProps() {
                     asideArticles: [],
                     title: "",
                     categories: [],
-                    headerImage: "",
-                    footerText: "COPYRIGHT © 2011 - 2021 TRACY’S NEW YORK LIFE",
-                    aboutImage: "",
-                    aboutTitle: "About the blog",
-                    mostVisitedArticlesTitle: "Favorite articles"
+                    ...DEFAULT_METADATA
                 },
                 index: 1
             }
