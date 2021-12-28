@@ -23,24 +23,32 @@ export type ArticleType = {
 };
 
 export type ArticleComponentType = {
-    id: number,
-    componentId: number | string,
+    id: number
+    componentId: number | string
     componentName: string
-    articleId: number | string,
-    order: number,
-    image: string,
-    text: string,
-    fontWeight: 400 | 600,
+    articleId: number | string
+    order: number
+    image: string
+    text: string
+    fontWeight: 400 | 600
     textAlign: string
 };
+
+export type MetadataType = {
+    name: string
+    value: string
+    description: string
+}
 
 export type LayoutProps = {
     title: string
     children: JSX.Element | JSX.Element[]
     asideArticles: ArticleType[]
     categories: CategoryType[]
-    // headerImage: string
-    // footerText: string
-    // aboutImage: string
-    // aboutText: string
+    headerImage: string
+    footerText: string
+    aboutImage: string
+    aboutTitle: string
+    mostVisitedArticlesTitle: string
+    headIcon: string
 };

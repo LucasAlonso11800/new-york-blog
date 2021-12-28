@@ -17,6 +17,8 @@ export const typeDefs = gql`
         getCategories: [Category]
         # ArticleComponents
         getArticleComponents(articleId: ID!): [ArticleComponent]
+        # Metadata
+        getMetadata: [Metadata] 
     }
 
     type Mutation {
@@ -53,5 +55,12 @@ export const typeDefs = gql`
 	    text: String,
 	    fontWeight: String,
 	    textAlign: String
+    }
+
+    type Metadata {
+        id: ID,
+        name: String,
+        description: String
+        value: String
     }
 `;

@@ -11,22 +11,23 @@ import { gql } from '@apollo/client';
 import { ArticleType } from '../../types/Types';
 
 type Props = {
-    articles: ArticleType[]
+    articles: ArticleType[],
+    title: string
+    image: string
+    mostVisitedArticlesTitle: string
 }
 
-export default function Aside({ articles }: Props) {
-    // Get about image from backend
-
+export default function Aside({ articles, title, image, mostVisitedArticlesTitle }: Props) {
     return (
         <aside className={classes.aside}>
             <section className={classes.about}>
-                <h2 className={classes.title}>About the blog</h2>
+                <h2 className={classes.title}>{title}</h2>
                 <Link href="/about">
-                    <Image src="https://www.tracysnewyorklife.com/wp-content/uploads/2016/10/015-resize-400x400.jpg" width="400" height="400" />
+                    <Image src={image} width="400" height="400" />
                 </Link>
             </section>
-            <section className={classes.featuredArticles}>
-                <h2 className={classes.title}>Favorite posts</h2>
+            <section className={classes.mostVisitedArticles}>
+                <h2 className={classes.title}>{mostVisitedArticlesTitle}</h2>
                 {articles.map(article => {
                     return <AsideArticle key={article.id} title={article.title} slug={article.slug} image={article.image} />
                 })}

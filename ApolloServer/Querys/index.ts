@@ -1,14 +1,17 @@
-export { 
+export {
     getAllArticles,
-    getSingleArticle, 
-    getLatestArticles, 
+    getSingleArticle,
+    getLatestArticles,
     getMostVisitedArticles,
     getCategoryArticles,
     getRelatedArticles,
-    getSearchedArticles,
+    getSearchedArticles
+} from './articles';
+
+export {
     getTotalArticleCount,
     getCategoryArticleCount
-} from './articles';
+} from './count';
 
 export {
     getCategories
@@ -17,3 +20,7 @@ export {
 export {
     getArticleComponents
 } from './articleComponents';
+
+export {
+    getMetadata
+} from './metadata';

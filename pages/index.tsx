@@ -5,9 +5,9 @@ import Main from '../components/LayoutComponents/Main';
 import ArticlePreview from '../components/ArticlePreview';
 import Pagination from '../components/Pagination';
 // Querys
-import { getCategories, getLatestArticles, getMostVisitedArticles } from '../ApolloClient/querys';
+import { getCategories, getLatestArticles, getMetadata, getMostVisitedArticles } from '../ApolloClient/querys';
 // Types
-import { ArticleType, LayoutProps } from '../types/Types';
+import { ArticleType, LayoutProps, MetadataType } from '../types/Types';
 
 type Props = {
     mainArticles: ArticleType[],
@@ -44,14 +44,15 @@ export async function getStaticProps() {
         const mainArticles = await getLatestArticles(1);
         const asideArticles = await getMostVisitedArticles();
         const categories = await getCategories();
-
+        const metadata = await getMetadata();
         return {
             props: {
                 mainArticles: mainArticles.data.getLatestArticles,
                 layoutProps: {
                     asideArticles: asideArticles.data.getMostVisitedArticles,
                     title: "",
-                    categories: categories.data.getCategories
+                    categories: categories.data.getCategories,
+                    ...metadata
                 },
                 index: 1
             }
@@ -65,7 +66,12 @@ export async function getStaticProps() {
                 layoutProps: {
                     asideArticles: [],
                     title: "",
-                    categories: []
+                    categories: [],
+                    headerImage: "",
+                    footerText: "COPYRIGHT © 2011 - 2021 TRACY’S NEW YORK LIFE",
+                    aboutImage: "",
+                    aboutTitle: "About the blog",
+                    mostVisitedArticlesTitle: "Favorite articles"
                 },
                 index: 1
             }

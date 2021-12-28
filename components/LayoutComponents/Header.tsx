@@ -8,9 +8,10 @@ import { CategoryType } from '../../types/Types';
 
 type Props = {
     categories: CategoryType[]
+    image: string
 }
 
-export default function Header({ categories }: Props) {
+export default function Header({ categories, image }: Props) {
     const [width, setWidth] = useState<number>();
     const [menuOpen, setMenuOpen] = useState(false);
     const [query, setQuery] = useState('');
@@ -67,7 +68,7 @@ export default function Header({ categories }: Props) {
                 </form>
             </nav>
             <div className={classes.siteLogoContainer}>
-                <p className={classes.siteLogo}>
+                <p className={classes.siteLogo} style={{ background: image }}>
                     <Link href="/">.</Link>
                 </p>
             </div>

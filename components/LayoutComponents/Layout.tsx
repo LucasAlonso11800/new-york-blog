@@ -8,14 +8,14 @@ import Head from './Head';
 import { LayoutProps } from '../../types/Types';
 
 export default function Layout(props: LayoutProps) {
-    const { title, children, asideArticles, categories } = props;
+    const { title, children, asideArticles, categories, aboutImage, aboutTitle, footerText, headerImage, mostVisitedArticlesTitle, headIcon } = props;
     return (
         <div id="page-container">
-            <Head title={title} />
-            <Header categories={categories}/>
+            <Head title={title} icon={headIcon}/>
+            <Header categories={categories} image={headerImage}/>
             {children}
-            <Aside articles={asideArticles} />
-            <Footer />
+            <Aside articles={asideArticles} title={aboutTitle} image={aboutImage} mostVisitedArticlesTitle={mostVisitedArticlesTitle}/>
+            <Footer text={footerText}/>
         </div>
     )
 };

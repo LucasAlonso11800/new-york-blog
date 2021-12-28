@@ -1,12 +1,16 @@
 import React from 'react'
 import classes from '../../styles/components/LayoutComponents/Footer.module.css';
 
-export default function Footer() {
+type Props = {
+    text: string
+}
+
+export default function Footer({ text }: Props) {
     return (
         <footer className={classes.footer}>
             <div></div>
             <div className={classes.copyright}>
-                <p>Copyright © 2011 - 2021 Tracy’s New York Life</p>
+                <p>{text}</p>
             </div>
             <div></div>
         </footer>

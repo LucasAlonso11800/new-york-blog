@@ -24,7 +24,7 @@ export default function ArticlePreview(props: Props) {
 
     return (
         <article className={`${classes.article} ${classes[layout]}`}>
-            <Link href={slug}>
+            <Link href={`/articles/${slug}`}>
                 <Image src={image} {...imageDimensions} />
             </Link>
             <div className={classes.content}>
