@@ -5,6 +5,7 @@ import Link from 'next/link';
 import classes from '../../styles/components/LayoutComponents/Header.module.css';
 // Types
 import { CategoryType } from '../../types/Types';
+import Image from 'next/image';
 
 type Props = {
     categories: CategoryType[]
@@ -68,9 +69,9 @@ export default function Header({ categories, image }: Props) {
                 </form>
             </nav>
             <div className={classes.siteLogoContainer}>
-                <p className={classes.siteLogo} style={{ background: image }}>
-                    <Link href="/">.</Link>
-                </p>
+                <Link href="/">
+                    <Image src={image} height="175" width="670" />
+                </Link>
             </div>
         </header>
     )

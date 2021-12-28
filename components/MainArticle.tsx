@@ -31,7 +31,7 @@ export default function MainArticle(props: Props) {
                 categoryPath={categoryPath}
                 authorName={authorName}
             />
-            <Image src={image} height="533" width="800" />
+            <Image src={image} height="535" width="800" />
             {articleComponents.map(component => {
                 switch (component.componentName) {
                     case "ArticleQuote": return <ArticleQuote key={component.id} text={component.text} />

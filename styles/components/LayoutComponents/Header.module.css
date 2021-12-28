@@ -133,29 +133,8 @@ header.header {
 .siteLogoContainer {
     padding: 24px 10px;
     margin: auto;
-    min-height: 150px;
+    height: 223px;
     text-align: center;
     width: 100%;
     background-color: var(--white)
-}
-
-.siteLogo {
-    font-family: var(--montserrat);
-    font-size: 65px;
-    font-weight: 100;
-    letter-spacing: 3px;
-    line-height: 1.3;
-    margin: 0 0 10px;
-    text-transform: uppercase;
-    /* background: url(https://www.tracysnewyorklife.com/wp-content/uploads/2018/03/cropped-logo2018-header-tracysnewyorklife-2.png)50% no-repeat !important; */
-    background-size: contain !important;
-}
-
-.siteLogo a {
-    display: block;
-    margin: 0 auto;
-    min-height: 175px !important;
-    max-height: 175px !important;
-    width: 100%;
-    text-indent: -9999px;
 }

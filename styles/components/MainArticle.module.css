@@ -5,7 +5,9 @@
 
 .article span {
     max-width: 800px!important;
+    margin: auto!important;
     margin-bottom: 24px!important;
+    max-height: 533px!important;
 }
 
 .title {
