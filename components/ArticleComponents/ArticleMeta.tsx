@@ -14,7 +14,7 @@ export default function ArticleMeta(props: Props) {
     return (
         <p className={classes.meta}>
             <span className={classes.in}>in </span>
-            <span className={classes.categories}><Link href={`categories/${categoryPath}`}>{categoryName}</Link> </span>
+            <span className={classes.categories}><Link href={`/categories/${categoryPath}`}>{categoryName}</Link> </span>
             by
             <span className={classes.author}> {authorName}</span>
         </p>

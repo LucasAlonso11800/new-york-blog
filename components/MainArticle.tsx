@@ -22,6 +22,7 @@ type Props = {
 
 export default function MainArticle(props: Props) {
     const { title, categoryName, categoryPath, image, authorName, articleComponents } = props;
+
     return (
         <article className={classes.article}>
             <h1 className={classes.title}>{title}</h1>
