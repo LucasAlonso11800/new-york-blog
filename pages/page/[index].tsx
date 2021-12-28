@@ -5,7 +5,7 @@ import Main from '../../components/LayoutComponents/Main';
 import Pagination from '../../components/Pagination'
 import ArticlePreview from '../../components/ArticlePreview';
 // Querys
-import { getLatestArticles, getMostVisitedArticles, getTotalArticleCount } from '../../Apollo/querys';
+import { getLatestArticles, getMostVisitedArticles, getTotalArticleCount } from '../../ApolloClient/querys';
 // Const
 import { ARTICLE_LIMIT_PER_PAGE } from '../../const/Limits';
 // Types

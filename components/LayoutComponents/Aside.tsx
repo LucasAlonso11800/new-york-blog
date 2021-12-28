@@ -6,7 +6,7 @@ import AsideArticle from '../AsideArticle';
 // Styles
 import classes from '../../styles/components/LayoutComponents/Aside.module.css';
 // GraphQL
-import { client } from '../../const/ApolloConfig';
+import { client } from '../../ApolloClient/ApolloConfig';
 import { gql } from '@apollo/client';
 import { ArticleType } from '../../types/Types';
 

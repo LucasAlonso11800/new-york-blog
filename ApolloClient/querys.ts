@@ -1,5 +1,5 @@
 import { gql } from "apollo-server-micro";
-import { client } from "../const/ApolloConfig";
+import { client } from "./ApolloConfig";
 
 // Articles
 

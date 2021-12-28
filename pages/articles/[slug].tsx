@@ -4,7 +4,7 @@ import Layout from '../../components/LayoutComponents/Layout';
 import Main from '../../components/LayoutComponents/Main';
 import MainArticle from '../../components/MainArticle';
 // Querys
-import { getAllArticles, getArticleComponents, getMostVisitedArticles, getSingleArticle } from '../../Apollo/querys';
+import { getAllArticles, getArticleComponents, getMostVisitedArticles, getSingleArticle } from '../../ApolloClient/querys';
 // Types
 import { ArticleComponentType, ArticleType, LayoutProps } from '../../types/Types';
 

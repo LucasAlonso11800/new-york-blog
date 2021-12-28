@@ -5,7 +5,7 @@ import Main from '../components/LayoutComponents/Main';
 import ArticlePreview from '../components/ArticlePreview';
 import Pagination from '../components/Pagination';
 // Querys
-import { getLatestArticles, getMostVisitedArticles } from '../Apollo/querys';
+import { getLatestArticles, getMostVisitedArticles } from '../ApolloClient/querys';
 // Types
 import { ArticleType, LayoutProps } from '../types/Types';
 

@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { SERVER_URL } from './ServerURL';
+import { SERVER_URL } from '../const/ServerURL';
 
 export const httpLink = createHttpLink({ uri: SERVER_URL });
 
