@@ -26,19 +26,21 @@ export default function MainArticle(props: Props) {
     return (
         <article className={classes.article}>
             <h1 className={classes.title}>{title}</h1>
-            <ArticleMeta
-                categoryName={categoryName}
-                categoryPath={categoryPath}
-                authorName={authorName}
-            />
+            {categoryName !== "" && categoryPath !== "" && authorName !== "" &&
+                <ArticleMeta
+                    categoryName={categoryName}
+                    categoryPath={categoryPath}
+                    authorName={authorName}
+                />
+            }
             <Image src={image} height="535" width="800" />
             {articleComponents.map(component => {
                 switch (component.componentName) {
                     case "ArticleQuote": return <ArticleQuote key={component.id} text={component.text} />
-                    case "ArticleSubtitle": return <ArticleSubtitle key={component.id} text={component.text} textAlign={component.textAlign === 'L' ? 'left' : 'center'} fontWeight={component.fontWeight} />
+                    case "ArticleSubtitle": return <ArticleSubtitle key={component.id} text={component.text} textAlign={component.textAlign === 'L' ? 'left' : 'center'} fontWeight={component.fontWeight} lineHeight={component.fontWeight === "400" ? '45px' : '32.5px'} />
                     case "ArticleText": return <ArticleText key={component.id} text={component.text} />
                     case "ArticleTitle": return <ArticleTitle key={component.id} text={component.text} />
-                    case "Image": return <Image key={component.id} src={component.image} height="533" width="800"/>
+                    case "Image": return <Image key={component.id} src={component.image} height="535" width="800" />
                 }
             })}
         </article>

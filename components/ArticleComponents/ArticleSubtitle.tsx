@@ -3,14 +3,16 @@ import classes from '../../styles/components/ArticleComponents/ArticleSubtitle.m
 
 type Props = {
     text: string;
-    textAlign: 'left' | 'center',
-    fontWeight: 400 | 600;
+    textAlign: 'left' | 'center'
+    fontWeight: "600" | "400"
+    lineHeight: "32.5px" | "45px"
 }
 
-export default function ArticleSubtitle({ text, textAlign, fontWeight }: Props) {
+export default function ArticleSubtitle({ text, textAlign, fontWeight, lineHeight }: Props) {
     return (
-        <h4 className={classes.subtitle}
-            style={{ textAlign, fontWeight }}
+        <h4
+            className={classes.subtitle}
+            style={{ textAlign, fontWeight, lineHeight }}
         >
             {text}
         </h4>

@@ -31,8 +31,8 @@ export type ArticleComponentType = {
     order: number
     image: string
     text: string
-    fontWeight: 400 | 600
-    textAlign: string
+    fontWeight: "400" | "600"
+    textAlign: "L" | "C"
 };
 
 export type MetadataType = {

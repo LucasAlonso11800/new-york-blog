@@ -1,6 +1,9 @@
+// Helpers
 import executeQuery from "../../dbConfig";
+// Const
 import { ARTICLE_LIMIT_PER_PAGE, CATEGORY_ARTICLE_LIMIT, FAVORITE_ARTICLE_LIMIT, RELATED_ARTICLE_LIMIT } from "../../const/Limits";
-import { ArticleType, CountType } from "../../types/Types";
+// Types
+import { ArticleType } from "../../types/Types";
 
 type Args = {
     id: number | string
@@ -29,6 +32,7 @@ export const getAllArticles = async () => {
             ON categories.category_id = article_category_id
         JOIN users
             ON users.user_id = article_user_id
+        WHERE category_path != "about"
     `;
     const articles: ArticleType[] = await executeQuery(query, []);
     return articles;
@@ -87,6 +91,7 @@ export const getLatestArticles = async (_: any, args: Args) => {
             LEFT JOIN article_components
                 ON article_components.article_component_article_id = article_id 
                 AND article_components.article_component_order = 2
+            WHERE category_path != "about"
             ORDER BY article_created_at DESC, article_id DESC
         `;
 
@@ -113,6 +118,7 @@ export const getMostVisitedArticles = async () => {
             ON categories.category_id = article_category_id
         JOIN users
             ON users.user_id = article_user_id
+        WHERE category_path != "about"
         ORDER BY article_visits DESC
         LIMIT ? 
     `;
@@ -206,7 +212,7 @@ export const getSearchedArticles = async (_: any, args: Args) => {
             ON categories.category_id = article_category_id
         JOIN users
             ON users.user_id = article_user_id
-        WHERE article_title LIKE CONCAT('%', ?, '%')
+        WHERE article_title LIKE CONCAT('%', ?, '%') AND  category_path != "about"
         ORDER BY article_created_at DESC, article_id DESC
         LIMIT ? 
     `;
