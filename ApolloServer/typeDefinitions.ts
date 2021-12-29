@@ -13,6 +13,7 @@ export const typeDefs = gql`
         # Counts
         getTotalArticleCount: Int,
         getCategoryArticleCount(categoryId: ID!): Int
+        getSearchedArticleCount(search: String!): Int
         # Categories
         getCategories: [Category]
         # ArticleComponents

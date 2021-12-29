@@ -17,16 +17,6 @@ export async function getAllArticles() {
     });
 };
 
-export async function getTotalArticleCount() {
-    return await client.query({
-        query: gql`
-            query Query {
-                getTotalArticleCount
-            } 
-        `
-    });
-};
-
 export async function getSingleArticle(slug: string) {
     return await client.query({
         query: gql`
@@ -103,6 +93,41 @@ export async function getCategoryArticles(categoryId: number, index: number){
     });
 };
 
+export async function getSearchedArticles(search: string, index: number) {
+    return await client.query({
+        query: gql`
+            query Query ($search: String!, $index: Int!){
+                getSearchedArticles(search: $search, index: $index){
+                    id
+                    title
+                    categoryName
+                    categoryPath
+                    image
+                    authorName
+                    slug
+                    description
+                }
+            }
+        `,
+        variables: {
+            search,
+            index
+        }
+    });
+};
+
+// Count
+
+export async function getTotalArticleCount() {
+    return await client.query({
+        query: gql`
+            query Query {
+                getTotalArticleCount
+            } 
+        `
+    });
+};
+
 export async function getCategoryArticleCount(categoryId: number){
     return await client.query({
         query: gql`
@@ -112,6 +137,19 @@ export async function getCategoryArticleCount(categoryId: number){
         `,
         variables: {
             categoryId
+        }
+    });
+};
+
+export async function getSearchedArticleCount(search: string) {
+    return await client.query({
+        query: gql`
+            query Query ($search: String!){
+                getSearchedArticleCount(search: $search)
+            } 
+        `,
+        variables: {
+            search
         }
     });
 };

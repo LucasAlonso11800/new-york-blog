@@ -95,7 +95,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                     ...metadata
                 },
                 index: parseInt(params.index),
-                articleCount
+                articleCount: articleCount.data.getTotalArticleCount
             }
         }
     }

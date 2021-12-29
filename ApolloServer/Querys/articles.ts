@@ -206,17 +206,19 @@ export const getSearchedArticles = async (_: any, args: Args) => {
             article_created_at AS createdAt,
             article_user_id AS authorId,
             user_username AS authorName,
-            article_slug AS slug
+            article_slug AS slug,
+            article_component_text AS description
         FROM articles
         JOIN categories
             ON categories.category_id = article_category_id
         JOIN users
             ON users.user_id = article_user_id
+        LEFT JOIN article_components
+            ON article_components.article_component_article_id = article_id 
+            AND article_components.article_component_order = 2
         WHERE article_title LIKE CONCAT('%', ?, '%') AND  category_path != "about"
         ORDER BY article_created_at DESC, article_id DESC
-        LIMIT ? 
     `;
-
     const values: [string] = [search];
     const articles: ArticleType[] = await executeQuery(query, values);
 

@@ -10,7 +10,8 @@ export {
 
 export {
     getTotalArticleCount,
-    getCategoryArticleCount
+    getCategoryArticleCount,
+    getSearchedArticleCount
 } from './count';
 
 export {

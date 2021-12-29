@@ -1,0 +1,10 @@
+.title {
+    font-family: var(--raleway);
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-bottom: 87px;
+    padding: 16px 20px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 400;
+}

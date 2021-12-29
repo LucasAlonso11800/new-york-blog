@@ -21,8 +21,10 @@ export default function Header({ categories, image }: Props) {
 
     useEffect(() => setWidth(window.innerWidth), []);
 
-    // Make search work
-    // Get image from backend
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        window.location.assign(`/search/${query}`);
+    };
 
     return (
         <header className={classes.header}>
@@ -58,7 +60,7 @@ export default function Header({ categories, image }: Props) {
                         </li>
                     }
                 </ul>
-                <form>
+                <form onSubmit={(e) => handleSubmit(e)}>
                     <input
                         className={classes.input}
                         type="search"

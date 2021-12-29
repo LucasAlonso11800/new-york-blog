@@ -30,7 +30,7 @@ export default function ArticlePreview(props: Props) {
             <div className={classes.content}>
                 <h2 className={classes.title}><Link href={`/articles/${slug}`}>{title}</Link></h2>
                 <ArticleMeta categoryName={categoryName} categoryPath={categoryPath} authorName={authorName}/>
-                <p className={classes.body}>{description ? `${description.substring(0, 320)}...` : ''}</p>
+                <p className={classes.body}>{description ? `${description.substring(0, 320)}[...]` : ''}</p>
                 <ReadMoreButton link={`/articles/${slug}`}/>
             </div>
         </article>

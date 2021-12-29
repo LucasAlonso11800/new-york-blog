@@ -9,13 +9,14 @@ import { ARTICLE_LIMIT_PER_PAGE, CATEGORY_ARTICLE_LIMIT } from '../const/Limits'
 type Props = {
     index: number,
     category?: string,
-    articleCount?: number
+    articleCount?: number,
+    search?: string
 };
 
-export default function Pagination({ index, category, articleCount }: Props) {
-    const forwardLink: string = category ? `/categories/${category}/page/${index + 1}` : `/page/${index + 1}`;
-    const previousLink: string = category ? index === 2 ? `/categories/${category}` : `/categories/${category}/page/${index - 1}` : index === 2 ? '/' : `/page/${index + 1}`;
-    const limit = category ? CATEGORY_ARTICLE_LIMIT : ARTICLE_LIMIT_PER_PAGE;
+export default function Pagination({ index, category, articleCount, search }: Props) {
+    const forwardLink: string = search ? `/search/${search}/page/${index + 1}` : category ? `/categories/${category}/page/${index + 1}` : `/page/${index + 1}`;
+    const previousLink: string = search ? index === 2 ? `/search/${search}` : `/search/${search}/page/${index - 1}` : category ? index === 2 ? `/categories/${category}` : `/categories/${category}/page/${index - 1}` : index === 2 ? '/' : `/page/${index + 1}`;
+    const limit: number = category ? CATEGORY_ARTICLE_LIMIT : ARTICLE_LIMIT_PER_PAGE;
 
     return (
         <div className={classes.pagination}>
