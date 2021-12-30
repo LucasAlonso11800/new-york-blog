@@ -53,3 +53,10 @@ export type LayoutProps = {
     mostVisitedArticlesTitle: string
     headIcon: string
 };
+
+export type CommentType = {
+    id: string
+    author: string
+    createdAt: string
+    body: string
+}

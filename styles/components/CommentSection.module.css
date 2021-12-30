@@ -1,0 +1,14 @@
+.container {
+    margin-bottom: 40px;
+}
+
+.title {
+    padding-bottom: 7px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: var(--montserrat);
+    font-weight: 400;
+    letter-spacing: 1px;
+}

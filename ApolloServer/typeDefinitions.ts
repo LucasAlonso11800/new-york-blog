@@ -20,6 +20,9 @@ export const typeDefs = gql`
         getArticleComponents(articleId: ID!): [ArticleComponent]
         # Metadata
         getMetadata: [Metadata] 
+        # Comments
+        getArticleComments(articleId: ID!): [Comment]
+        getCommentReplies(commentId: ID!): [Comment]
     }
 
     type Mutation {
@@ -48,21 +51,28 @@ export const typeDefs = gql`
     }
 
     type ArticleComponent {
-        id: ID,
-        componentId: ID,
-        componentName: String,
-        articleId: ID,
-	    order: Int,
-	    image: String,
-	    text: String,
-	    fontWeight: String,
+        id: ID
+        componentId: ID
+        componentName: String
+        articleId: ID
+	    order: Int
+	    image: String
+	    text: String
+	    fontWeight: String
 	    textAlign: String
     }
 
     type Metadata {
-        id: ID,
-        name: String,
+        id: ID
+        name: String
         description: String
         value: String
+    }
+
+    type Comment {
+        id: ID
+        author: String
+        createdAt: String
+        body: String
     }
 `;

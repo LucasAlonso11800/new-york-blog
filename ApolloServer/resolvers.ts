@@ -1,4 +1,4 @@
-import { getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles, getCategories, getTotalArticleCount, getCategoryArticleCount, getSearchedArticleCount, getAllArticles, getArticleComponents, getMetadata } from "./Querys";
+import { getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles, getCategories, getTotalArticleCount, getCategoryArticleCount, getSearchedArticleCount, getAllArticles, getArticleComponents, getMetadata, getArticleComments, getCommentReplies } from "./Querys";
 import { hi } from "./Mutations/hi";
 
 export const resolvers = {
@@ -20,7 +20,10 @@ export const resolvers = {
         // Article Components
         getArticleComponents,
         // Metadata
-        getMetadata
+        getMetadata,
+        // Comments
+        getArticleComments,
+        getCommentReplies
     },
     Mutation: {
         hi,

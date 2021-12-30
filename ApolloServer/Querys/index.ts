@@ -25,3 +25,8 @@ export {
 export {
     getMetadata
 } from './metadata';
+
+export {
+    getArticleComments,
+    getCommentReplies
+} from './comments'

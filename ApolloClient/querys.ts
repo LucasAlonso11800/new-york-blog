@@ -234,3 +234,34 @@ export async function getMetadata(){
         mostVisitedArticlesTitle: metadata.data.getMetadata.find((data: MetadataType) => data.name === 'most_visited_articles_title').value
     }
 };
+
+// Comments
+
+export async function getArticleComments(articleId: number){
+    return await client.query({
+        query: gql`
+            query Query ($articleId: ID!) {
+                getArticleComments(articleId: $articleId){
+                    id
+                    author
+                    createdAt
+                    body
+                } 
+            }
+        `,
+        variables: {
+            articleId
+        }
+    })
+};
+
+export const GET_COMMENT_REPLIES = gql`
+    query Query ($commentId: ID!) {
+        getCommentReplies(commentId: $commentId){
+            id
+            author
+            createdAt
+            body
+        }
+    }
+`;
