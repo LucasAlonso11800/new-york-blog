@@ -4,19 +4,21 @@ import Layout from '../../components/LayoutComponents/Layout';
 import Main from '../../components/LayoutComponents/Main';
 import MainArticle from '../../components/MainArticle';
 // Querys
-import { getAllArticles, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getSingleArticle } from '../../ApolloClient/querys';
+import { getAllArticles, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getRelatedArticles, getSingleArticle } from '../../ApolloClient/querys';
 // Const
 import { DEFAULT_METADATA } from '../../const/defaultMetadata';
 // Types
 import { ArticleComponentType, ArticleType, LayoutProps } from '../../types/Types';
+import RelatedArticles from '../../components/RelatedArticles';
 
 type Props = {
     mainArticle: ArticleType
     layoutProps: LayoutProps
     articleComponents: ArticleComponentType[]
+    relatedArticles: ArticleType[]
 };
 
-export default function ArticlePage({ mainArticle, layoutProps, articleComponents }: Props) {
+export default function ArticlePage({ mainArticle, layoutProps, articleComponents, relatedArticles }: Props) {
     return (
         <Layout {...layoutProps}>
             <Main>
@@ -28,6 +30,7 @@ export default function ArticlePage({ mainArticle, layoutProps, articleComponent
                     authorName={mainArticle.authorName}
                     articleComponents={articleComponents}
                 />
+                <RelatedArticles articles={relatedArticles}/>
             </Main>
         </Layout>
     )
@@ -59,6 +62,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
     try {
         const article = await getSingleArticle(params.slug);
         const asideArticles = await getMostVisitedArticles();
+        const relatedArticles = await getRelatedArticles(article.data.getSingleArticle.categoryId);
         const components = await getArticleComponents(article.data.getSingleArticle.id);
         const categories = await getCategories();
         const metadata = await getMetadata();
@@ -66,6 +70,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         return {
             props: {
                 mainArticle: article.data.getSingleArticle,
+                relatedArticles: relatedArticles.data.getRelatedArticles,
                 layoutProps: {
                     asideArticles: asideArticles.data.getMostVisitedArticles,
                     title: article.data.getSingleArticle.title + " - ",
@@ -81,6 +86,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         return {
             props: {
                 mainArticle: {},
+                relatedArticles: [],
                 layoutProps: {
                     asideArticles: [],
                     title: "",

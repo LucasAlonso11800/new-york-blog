@@ -24,6 +24,7 @@ export async function getSingleArticle(slug: string) {
                 getSingleArticle(slug: $slug){
                     id
                     title
+                    categoryId
                     categoryName
                     categoryPath
                     image
@@ -112,6 +113,24 @@ export async function getSearchedArticles(search: string, index: number) {
         variables: {
             search,
             index
+        }
+    });
+};
+
+export async function getRelatedArticles(categoryId: number){
+    return await client.query({
+        query: gql`
+            query Query ($categoryId: ID!){
+                getRelatedArticles(categoryId: $categoryId){
+                    id
+                    title
+                    image
+                    slug
+                }
+            }
+        `,
+        variables: {
+            categoryId,
         }
     });
 };
