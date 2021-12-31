@@ -135,6 +135,23 @@ export async function getRelatedArticles(categoryId: number){
     });
 };
 
+export async function getAdjacentArticles(id: number){
+    return await client.query({
+        query: gql`
+            query Query ($id: ID!){
+                getAdjacentArticles(id: $id){
+                    id
+                    slug
+                    title
+                }
+            }
+        `,
+        variables: {
+            id
+        }
+    });
+};
+
 // Count
 
 export async function getTotalArticleCount() {

@@ -18,7 +18,7 @@ export default function RelatedArticles({ articles }: Props) {
             <div className={classes.articles}>
                 {articles.map(article => {
                     return (
-                        <div className={classes.article}>
+                        <div key={article.id} className={classes.article}>
                             <Link href={`/articles/${article.slug}`}>
                                 <Image src={article.image} height="190" width="190" />
                             </Link>

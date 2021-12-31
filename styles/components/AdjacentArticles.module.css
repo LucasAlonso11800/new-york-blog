@@ -1,0 +1,35 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 112px;
+    margin-bottom: 40px;
+}
+
+.link {
+    text-transform: uppercase;
+    font-family: var(--montserrat);
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+    display: flex;
+    align-items: center;
+}
+
+.link:hover {
+    color: var(--light-brown);
+}
+
+.title {
+    padding: 0 8px;
+}
+
+.icons {
+    display: flex;
+    align-items: center;
+}
+
+.icons svg {
+    margin: 0 -4px;
+}

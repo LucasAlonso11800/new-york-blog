@@ -224,3 +224,42 @@ export const getSearchedArticles = async (_: any, args: Args) => {
 
     return articles.slice((index - 1) * ARTICLE_LIMIT_PER_PAGE, (index - 1) * ARTICLE_LIMIT_PER_PAGE + 7);
 };
+
+export const getAdjacentArticles = async (_: any, args: Args) => {
+    const { id } = args;
+    const query: string = `
+        SELECT         
+            article_id AS id,
+            article_title AS title,
+            article_visits AS visits,
+            article_category_id AS categoryId,
+            category_name AS categoryName,
+            category_path AS categoryPath,
+            article_main_image AS image,
+            article_created_at AS createdAt,
+            article_user_id AS authorId,
+            user_username AS authorName,
+            article_slug AS slug
+        FROM articles
+        JOIN categories
+            ON categories.category_id = article_category_id
+        JOIN users
+            ON users.user_id = article_user_id
+        WHERE category_name != 'About'
+        ORDER BY article_id
+    `;
+
+    const articles: ArticleType[] = await executeQuery(query, []);
+    const mainArticle = articles.find(article => article.id == id) as ArticleType;
+    const index = articles.indexOf(mainArticle);
+    
+    if(index === articles.length - 1){
+        return [articles[index - 1], articles[0]];
+    };
+
+    if(index === 0){
+        return [articles[articles.length - 1], articles[index + 1]];
+    };
+
+    return [articles[index - 1], articles[index + 1]];
+};

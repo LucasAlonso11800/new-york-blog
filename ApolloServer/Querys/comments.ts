@@ -16,6 +16,7 @@ export const getArticleComments = async (_: any, args: Args) => {
             comment_article_id AS articleId
         FROM comments
         WHERE comment_is_response = 'N'
+            AND comment_article_id = ?
     `;
 
     const values: [number] = [typeof articleId === 'number' ? articleId : parseInt(articleId)]
