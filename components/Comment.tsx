@@ -1,5 +1,6 @@
+import React, { useState } from 'react';
+// Querys
 import { useQuery } from '@apollo/client';
-import React, { useEffect, useState } from 'react';
 import { GET_COMMENT_REPLIES } from '../ApolloClient/querys';
 // Styles
 import classes from '../styles/components/Comment.module.css';

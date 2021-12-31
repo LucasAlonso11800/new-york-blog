@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // Components
 import Layout from '../../components/LayoutComponents/Layout';
 import Main from '../../components/LayoutComponents/Main';
@@ -8,6 +8,9 @@ import CommentSection from '../../components/CommentSection';
 import AdjacentArticles from '../../components/AdjacentArticles';
 // Querys
 import { getAdjacentArticles, getAllArticles, getArticleComments, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getRelatedArticles, getSingleArticle } from '../../ApolloClient/querys';
+// Mutations
+import { useMutation } from '@apollo/client';
+import { ADD_VISIT } from '../../ApolloClient/mutations';
 // Const
 import { DEFAULT_METADATA } from '../../const/defaultMetadata';
 // Types
@@ -24,6 +27,16 @@ type Props = {
 
 export default function ArticlePage(props: Props) {
     const { mainArticle, layoutProps, articleComponents, relatedArticles, adjacentArticles, comments } = props;
+
+    const [addVisit, { }] = useMutation(ADD_VISIT);
+
+    useEffect(() => {
+        addVisit({
+            variables: {
+                articleId: mainArticle.id
+            }
+        });
+    }, [mainArticle.id]);
 
     return (
         <Layout {...layoutProps}>

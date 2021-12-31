@@ -27,7 +27,7 @@ export const typeDefs = gql`
     }
 
     type Mutation {
-        hi: String
+        addVisit(articleId: ID!): String
     }
 
     type Article {
