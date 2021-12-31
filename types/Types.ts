@@ -1,5 +1,5 @@
 export type CategoryType = {
-    id: number
+    id: string
     name: string
     path: string
 };
@@ -9,25 +9,25 @@ export type CountType = {
 };
 
 export type ArticleType = {
-    id: number
+    id: string
     title: string
     visits: number
-    categoryId: number
+    categoryId: string
     categoryName: string
     categoryPath: string
     image: string
     createdAt: string
-    authorId: number
+    authorId: string
     authorName: string
     slug: string
     description: string
 };
 
 export type ArticleComponentType = {
-    id: number
-    componentId: number | string
+    id: string
+    componentId: string
     componentName: string
-    articleId: number | string
+    articleId: string
     order: number
     image: string
     text: string

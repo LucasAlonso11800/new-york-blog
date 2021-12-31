@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 // Components
 import Layout from '../../components/LayoutComponents/Layout';
 import Main from '../../components/LayoutComponents/Main';
@@ -6,15 +6,17 @@ import MainArticle from '../../components/MainArticle';
 import RelatedArticles from '../../components/RelatedArticles';
 import CommentSection from '../../components/CommentSection';
 import AdjacentArticles from '../../components/AdjacentArticles';
+import CommentForm from '../../components/CommentForm';
 // Querys
-import { getAdjacentArticles, getAllArticles, getArticleComments, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getRelatedArticles, getSingleArticle } from '../../ApolloClient/querys';
+import { getAdjacentArticles, getAllArticles, getArticleComments, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getRelatedArticles, getSingleArticle, GET_ARTICLE_COMMENTS } from '../../ApolloClient/querys';
 // Mutations
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { ADD_VISIT } from '../../ApolloClient/mutations';
 // Const
 import { DEFAULT_METADATA } from '../../const/defaultMetadata';
 // Types
 import { ArticleComponentType, ArticleType, CommentType, LayoutProps } from '../../types/Types';
+import LoadingIcon from '../../components/LoadingIcon';
 
 type Props = {
     mainArticle: ArticleType
@@ -26,9 +28,14 @@ type Props = {
 };
 
 export default function ArticlePage(props: Props) {
-    const { mainArticle, layoutProps, articleComponents, relatedArticles, adjacentArticles, comments } = props;
+    const { mainArticle, layoutProps, articleComponents, relatedArticles, adjacentArticles } = props;
+    
+    const [comments, setComments] = useState<CommentType[]>(props.comments);
 
-    const [addVisit, { }] = useMutation(ADD_VISIT);
+    const [addVisit] = useMutation(ADD_VISIT);
+    const [getComments, { loading }] = useLazyQuery(GET_ARTICLE_COMMENTS, {
+        onCompleted: (result) => setComments(result.getArticleComments)
+    });
 
     useEffect(() => {
         addVisit({
@@ -51,7 +58,9 @@ export default function ArticlePage(props: Props) {
                 />
                 <AdjacentArticles articles={adjacentArticles} />
                 <RelatedArticles articles={relatedArticles} />
-                {comments && comments.length > 0 ? <CommentSection comments={comments} /> : <></>}
+                {loading ? <LoadingIcon /> : <></>}
+                {!loading && comments && comments.length > 0 ? <CommentSection comments={comments} articleId={mainArticle.id} /> : <></>}
+                <CommentForm articleId={mainArticle.id} author={null} isResponse='N' isResponseToCommentId={null} setFormOpen={null} getComments={getComments}/>
             </Main>
         </Layout>
     )
@@ -86,7 +95,6 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         const adjacentArticles = await getAdjacentArticles(article.data.getSingleArticle.id);
         const components = await getArticleComponents(article.data.getSingleArticle.id);
         const comments = await getArticleComments(article.data.getSingleArticle.id);
-
         const asideArticles = await getMostVisitedArticles();
         const categories = await getCategories();
         const metadata = await getMetadata();

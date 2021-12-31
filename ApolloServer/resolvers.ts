@@ -1,7 +1,7 @@
 // Querys
 import { getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles, getCategories, getTotalArticleCount, getCategoryArticleCount, getSearchedArticleCount, getAllArticles, getArticleComponents, getMetadata, getArticleComments, getCommentReplies, getAdjacentArticles } from "./Querys";
 // Mutations
-import { addVisit } from "./Mutations";
+import { addComment, addVisit } from "./Mutations";
 
 export const resolvers = {
     Query: {
@@ -29,6 +29,7 @@ export const resolvers = {
         getCommentReplies
     },
     Mutation: {
-        addVisit
+        addVisit,
+        addComment
     }
 };

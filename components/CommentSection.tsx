@@ -8,9 +8,10 @@ import { CommentType } from '../types/Types';
 
 type Props = {
     comments: CommentType[]
+    articleId: string
 };
 
-export default function CommentSection({ comments }: Props) {
+export default function CommentSection({ comments, articleId }: Props) {
     return (
         <section className={classes.container}>
             <h3 className={classes.title}>Comments</h3>
@@ -18,7 +19,8 @@ export default function CommentSection({ comments }: Props) {
                 {comments.map(comment => (
                     <Comment
                         key={comment.id}
-                        commentId={comment.id} 
+                        articleId={articleId}
+                        commentId={comment.id}
                         author={comment.author}
                         createdAt={comment.createdAt}
                         body={comment.body}

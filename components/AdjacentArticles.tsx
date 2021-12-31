@@ -18,17 +18,17 @@ export default function AdjacentArticles({ articles }: Props) {
                 <Link key={article.id} href={`/articles/${article.slug}`}>
                     <p className={classes.link}>
                         {index === 0 &&
-                            <div className={classes.icons}>
+                            <span className={classes.icons}>
                                 <Icon icon="grommet-icons:form-previous" color="#000" fontSize={14} />
                                 <Icon icon="grommet-icons:form-previous" color="#000" fontSize={14} />
-                            </div>
+                            </span>
                         }
                         <span className={classes.title}>{article.title}</span>
                         {index === 1 &&
-                            <div className={classes.icons}>
+                            <span className={classes.icons}>
                                 <Icon icon="grommet-icons:form-next" color="#000" fontSize={14} />
                                 <Icon icon="grommet-icons:form-next" color="#000" fontSize={14} />
-                            </div>
+                            </span>
                         }
                     </p>
                 </Link>

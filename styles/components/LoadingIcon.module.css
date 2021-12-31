@@ -1,0 +1,23 @@
+.container {
+    margin: 6em auto;
+    height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon {
+    animation-name: Rotation;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+@keyframes Rotation {
+    0%{
+        transform: rotateZ(0)
+    }
+    100%{
+        transform: rotateZ(359deg)
+    }
+}

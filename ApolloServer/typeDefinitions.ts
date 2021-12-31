@@ -27,7 +27,10 @@ export const typeDefs = gql`
     }
 
     type Mutation {
+        # Articles
         addVisit(articleId: ID!): String
+        # Comments
+        addComment(articleId: ID!, commenter: String!, email: String!, body: String!, isResponse: String!, isResponseToCommentId: ID): Comment
     }
 
     type Article {

@@ -75,7 +75,7 @@ export async function getMostVisitedArticles() {
     });
 };
 
-export async function getCategoryArticles(categoryId: number, index: number){
+export async function getCategoryArticles(categoryId: string, index: number) {
     return await client.query({
         query: gql`
             query Query ($categoryId: ID!, $index: Int!){
@@ -117,7 +117,7 @@ export async function getSearchedArticles(search: string, index: number) {
     });
 };
 
-export async function getRelatedArticles(categoryId: number){
+export async function getRelatedArticles(categoryId: string) {
     return await client.query({
         query: gql`
             query Query ($categoryId: ID!){
@@ -135,7 +135,7 @@ export async function getRelatedArticles(categoryId: number){
     });
 };
 
-export async function getAdjacentArticles(id: number){
+export async function getAdjacentArticles(id: string) {
     return await client.query({
         query: gql`
             query Query ($id: ID!){
@@ -164,7 +164,7 @@ export async function getTotalArticleCount() {
     });
 };
 
-export async function getCategoryArticleCount(categoryId: number){
+export async function getCategoryArticleCount(categoryId: string) {
     return await client.query({
         query: gql`
             query Query ($categoryId: ID!) {
@@ -192,7 +192,7 @@ export async function getSearchedArticleCount(search: string) {
 
 // Categories
 
-export async function getCategories(){
+export async function getCategories() {
     return await client.query({
         query: gql`
             query Query {
@@ -202,13 +202,13 @@ export async function getCategories(){
                     path
                 }
             }
-        ` 
+        `
     });
 };
 
 // Article Components
 
-export async function getArticleComponents(articleId: number){
+export async function getArticleComponents(articleId: string) {
     return await client.query({
         query: gql`
             query Query ($articleId: ID!) {
@@ -231,8 +231,8 @@ export async function getArticleComponents(articleId: number){
 
 // Metadata
 
-export async function getMetadata(){
-    const metadata =  await client.query({
+export async function getMetadata() {
+    const metadata = await client.query({
         query: gql`
             query Query {
                 getMetadata {
@@ -254,18 +254,20 @@ export async function getMetadata(){
 
 // Comments
 
-export async function getArticleComments(articleId: number){
+export const GET_ARTICLE_COMMENTS = gql`
+    query Query ($articleId: ID!) {
+        getArticleComments(articleId: $articleId){
+            id
+            author
+            createdAt
+            body
+        } 
+    }
+`;
+
+export async function getArticleComments(articleId: string) {
     return await client.query({
-        query: gql`
-            query Query ($articleId: ID!) {
-                getArticleComments(articleId: $articleId){
-                    id
-                    author
-                    createdAt
-                    body
-                } 
-            }
-        `,
+        query: GET_ARTICLE_COMMENTS,
         variables: {
             articleId
         }
