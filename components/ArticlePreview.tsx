@@ -23,7 +23,7 @@ export default function ArticlePreview(props: Props) {
 
     const imageDimensions = layout === 'column' ? { width: '850', height: '475' } : { width: '400', height: '400' };
     return (
-        <article className={`${classes.article} ${classes[layout]}`}>
+        <article className={`${classes.article} ${classes[layout]}`} data-testid="articlePreview">
             <Link href={`/articles/${slug}`}>
                 <Image src={image} {...imageDimensions} />
             </Link>

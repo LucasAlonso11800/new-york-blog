@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 // Components
 import Link from 'next/link';
+import Image from 'next/image';
 // Styles
 import classes from '../../styles/components/LayoutComponents/Header.module.css';
 // Types
 import { CategoryType } from '../../types/Types';
-import Image from 'next/image';
 
 type Props = {
     categories: CategoryType[]
@@ -27,7 +27,7 @@ export default function Header({ categories, image }: Props) {
     };
 
     return (
-        <header className={classes.header}>
+        <header className={classes.header} data-testid="header">
             <nav className={classes.nav}>
                 <ul className={classes.list}>
                     {width && width > 765 ?
@@ -60,7 +60,7 @@ export default function Header({ categories, image }: Props) {
                         </li>
                     }
                 </ul>
-                <form onSubmit={(e) => handleSubmit(e)}>
+                <form onSubmit={(e) => handleSubmit(e)} data-testid="searchForm">
                     <input
                         className={classes.input}
                         type="search"

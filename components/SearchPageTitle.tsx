@@ -7,6 +7,6 @@ type Props = {
 
 export default function SearchPageTitle({ search }: Props) {
     return (
-        <h1 className={classes.title}>Search results for: {search}</h1>
+        <h1 className={classes.title} data-testid="searchPageTitle">Search results for: {search}</h1>
     )
 };

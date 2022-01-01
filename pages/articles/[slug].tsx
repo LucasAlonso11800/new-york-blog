@@ -7,6 +7,7 @@ import RelatedArticles from '../../components/RelatedArticles';
 import CommentSection from '../../components/CommentSection';
 import AdjacentArticles from '../../components/AdjacentArticles';
 import CommentForm from '../../components/CommentForm';
+import LoadingIcon from '../../components/LoadingIcon';
 // Querys
 import { getAdjacentArticles, getAllArticles, getArticleComments, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getRelatedArticles, getSingleArticle, GET_ARTICLE_COMMENTS } from '../../ApolloClient/querys';
 // Mutations
@@ -16,7 +17,6 @@ import { ADD_VISIT } from '../../ApolloClient/mutations';
 import { DEFAULT_METADATA } from '../../const/defaultMetadata';
 // Types
 import { ArticleComponentType, ArticleType, CommentType, LayoutProps } from '../../types/Types';
-import LoadingIcon from '../../components/LoadingIcon';
 
 type Props = {
     mainArticle: ArticleType
