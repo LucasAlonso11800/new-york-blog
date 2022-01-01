@@ -13,7 +13,7 @@ type Props = {
 
 export default function CommentSection({ comments, articleId }: Props) {
     return (
-        <section className={classes.container}>
+        <section className={classes.container} data-testid="commentSection">
             <h3 className={classes.title}>Comments</h3>
             <ul className={classes.list}>
                 {comments.map(comment => (

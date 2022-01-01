@@ -7,15 +7,16 @@ import { GET_COMMENT_REPLIES } from '../ApolloClient/querys';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 // Const
-import { EmailRegex } from '../const/EmailRegex';
+import { EMAIL_REGEX } from '../const/EmailRegex';
+import { URL_REGEX } from '../const/URLRegex';
 // Styles
 import classes from '../styles/components/CommentForm.module.css';
 
 const validationSchema = yup.object({
     body: yup.string().max(65535, 'Maximum length 65535 characters').required("The comment can't be empty"),
-    commenter: yup.string().max(40, 'Maximum length 40 characters').required('You have to leave a username'),
-    email: yup.string().max(100, 'Maximum length 100 characters').matches(EmailRegex, 'Provide a valid email').required('Please leave an email'),
-    website: yup.string().max(100, 'Maximum length 100 characters')
+    commenter: yup.string().max(40, 'Maximum length 40 characters').required('Please provide a name'),
+    email: yup.string().max(100, 'Maximum length 100 characters').matches(EMAIL_REGEX, 'Provide a valid email').required('Please provide an email'),
+    website: yup.string().max(100, 'Maximum length 100 characters').matches(URL_REGEX, 'Provide a valid url')
 });
 
 type Props = {
@@ -69,7 +70,7 @@ export default function CommentForm({ articleId, author, isResponse, isResponseT
     });
 
     return (
-        <section className={classes.container}>
+        <section className={classes.container} data-testid="commentForm">
             <h3 className={classes.title}>{author ? `Reply to ${author}` : 'Leave a comment'}</h3>
             <p className={classes.subtitle}>Your email address will not be published.</p>
             <form className={classes.form} onSubmit={formik.handleSubmit}>
@@ -83,6 +84,9 @@ export default function CommentForm({ articleId, author, isResponse, isResponseT
                     onChange={formik.handleChange}
                     name="body"
                 />
+                {formik.touched.body && formik.errors.body &&
+                    <p className={classes.error}>{formik.errors.body}</p>
+                }
                 <label className={classes.label}>Name</label>
                 <input
                     className={classes.input}
@@ -92,6 +96,9 @@ export default function CommentForm({ articleId, author, isResponse, isResponseT
                     onChange={formik.handleChange}
                     name="commenter"
                 />
+                {formik.touched.commenter && formik.errors.commenter &&
+                    <p className={classes.error}>{formik.errors.commenter}</p>
+                }
                 <label className={classes.label}>Email</label>
                 <input
                     className={classes.input}
@@ -101,6 +108,9 @@ export default function CommentForm({ articleId, author, isResponse, isResponseT
                     onChange={formik.handleChange}
                     name="email"
                 />
+                {formik.touched.email && formik.errors.email &&
+                    <p className={classes.error}>{formik.errors.email}</p>
+                }
                 <label className={classes.label}>Website</label>
                 <input
                     className={classes.input}
@@ -110,6 +120,9 @@ export default function CommentForm({ articleId, author, isResponse, isResponseT
                     onChange={formik.handleChange}
                     name="website"
                 />
+                {formik.touched.website && formik.errors.website &&
+                    <p className={classes.error}>{formik.errors.website}</p>
+                }
                 <button type="submit" className={classes.button} disabled={loading}>Post comment</button>
             </form>
         </section>

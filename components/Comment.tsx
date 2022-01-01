@@ -26,7 +26,7 @@ export default function Comment({ articleId, commentId, author, createdAt, body 
 
     return (
         <>
-            <li className={classes.comment}>
+            <li className={classes.comment} data-testid="comment">
                 <div className={classes.commentHeader}>
                     <p className={classes.title}>{author} SAYS:</p>
                     <p className={classes.meta}>{createdAt}</p>
@@ -40,7 +40,7 @@ export default function Comment({ articleId, commentId, author, createdAt, body 
             </li>
             {formOpen && <CommentForm articleId={articleId} author={author} isResponse="Y" isResponseToCommentId={commentId} setFormOpen={setFormOpen} getComments={null}/>}
             {!loading && data.getCommentReplies && data.getCommentReplies.length > 0 &&
-                <ul className={classes.replies}>
+                <ul className={classes.replies} data-testid="replies">
                     {data.getCommentReplies.map((reply: CommentType) => (
                         <Comment
                             key={reply.id}

@@ -17,11 +17,11 @@ export const getArticleComments = async (_: any, args: Args) => {
         FROM comments
         WHERE comment_is_response = 'N'
             AND comment_article_id = ?
+        ORDER BY comment_created_at DESC
     `;
 
     const values: [number] = [typeof articleId === 'number' ? articleId : parseInt(articleId)]
     const comments = await executeQuery(query, values);
-
     return comments;
 };
 
@@ -37,6 +37,7 @@ export const getCommentReplies = async (_: any, args: Args) => {
             comment_article_id AS articleId
         FROM comments
         WHERE comment_is_response = 'Y' AND comment_is_response_to_comment_id = ?
+        ORDER BY comment_created_at DESC
     `;
 
     const values: [number] = [typeof commentId === 'number' ? commentId : parseInt(commentId)]
