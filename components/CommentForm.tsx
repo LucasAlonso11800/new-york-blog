@@ -70,7 +70,7 @@ export default function CommentForm({ articleId, author, isResponse, isResponseT
     });
 
     return (
-        <section className={classes.container} data-testid="commentForm">
+        <section className={classes.container} data-testid="commentForm" id="commentForm">
             <h3 className={classes.title}>{author ? `Reply to ${author}` : 'Leave a comment'}</h3>
             <p className={classes.subtitle}>Your email address will not be published.</p>
             <form className={classes.form} onSubmit={formik.handleSubmit}>

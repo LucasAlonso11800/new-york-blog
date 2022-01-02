@@ -8,6 +8,8 @@ import ArticleTitle from './ArticleComponents/ArticleTitle';
 import ArticleText from './ArticleComponents/ArticleText';
 import ArticleSubtitle from './ArticleComponents/ArticleSubtitle';
 import ArticleQuote from './ArticleComponents/ArticleQuote';
+// Utils
+import { formatDate } from '../utils/formatDate';
 // Types
 import { ArticleComponentType } from '../types/Types';
 
@@ -18,10 +20,21 @@ type Props = {
     image: string
     authorName: string
     articleComponents: ArticleComponentType[]
+    createdAt: string
+    commentCount: number
 }
 
 export default function MainArticle(props: Props) {
-    const { title, categoryName, categoryPath, image, authorName, articleComponents } = props;
+    const { title, categoryName, categoryPath, image, authorName, articleComponents, createdAt, commentCount } = props;
+
+    const handleClick = (): void => {
+        const commentSection = document.querySelector('#commentSection');
+        const commentForm = document.querySelector('#commentForm');
+        const options: ScrollIntoViewOptions = { inline: 'start', block: 'start', behavior: 'smooth' };
+
+        if(commentSection) return commentSection.scrollIntoView(options);
+        return commentForm?.scrollIntoView(options);
+    };
 
     return (
         <article className={classes.article}>
@@ -43,6 +56,8 @@ export default function MainArticle(props: Props) {
                     case "Image": return <Image key={component.id} src={component.image} height="535" width="800" />
                 }
             })}
+            <p className={classes.createdAt}>Posted on {formatDate(createdAt)}</p>
+            <p className={classes.commentCount} onClick={() => handleClick()}>{commentCount} {commentCount === 1 ? 'Comment' : 'Comments'}</p>
         </article>
     )
 };

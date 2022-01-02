@@ -29,6 +29,7 @@ export async function getSingleArticle(slug: string) {
                     categoryPath
                     image
                     authorName
+                    createdAt
                 }
             }
         `,

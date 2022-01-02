@@ -1,0 +1,28 @@
+.section {
+    margin: 40px 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.button {
+    margin: 0 2px;
+    background-color: #D9ECF6;
+    border: 1px solid #D9ECF6;
+    box-shadow: none;
+    color: #000;
+    cursor: pointer;
+    padding: 16px 20px;
+    width: auto;
+}
+
+.link {
+    font-family: var(--montserrat);
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}

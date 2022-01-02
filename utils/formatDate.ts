@@ -1,0 +1,1 @@
+export const formatDate = (date: string): string => `${date.substring(8)}/${date.substring(5, 7)}/${date.substring(0, 4)}`;

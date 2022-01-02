@@ -4,6 +4,8 @@ import CommentForm from './CommentForm';
 // Querys
 import { useQuery } from '@apollo/client';
 import { GET_COMMENT_REPLIES } from '../ApolloClient/querys';
+// Utils
+import { formatDate } from '../utils/formatDate';
 // Styles
 import classes from '../styles/components/Comment.module.css';
 // Types
@@ -29,7 +31,7 @@ export default function Comment({ articleId, commentId, author, createdAt, body 
             <li className={classes.comment} data-testid="comment">
                 <div className={classes.commentHeader}>
                     <p className={classes.title}>{author} SAYS:</p>
-                    <p className={classes.meta}>{createdAt}</p>
+                    <p className={classes.meta}>{formatDate(createdAt)}</p>
                 </div>
                 <div className={classes.commentContent}>
                     <p>{body}</p>

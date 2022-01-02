@@ -8,6 +8,7 @@ import CommentSection from '../../components/CommentSection';
 import AdjacentArticles from '../../components/AdjacentArticles';
 import CommentForm from '../../components/CommentForm';
 import LoadingIcon from '../../components/LoadingIcon';
+import ExternalLinksSection from '../../components/ExternalLinksSection';
 // Querys
 import { getAdjacentArticles, getAllArticles, getArticleComments, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getRelatedArticles, getSingleArticle, GET_ARTICLE_COMMENTS } from '../../ApolloClient/querys';
 // Mutations
@@ -29,8 +30,7 @@ type Props = {
 
 export default function ArticlePage(props: Props) {
     const { mainArticle, layoutProps, articleComponents, relatedArticles, adjacentArticles } = props;
-    
-    const [comments, setComments] = useState<CommentType[]>(props.comments);
+    const [comments, setComments] = useState<CommentType[]>();
 
     const [addVisit] = useMutation(ADD_VISIT);
     const [getComments, { loading }] = useLazyQuery(GET_ARTICLE_COMMENTS, {
@@ -43,6 +43,7 @@ export default function ArticlePage(props: Props) {
                 articleId: mainArticle.id
             }
         });
+        setComments(props.comments);
     }, [mainArticle.id]);
 
     return (
@@ -55,7 +56,10 @@ export default function ArticlePage(props: Props) {
                     image={mainArticle.image}
                     authorName={mainArticle.authorName}
                     articleComponents={articleComponents}
+                    createdAt={mainArticle.createdAt}
+                    commentCount={comments ? comments.length : 0}
                 />
+                <ExternalLinksSection />
                 <AdjacentArticles articles={adjacentArticles} />
                 <RelatedArticles articles={relatedArticles} />
                 {loading ? <LoadingIcon /> : <></>}

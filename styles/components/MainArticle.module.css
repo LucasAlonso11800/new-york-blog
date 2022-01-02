@@ -7,7 +7,7 @@
     max-width: 800px!important;
     margin: auto!important;
     margin-bottom: 24px!important;
-    max-height: 533px!important;
+    max-height: 535px!important;
 }
 
 .title {
@@ -21,4 +21,35 @@
     margin-bottom: 10px;
     font-weight: 400;
     width: 100%;
+}
+
+.createdAt {
+    margin-top: 24px;
+    margin-bottom: 26px;
+    border-top: 1px solid var(--light-blue);
+    font-family: var(--montserrat);
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    width: max-content;
+}
+
+.commentCount {
+    border-top: 3px solid #f9f9f9;
+    font-family: var(--montserrat);
+    font-size: 9px;
+    line-height: 18px;
+    padding: 5px 0;
+    margin: 10px 0 34px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: all .2s ease-in-out;
+    align-self: center;
+    width: max-content;
+    cursor: pointer;
+}
+
+.commentCount:hover {
+    color: var(--light-brown);
 }
