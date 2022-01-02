@@ -59,4 +59,17 @@ export type CommentType = {
     author: string
     createdAt: string
     body: string
-}
+};
+
+type OkPacket = {
+    fieldCount: number
+    affectedRows: number
+    insertId: number
+    serverStatus: number
+    warningCount: number
+    message: string,
+    protocol41: boolean,
+    changedRows: number
+};
+
+export type SPResponse<Type> = [Type[], OkPacket];

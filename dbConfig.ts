@@ -1,4 +1,7 @@
 import mysql from 'serverless-mysql';
+// Types
+import { CallSPParams } from './types/CallSPParams';
+import { SPResponse } from './types/Types';
 
 const db = mysql({
     config: {
@@ -15,7 +18,27 @@ export default async function executeQuery(query: string, values?: any[]): Promi
         const results = await db.query(query, values) as any[];
         await db.end();
         return results;
-    } 
+    }
+    catch (err: any) {
+        throw new Error(err)
+    }
+};
+
+export async function callSP<Type>(params: CallSPParams): Promise<Type[]> {
+    const { procedure, values } = params;
+
+    const formatedValues = values.map((value) => {
+        if (typeof value === 'string') return `"${value}"`;
+        return value;
+    });
+
+    const query: string = `CALL ${process.env.MYSQL_DATABASE}.${procedure}(${formatedValues.join(',')})`;
+
+    try {
+        const results = await db.query(query, values) as SPResponse<Type>;
+        await db.end();
+        return results[0];
+    }
     catch (err: any) {
         throw new Error(err)
     }

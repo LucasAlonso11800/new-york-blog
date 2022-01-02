@@ -1,7 +1,8 @@
 // Helpers
-import executeQuery from "../../dbConfig";
+import { callSP } from "../../dbConfig";
 // Const
 import { ARTICLE_LIMIT_PER_PAGE, CATEGORY_ARTICLE_LIMIT, FAVORITE_ARTICLE_LIMIT, RELATED_ARTICLE_LIMIT } from "../../const/Limits";
+import { STORED_PROCEDURES } from "../../const/StoredProcedures";
 // Types
 import { ArticleType } from "../../types/Types";
 
@@ -14,147 +15,45 @@ type Args = {
 };
 
 export const getAllArticles = async () => {
-    const query: string = `
-        SELECT         
-            article_id AS id,
-            article_title AS title,
-            article_visits AS visits,
-            article_category_id AS categoryId,
-            category_name AS categoryName,
-            category_path AS categoryPath,
-            article_main_image AS image,
-            article_created_at AS createdAt,
-            article_user_id AS authorId,
-            user_username AS authorName,
-            article_slug AS slug
-        FROM articles
-        JOIN categories
-            ON categories.category_id = article_category_id
-        JOIN users
-            ON users.user_id = article_user_id
-        WHERE category_path != "about"
-    `;
-    const articles: ArticleType[] = await executeQuery(query, []);
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_ALL_ARTICLES;
+
+    const articles: ArticleType[] = await callSP({ procedure, values: [] });
     return articles;
 };
 
 export const getSingleArticle = async (_: any, args: Args) => {
     const { slug } = args;
 
-    const query: string = `
-        SELECT         
-            article_id AS id,
-            article_title AS title,
-            article_visits AS visits,
-            article_category_id AS categoryId,
-            category_name AS categoryName,
-            category_path AS categoryPath,
-            article_main_image AS image,
-            article_created_at AS createdAt,
-            article_user_id AS authorId,
-            user_username AS authorName,
-            article_slug AS slug
-        FROM articles
-        JOIN categories
-            ON categories.category_id = article_category_id
-        JOIN users
-            ON users.user_id = article_user_id
-        WHERE article_slug = ?
-    `;
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_SINGLE_ARTICLE;
     const values: [string] = [slug];
-    const article: ArticleType[] = await executeQuery(query, values);
+
+    const article: ArticleType[] = await callSP({ procedure, values });
     return article[0];
 };
 
 export const getLatestArticles = async (_: any, args: Args) => {
     const { index } = args;
 
-    const query: string = `
-        SELECT         
-            article_id AS id,
-            article_title AS title,
-            article_visits AS visits,
-            article_category_id AS categoryId,
-            category_name AS categoryName,
-            category_path AS categoryPath,
-            article_main_image AS image,
-            article_created_at AS createdAt,
-            article_user_id AS authorId,
-            user_username AS authorName,
-            article_slug AS slug,
-            article_component_text AS description
-            FROM articles
-            JOIN categories
-                ON categories.category_id = article_category_id
-            JOIN users
-                ON users.user_id = article_user_id
-            LEFT JOIN article_components
-                ON article_components.article_component_article_id = article_id 
-                AND article_components.article_component_order = 2
-            WHERE category_path != "about"
-            ORDER BY article_created_at DESC, article_id DESC
-        `;
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_LATEST_ARTICLES;
 
-    const articles: ArticleType[] = await executeQuery(query, []);
+    const articles: ArticleType[] = await callSP({ procedure, values: [] });
     return articles.slice((index - 1) * ARTICLE_LIMIT_PER_PAGE, (index - 1) * ARTICLE_LIMIT_PER_PAGE + ARTICLE_LIMIT_PER_PAGE);
 };
 
 export const getMostVisitedArticles = async () => {
-    const query: string = `
-        SELECT         
-            article_id AS id,
-            article_title AS title,
-            article_visits AS visits,
-            article_category_id AS categoryId,
-            category_name AS categoryName,
-            category_path AS categoryPath,
-            article_main_image AS image,
-            article_created_at AS createdAt,
-            article_user_id AS authorId,
-            user_username AS authorName,
-            article_slug AS slug
-        FROM articles
-        JOIN categories
-            ON categories.category_id = article_category_id
-        JOIN users
-            ON users.user_id = article_user_id
-        WHERE category_path != "about"
-        ORDER BY article_visits DESC
-        LIMIT ? 
-    `;
-
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_MOST_VISITED_ARTICLES;
     const values: [number] = [FAVORITE_ARTICLE_LIMIT];
-    const articles: ArticleType[] = await executeQuery(query, values);
+    const articles: ArticleType[] = await callSP({ procedure, values });
     return articles;
 };
 
 export const getCategoryArticles = async (_: any, args: Args) => {
     const { categoryId, index } = args;
 
-    const query: string = `
-        SELECT         
-            article_id AS id,
-            article_title AS title,
-            article_visits AS visits,
-            article_category_id AS categoryId,
-            category_name AS categoryName,
-            category_path AS categoryPath,
-            article_main_image AS image,
-            article_created_at AS createdAt,
-            article_user_id AS authorId,
-            user_username AS authorName,
-            article_slug AS slug
-        FROM articles
-        JOIN categories
-            ON categories.category_id = article_category_id
-        JOIN users
-            ON users.user_id = article_user_id
-        WHERE article_category_id = ?
-        ORDER BY article_created_at DESC, article_id DESC
-    `;
-
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_CATEGORY_ARTICLES;
     const values: [number] = [typeof categoryId === 'number' ? categoryId : parseInt(categoryId)];
-    const articles: ArticleType[] = await executeQuery(query, values);
+
+    const articles: ArticleType[] = await callSP({ procedure, values });
 
     return articles.slice((index - 1) * CATEGORY_ARTICLE_LIMIT, (index - 1) * CATEGORY_ARTICLE_LIMIT + CATEGORY_ARTICLE_LIMIT);
 };
@@ -162,104 +61,29 @@ export const getCategoryArticles = async (_: any, args: Args) => {
 export const getRelatedArticles = async (_: any, args: Args) => {
     const { categoryId } = args;
 
-    const query: string = `
-        SELECT         
-            article_id AS id,
-            article_title AS title,
-            article_visits AS visits,
-            article_category_id AS categoryId,
-            category_name AS categoryName,
-            category_path AS categoryPath,
-            article_main_image AS image,
-            article_created_at AS createdAt,
-            article_user_id AS authorId,
-            user_username AS authorName,
-            article_slug AS slug
-        FROM articles
-        JOIN categories
-            ON categories.category_id = article_category_id
-        JOIN users
-            ON users.user_id = article_user_id
-        WHERE article_category_id = ?
-        ORDER BY RAND()
-        LIMIT ? 
-    `;
-
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_RELATED_ARTICLES;
     const values: [number, number] = [typeof categoryId === 'number' ? categoryId : parseInt(categoryId), RELATED_ARTICLE_LIMIT];
-    const articles: ArticleType[] = await executeQuery(query, values);
 
+    const articles: ArticleType[] = await callSP({ procedure, values });
     return articles;
 };
 
 export const getSearchedArticles = async (_: any, args: Args) => {
     const { search, index } = args;
 
-    const query: string = `
-        SELECT         
-            article_id AS id,
-            article_title AS title,
-            article_visits AS visits,
-            article_category_id AS categoryId,
-            category_name AS categoryName,
-            category_path AS categoryPath,
-            article_main_image AS image,
-            article_created_at AS createdAt,
-            article_user_id AS authorId,
-            user_username AS authorName,
-            article_slug AS slug,
-            article_component_text AS description
-        FROM articles
-        JOIN categories
-            ON categories.category_id = article_category_id
-        JOIN users
-            ON users.user_id = article_user_id
-        LEFT JOIN article_components
-            ON article_components.article_component_article_id = article_id 
-            AND article_components.article_component_order = 2
-        WHERE article_title LIKE CONCAT('%', ?, '%') AND  category_path != "about"
-        ORDER BY article_created_at DESC, article_id DESC
-    `;
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_SEARCHED_ARTICLES;
     const values: [string] = [search];
-    const articles: ArticleType[] = await executeQuery(query, values);
 
+    const articles: ArticleType[] = await callSP({ procedure, values });
     return articles.slice((index - 1) * ARTICLE_LIMIT_PER_PAGE, (index - 1) * ARTICLE_LIMIT_PER_PAGE + 7);
 };
 
 export const getAdjacentArticles = async (_: any, args: Args) => {
     const { id } = args;
-    const query: string = `
-        SELECT         
-            article_id AS id,
-            article_title AS title,
-            article_visits AS visits,
-            article_category_id AS categoryId,
-            category_name AS categoryName,
-            category_path AS categoryPath,
-            article_main_image AS image,
-            article_created_at AS createdAt,
-            article_user_id AS authorId,
-            user_username AS authorName,
-            article_slug AS slug
-        FROM articles
-        JOIN categories
-            ON categories.category_id = article_category_id
-        JOIN users
-            ON users.user_id = article_user_id
-        WHERE category_name != 'About'
-        ORDER BY article_id
-    `;
 
-    const articles: ArticleType[] = await executeQuery(query, []);
-    const mainArticle = articles.find(article => article.id == id) as ArticleType;
-    const index = articles.indexOf(mainArticle);
-    
-    if(index === articles.length - 1){
-        return [articles[index - 1], articles[0]];
-    };
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_ADJACENT_ARTICLES;
+    const values: [number] = [typeof id === 'number' ? id : parseInt(id)]
 
-    if(index === 0){
-        return [articles[articles.length - 1], articles[index + 1]];
-    };
-
-    return [articles[index - 1], articles[index + 1]];
+    const articles: ArticleType[] = await callSP({ procedure, values });
+    return articles;
 };
