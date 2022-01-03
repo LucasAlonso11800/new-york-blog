@@ -1,4 +1,6 @@
-import executeQuery from "../../dbConfig";
+import { callSP } from "../../dbConfig";
+// Const
+import { STORED_PROCEDURES } from "../../const/StoredProcedures";
 // Utils
 import { formatId } from "../../utils/formatId";
 
@@ -9,41 +11,20 @@ type Args = {
 
 export const getArticleComments = async (_: any, args: Args) => {
     const { articleId } = args
-    const query = `
-        SELECT
-            comment_id AS id,  
-            comment_commenter AS author,
-            comment_body AS body,
-            comment_created_at AS createdAt,
-            comment_article_id AS articleId
-        FROM comments
-        WHERE comment_is_response = 'N'
-            AND comment_article_id = ?
-        ORDER BY comment_created_at DESC
-    `;
 
-    const values: [number] = [formatId(articleId)]
-    const comments = await executeQuery(query, values);
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_ARTICLE_COMMENTS;
+    const values: [number] = [formatId(articleId)];
+
+    const comments = await callSP({ procedure, values });
     return comments;
 };
 
 export const getCommentReplies = async (_: any, args: Args) => {
     const { commentId } = args;
 
-    const query = `
-        SELECT
-            comment_id AS id,  
-            comment_commenter AS author,
-            comment_body AS body,
-            comment_created_at AS createdAt,
-            comment_article_id AS articleId
-        FROM comments
-        WHERE comment_is_response = 'Y' AND comment_is_response_to_comment_id = ?
-        ORDER BY comment_created_at DESC
-    `;
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_COMMENT_REPLIES;
+    const values: [number] = [formatId(commentId)];
 
-    const values: [number] = [formatId(commentId)]
-    const comments = await executeQuery(query, values);
-
+    const comments = await callSP({ procedure, values });
     return comments;
 };
