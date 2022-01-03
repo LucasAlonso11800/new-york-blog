@@ -5,6 +5,8 @@ import { ARTICLE_LIMIT_PER_PAGE, CATEGORY_ARTICLE_LIMIT, FAVORITE_ARTICLE_LIMIT,
 import { STORED_PROCEDURES } from "../../const/StoredProcedures";
 // Types
 import { ArticleType } from "../../types/Types";
+// Utils
+import { formatId } from "../../utils/formatId";
 
 type Args = {
     id: number | string
@@ -51,7 +53,7 @@ export const getCategoryArticles = async (_: any, args: Args) => {
     const { categoryId, index } = args;
 
     const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_CATEGORY_ARTICLES;
-    const values: [number] = [typeof categoryId === 'number' ? categoryId : parseInt(categoryId)];
+    const values: [number] = [formatId(categoryId)];
 
     const articles: ArticleType[] = await callSP({ procedure, values });
 
@@ -62,7 +64,7 @@ export const getRelatedArticles = async (_: any, args: Args) => {
     const { categoryId } = args;
 
     const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_RELATED_ARTICLES;
-    const values: [number, number] = [typeof categoryId === 'number' ? categoryId : parseInt(categoryId), RELATED_ARTICLE_LIMIT];
+    const values: [number, number] = [formatId(categoryId), RELATED_ARTICLE_LIMIT];
 
     const articles: ArticleType[] = await callSP({ procedure, values });
     return articles;
@@ -82,7 +84,7 @@ export const getAdjacentArticles = async (_: any, args: Args) => {
     const { id } = args;
 
     const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_ADJACENT_ARTICLES;
-    const values: [number] = [typeof id === 'number' ? id : parseInt(id)]
+    const values: [number] = [formatId(id)]
 
     const articles: ArticleType[] = await callSP({ procedure, values });
     return articles;

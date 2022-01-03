@@ -1,5 +1,8 @@
 import executeQuery from "../../dbConfig";
+// Types
 import { ArticleComponentType } from "../../types/Types";
+// Utils
+import { formatId } from "../../utils/formatId";
 
 type Args = {
     articleId: string | number
@@ -24,7 +27,7 @@ export const getArticleComponents = async (_: any, args: Args) => {
         WHERE article_component_article_id = ?
         ORDER BY article_component_order
     `;
-    const values: [number] = [typeof articleId === 'string' ? parseInt(articleId) : articleId]
+    const values: [number] = [formatId(articleId)]
     const articleComponents: ArticleComponentType[] = await executeQuery(query, values);
     return articleComponents;
 };

@@ -1,4 +1,6 @@
 import executeQuery from "../../dbConfig";
+// Utils
+import { formatId } from "../../utils/formatId";
 
 type Args = {
     articleId: string | number
@@ -20,7 +22,7 @@ export const getArticleComments = async (_: any, args: Args) => {
         ORDER BY comment_created_at DESC
     `;
 
-    const values: [number] = [typeof articleId === 'number' ? articleId : parseInt(articleId)]
+    const values: [number] = [formatId(articleId)]
     const comments = await executeQuery(query, values);
     return comments;
 };
@@ -40,7 +42,7 @@ export const getCommentReplies = async (_: any, args: Args) => {
         ORDER BY comment_created_at DESC
     `;
 
-    const values: [number] = [typeof commentId === 'number' ? commentId : parseInt(commentId)]
+    const values: [number] = [formatId(commentId)]
     const comments = await executeQuery(query, values);
 
     return comments;

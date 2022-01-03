@@ -3,6 +3,8 @@ import { STORED_PROCEDURES } from "../../const/StoredProcedures";
 import { callSP } from "../../dbConfig";
 // Types 
 import { CountType } from "../../types/Types";
+// Utils
+import { formatId } from "../../utils/formatId";
 
 type Args = {
     categoryId: string | number,
@@ -19,7 +21,7 @@ export const getCategoryArticleCount = async (_: any, args: Args) => {
     const { categoryId } = args;
 
     const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_CATEGORY_ARTICLE_COUNT;
-    const values: [number] = [typeof categoryId === 'number' ? categoryId : parseInt(categoryId)];
+    const values: [number] = [formatId(categoryId)];
 
     const count: CountType[] = await callSP({ procedure, values });
     return count[0].count;

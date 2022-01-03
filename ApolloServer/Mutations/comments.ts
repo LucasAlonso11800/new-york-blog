@@ -1,4 +1,6 @@
 import executeQuery from "../../dbConfig";
+// Utils
+import { formatId } from "../../utils/formatId";
 
 type Args = {
     articleId: string | number
@@ -24,7 +26,7 @@ export const addComment = async (_: any, args: Args) => {
         VALUES (?, ?, ?, CURDATE(), ?, ?, ?)
     `;
     
-    const values: [string, string, string, number, 'Y' | 'N', number| null] = [commenter, email, body, typeof articleId === 'number' ? articleId : parseInt(articleId), isResponse, isResponseToCommentId === null ? null : typeof isResponseToCommentId === 'number' ? isResponseToCommentId : parseInt(isResponseToCommentId)];
+    const values: [string, string, string, number, 'Y' | 'N', number| null] = [commenter, email, body, formatId(articleId), isResponse, isResponseToCommentId === null ? null : formatId(isResponseToCommentId)];
     const response = await executeQuery(query, values);
         
     const newCommentQuery = `

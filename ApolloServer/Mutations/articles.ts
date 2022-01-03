@@ -1,4 +1,6 @@
 import executeQuery from "../../dbConfig";
+// Utils
+import { formatId } from "../../utils/formatId";
 
 type Args = {
     articleId: string | number
@@ -13,7 +15,7 @@ export const addVisit = async (_: any, args: Args) => {
         WHERE article_id = ?
     `;
     
-    const values: [number] = [typeof articleId === 'number' ? articleId : parseInt(articleId)];
+    const values: [number] = [formatId(articleId)];
     await executeQuery(query, values);
     return 'Visit added';
 };
