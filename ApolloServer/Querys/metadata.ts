@@ -1,14 +1,9 @@
-import executeQuery from "../../dbConfig";
+import { callSP } from "../../dbConfig";
+// Const
+import { STORED_PROCEDURES } from "../../const/StoredProcedures";
 
 export const getMetadata = async () => {
-    const query = `
-        SELECT 
-            metadata_id AS id,
-            metadata_name AS name,
-            metadata_description AS description,
-            metadata_value AS value
-        FROM metadata
-    `;
-    const metadata = await executeQuery(query, []);
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_METADATA;
+    const metadata = await callSP({ procedure, values: [] });
     return metadata;
 };
