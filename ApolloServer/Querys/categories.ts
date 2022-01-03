@@ -1,17 +1,12 @@
-import executeQuery from "../../dbConfig";
+import { callSP } from "../../dbConfig";
+// Const
+import { STORED_PROCEDURES } from "../../const/StoredProcedures";
+// Types
 import { CategoryType } from "../../types/Types";
 
 export const getCategories = async (_: any, args: any) => {
-    const query: string = `
-        SELECT 
-            category_id AS id,
-            category_name AS name,
-            category_path AS path
-        FROM categories
-        WHERE category_name NOT IN(?, ?)
-    `;
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_CATEGORIES;
 
-    const values: [string, string] = ["Dev", "About"]
-    const categories: CategoryType[] = await executeQuery(query, values);
+    const categories: CategoryType[] = await callSP({ procedure, values: [] });
     return categories;
 };

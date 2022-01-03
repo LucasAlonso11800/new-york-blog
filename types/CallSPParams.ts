@@ -1,7 +1,8 @@
 import { STORED_PROCEDURES } from "../const/StoredProcedures";
 
+export type CallSPParams = GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
 
-export type CallSPParams = GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
+// Articles
 
 type GetAllArticles = {
     procedure: STORED_PROCEDURES.GET_ALL_ARTICLES,
@@ -41,4 +42,11 @@ type GetSearchedArticles = {
 type GetAdjacentArticles = {
     procedure: STORED_PROCEDURES.GET_ADJACENT_ARTICLES,
     values: [number]
+};
+
+// Categories
+
+type GetCategories = {
+    procedure: STORED_PROCEDURES.GET_CATEGORIES,
+    values: []
 };

@@ -1,4 +1,6 @@
 export enum STORED_PROCEDURES {
+    // Querys
+        // Articles
     GET_ALL_ARTICLES = 'GetAllArticles',
     GET_SINGLE_ARTICLE = 'GetSingleArticle',
     GET_LATEST_ARTICLES = 'GetLatestArticles',
@@ -6,5 +8,7 @@ export enum STORED_PROCEDURES {
     GET_CATEGORY_ARTICLES = 'GetCategoryArticles',
     GET_RELATED_ARTICLES = 'GetRelatedArticles',
     GET_SEARCHED_ARTICLES = 'GetSearchedArticles',
-    GET_ADJACENT_ARTICLES = 'GetAdjacentArticles'
+    GET_ADJACENT_ARTICLES = 'GetAdjacentArticles',
+        // Categories
+    GET_CATEGORIES = 'GetCategories'
 };
