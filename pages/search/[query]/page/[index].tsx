@@ -4,6 +4,7 @@ import ArticlePreview from '../../../../components/ArticlePreview';
 import Layout from '../../../../components/LayoutComponents/Layout';
 import Main from '../../../../components/LayoutComponents/Main';
 import Pagination from '../../../../components/Pagination';
+import SearchPageTitle from '../../../../components/SearchPageTitle';
 // Querys
 import { getCategories, getMetadata, getMostVisitedArticles, getSearchedArticleCount, getSearchedArticles } from '../../../../ApolloClient/querys';
 // Const
@@ -11,7 +12,6 @@ import { DEFAULT_METADATA } from '../../../../const/defaultMetadata';
 // Types
 import { ArticleType, LayoutProps } from '../../../../types/Types';
 import { GetServerSidePropsContext } from 'next';
-import SearchPageTitle from '../../../../components/SearchPageTitle';
 
 type Props = {
     mainArticles: ArticleType[]
