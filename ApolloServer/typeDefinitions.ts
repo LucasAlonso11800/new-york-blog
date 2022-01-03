@@ -30,7 +30,7 @@ export const typeDefs = gql`
         # Articles
         addVisit(articleId: ID!): String
         # Comments
-        addComment(articleId: ID!, commenter: String!, email: String!, body: String!, isResponse: String!, isResponseToCommentId: ID): Comment
+        addComment(articleId: ID!, commenter: String!, email: String!, website: String, body: String!, isResponse: String!, isResponseToCommentId: ID): Comment
     }
 
     type Article {

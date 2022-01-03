@@ -11,8 +11,8 @@ export const ADD_VISIT = gql`
 // Comments
 
 export const ADD_COMMENT = gql`
-    mutation Mutation($articleId: ID!, $commenter: String!, $email: String!, $body: String!, $isResponse: String!, $isResponseToCommentId: ID){
-        addComment(articleId: $articleId, commenter: $commenter, email: $email, body: $body, isResponse: $isResponse, isResponseToCommentId: $isResponseToCommentId){
+    mutation Mutation($articleId: ID!, $commenter: String!, $email: String!, $website: String, $body: String!, $isResponse: String!, $isResponseToCommentId: ID){
+        addComment(articleId: $articleId, commenter: $commenter, email: $email, website: $website, body: $body, isResponse: $isResponse, isResponseToCommentId: $isResponseToCommentId){
             id
             author
             createdAt

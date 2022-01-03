@@ -31,7 +31,7 @@ export default function Comment({ articleId, commentId, author, createdAt, body 
             <li className={classes.comment} data-testid="comment">
                 <div className={classes.commentHeader}>
                     <p className={classes.title}>{author} SAYS:</p>
-                    <p className={classes.meta}>{formatDate(createdAt)}</p>
+                    <p className={classes.meta}>{formatDate(createdAt.substring(0, 10))}</p>
                 </div>
                 <div className={classes.commentContent}>
                     <p>{body}</p>

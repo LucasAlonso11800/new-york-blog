@@ -1,6 +1,6 @@
 import { STORED_PROCEDURES } from "../const/StoredProcedures";
 
-export type CallSPParams = GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
+export type CallSPParams = AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
 
 // Articles
 
@@ -44,6 +44,11 @@ type GetAdjacentArticles = {
     values: [number]
 };
 
+type AddVisit = {
+    procedure: STORED_PROCEDURES.ADD_VISIT,
+    values: [number]
+};
+
 // Categories
 
 type GetCategories = {
@@ -82,6 +87,8 @@ type GetArticleComponents = {
     values: [number]
 };
 
+// Comments
+
 type GetArticleComments = {
     procedure: STORED_PROCEDURES.GET_ARTICLE_COMMENTS,
     values: [number]
@@ -90,4 +97,9 @@ type GetArticleComments = {
 type GetCommentReplies = {
     procedure: STORED_PROCEDURES.GET_COMMENT_REPLIES,
     values: [number]
+};
+
+type AddComment = {
+    procedure: STORED_PROCEDURES.ADD_COMMENT,
+    values: [string, string, string, string, number, 'Y' | 'N', number| null]
 };

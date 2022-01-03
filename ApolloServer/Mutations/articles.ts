@@ -1,4 +1,6 @@
-import executeQuery from "../../dbConfig";
+import { callSP } from "../../dbConfig";
+// Const 
+import { STORED_PROCEDURES } from "../../const/StoredProcedures";
 // Utils
 import { formatId } from "../../utils/formatId";
 
@@ -8,14 +10,10 @@ type Args = {
 
 export const addVisit = async (_: any, args: Args) => {
     const { articleId } = args;
-    
-    const query = `
-        UPDATE articles 
-        SET article_visits = article_visits + 1
-        WHERE article_id = ?
-    `;
-    
+
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.ADD_VISIT;
     const values: [number] = [formatId(articleId)];
-    await executeQuery(query, values);
+
+    await callSP({ procedure, values });
     return 'Visit added';
 };

@@ -16,6 +16,7 @@ export const getArticleComments = async (_: any, args: Args) => {
     const values: [number] = [formatId(articleId)];
 
     const comments = await callSP({ procedure, values });
+    console.log(comments)
     return comments;
 };
 

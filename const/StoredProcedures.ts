@@ -1,5 +1,4 @@
 export enum STORED_PROCEDURES {
-    // Querys
         // Articles
     GET_ALL_ARTICLES = 'GetAllArticles',
     GET_SINGLE_ARTICLE = 'GetSingleArticle',
@@ -9,6 +8,7 @@ export enum STORED_PROCEDURES {
     GET_RELATED_ARTICLES = 'GetRelatedArticles',
     GET_SEARCHED_ARTICLES = 'GetSearchedArticles',
     GET_ADJACENT_ARTICLES = 'GetAdjacentArticles',
+    ADD_VISIT = 'AddVisit',
         // Categories
     GET_CATEGORIES = 'GetCategories',
         // Count
@@ -21,5 +21,6 @@ export enum STORED_PROCEDURES {
     GET_ARTICLE_COMPONENTS = 'GetArticleComponents',
         // Comments
     GET_ARTICLE_COMMENTS = 'GetArticleComments',
-    GET_COMMENT_REPLIES = 'GetCommentReplies'
+    GET_COMMENT_REPLIES = 'GetCommentReplies',
+    ADD_COMMENT = 'AddComment',
 };
