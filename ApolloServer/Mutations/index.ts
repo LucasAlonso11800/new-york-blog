@@ -5,3 +5,8 @@ export {
 export {
     addComment
 } from './comments'
+
+export {
+    loginUser,
+    registerUser
+} from './users';

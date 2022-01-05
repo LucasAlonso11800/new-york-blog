@@ -1,6 +1,6 @@
 import { STORED_PROCEDURES } from "../const/StoredProcedures";
 
-export type CallSPParams = AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
+export type CallSPParams = RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
 
 // Articles
 
@@ -102,4 +102,16 @@ type GetCommentReplies = {
 type AddComment = {
     procedure: STORED_PROCEDURES.ADD_COMMENT,
     values: [string, string, string, string, number, 'Y' | 'N', number| null]
+};
+
+// Users 
+
+type RegisterUser = {
+    procedure: STORED_PROCEDURES.REGISTER_USER,
+    values: [string, string, string];
+};
+
+type LoginUser = {
+    procedure: STORED_PROCEDURES.LOGIN_USER,
+    values: [string];
 };

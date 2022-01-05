@@ -31,6 +31,9 @@ export const typeDefs = gql`
         addVisit(articleId: ID!): String
         # Comments
         addComment(articleId: ID!, commenter: String!, email: String!, website: String, body: String!, isResponse: String!, isResponseToCommentId: ID): Comment
+        # Users
+        loginUser(email: String!, password: String!): User
+        registerUser(username: String!, email: String!, password: String!): User
     }
 
     type Article {
@@ -78,5 +81,11 @@ export const typeDefs = gql`
         author: String
         createdAt: String
         body: String
+    }
+
+    type User {
+        id: ID
+        username: String
+        token: String
     }
 `;

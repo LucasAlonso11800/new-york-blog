@@ -61,6 +61,13 @@ export type CommentType = {
     body: string
 };
 
+export type UserType = {
+    id: string
+    username: string
+    token: string
+    password: string
+}
+
 type OkPacket = {
     fieldCount: number
     affectedRows: number

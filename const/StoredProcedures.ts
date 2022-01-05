@@ -23,4 +23,7 @@ export enum STORED_PROCEDURES {
     GET_ARTICLE_COMMENTS = 'GetArticleComments',
     GET_COMMENT_REPLIES = 'GetCommentReplies',
     ADD_COMMENT = 'AddComment',
+        // Users
+    REGISTER_USER = 'RegisterUser',
+    LOGIN_USER = 'LoginUser',
 };
