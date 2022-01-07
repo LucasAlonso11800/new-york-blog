@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { GlobalContext } from '../../context/GlobalContext';
 // Styles
 import classes from '../../styles/components/LoginAndRegisterPages.module.css';
 // Components
@@ -20,9 +21,12 @@ import { LayoutProps } from '../../types/Types';
 type Props = { layoutProps: LayoutProps }
 
 export default function RegisterPage({ layoutProps }: Props) {
+    const { setUser } = useContext(GlobalContext);
+
     const [registerUser, { loading }] = useMutation(REGISTER_USER, {
         onCompleted: (data) => {
-            console.log(data);
+            if(typeof localStorage !== 'undefined') localStorage.setItem('token', data.loginUser.token);
+            setUser(data.registerUser)
             window.location.assign('/admin');
         },
         onError: (error) => console.log(error)
@@ -31,7 +35,7 @@ export default function RegisterPage({ layoutProps }: Props) {
     const validationSchema = yup.object({
         username: yup.string().max(40, 'Maximum length 40 characters').required('Please provide an email'),
         email: yup.string().max(100, 'Maximum length 100 characters').required('Please provide an email'),
-        password: yup.string().max(20, 'Maximum length 20 characters').required('Please provide the password')
+        password: yup.string().min(6, 'Password lenght must be at least 6 characters').max(20, 'Maximum length 20 characters').required('Please provide the password')
     });
 
     const formik = useFormik({

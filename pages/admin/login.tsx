@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { GlobalContext } from '../../context/GlobalContext';
 // Styles
 import classes from '../../styles/components/LoginAndRegisterPages.module.css';
 // Components
@@ -20,9 +21,12 @@ import { LayoutProps } from '../../types/Types';
 type Props = { layoutProps: LayoutProps }
 
 export default function LoginPage({ layoutProps }: Props) {
+    const { setUser } = useContext(GlobalContext);
+
     const [loginUser, { loading }] = useMutation(LOGIN_USER, {
         onCompleted: (data) => {
-            console.log(data);
+            if(typeof localStorage !== 'undefined') localStorage.setItem('token', data.loginUser.token);
+            setUser(data.loginUser);
             window.location.assign('/admin');
         },
         onError: (error) => console.log(error)

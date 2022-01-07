@@ -65,8 +65,16 @@ export type UserType = {
     id: string
     username: string
     token: string
-    password: string
+    roleId: string
+    roleName: string
+    password?: string
 }
+
+type DecodedTokenProperties = {
+    exp: number
+}
+
+export type DecodedTokenType = UserType & DecodedTokenProperties;
 
 type OkPacket = {
     fieldCount: number

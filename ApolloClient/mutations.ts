@@ -27,6 +27,8 @@ export const REGISTER_USER = gql`
         registerUser(username: $username, email: $email, password: $password){
             id
             username
+            roleId
+            roleName
             token
         }
     }
@@ -37,6 +39,8 @@ export const LOGIN_USER = gql`
         loginUser(email: $email, password: $password){
             id
             username
+            roleId
+            roleName
             token
         }
     }

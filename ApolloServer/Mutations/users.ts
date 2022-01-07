@@ -13,15 +13,20 @@ type Args = {
     password: string
 };
 
-function generateToken(id: string, username: string) {
+function generateToken(id: string, username: string, roleId: string, roleName: string) {
     return jwt.sign({
         id,
         username,
+        roleId,
+        roleName
     }, process.env.JWT_SECRET_KEY as string, { expiresIn: '1h' })
 };
 
 export const registerUser = async (_: any, args: Args) => {
     const { username, email, password } = args;
+    if (password.length < 6) throw new Error("Password length must be 6 characters");
+    if (password.length > 20) throw new Error("Password length cannot be over 20 characters");
+
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
 
@@ -30,11 +35,13 @@ export const registerUser = async (_: any, args: Args) => {
 
     try {
         const newUser: UserType[] = await callSP({ procedure, values });
-        const token = generateToken(newUser[0].id, newUser[0].username);
+        const token = generateToken(newUser[0].id, newUser[0].username, newUser[0].roleId, newUser[0].roleName);
 
         return {
             id: newUser[0].id,
             username: newUser[0].username,
+            roleId: newUser[0].roleId,
+            roleName: newUser[0].roleName,
             token
         };
     }
@@ -48,18 +55,20 @@ export const loginUser = async (_: any, args: Args) => {
     try {
         const procedure: STORED_PROCEDURES = STORED_PROCEDURES.LOGIN_USER;
         const values: [string] = [email];
-        
+
         const user: UserType[] = await callSP({ procedure, values });
         if (!user[0].id) throw new Error('User not found');
-        
-        const match = await bcrypt.compare(password, user[0].password);
+
+        const match = await bcrypt.compare(password, user[0].password as string);
         if (!match) throw new Error('Wrong username or password');
-        
-        const token = generateToken(user[0].id, user[0].username);
+
+        const token = generateToken(user[0].id, user[0].username, user[0].roleId, user[0].roleName);
 
         return {
             id: user[0].id,
             username: user[0].username,
+            roleId: user[0].roleId,
+            roleName: user[0].roleName,
             token
         };
     }

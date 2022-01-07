@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+// Context
+import { GlobalContext } from '../../context/GlobalContext';
 // Components
 import AdminLayout from '../../components/LayoutComponents/AdminLayout';
 import Main from '../../components/LayoutComponents/Main';
@@ -12,6 +14,10 @@ import { LayoutProps } from '../../types/Types';
 type Props = { layoutProps: LayoutProps }
 
 export default function AdminPage({ layoutProps }: Props) {
+    const { user } = useContext(GlobalContext);
+
+    if (user === null && typeof window !== 'undefined') window.location.assign('/');
+    
     return (
         <AdminLayout {...layoutProps}>
             <Main>

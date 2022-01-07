@@ -87,5 +87,7 @@ export const typeDefs = gql`
         id: ID
         username: String
         token: String
+        roleId: ID
+        roleName: String
     }
 `;
