@@ -1,7 +1,7 @@
 // Querys
 import { getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles, getCategories, getTotalArticleCount, getCategoryArticleCount, getSearchedArticleCount, getAllArticles, getArticleComponents, getMetadata, getArticleComments, getCommentReplies, getAdjacentArticles } from "./Querys";
 // Mutations
-import { addComment, addVisit, loginUser, registerUser } from "./Mutations";
+import { addCategory, addComment, addVisit, deleteCategory, editCategory, loginUser, registerUser } from "./Mutations";
 
 export const resolvers = {
     Query: {
@@ -29,8 +29,15 @@ export const resolvers = {
         getCommentReplies
     },
     Mutation: {
+        // Articles
         addVisit,
+        // Categories
+        addCategory,
+        editCategory,
+        deleteCategory,
+        // Comments
         addComment,
+        // Users
         loginUser,
         registerUser
     }

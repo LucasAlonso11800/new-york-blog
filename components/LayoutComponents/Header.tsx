@@ -5,14 +5,11 @@ import Image from 'next/image';
 // Styles
 import classes from '../../styles/components/LayoutComponents/Header.module.css';
 // Types
-import { CategoryType } from '../../types/Types';
+import { CategoryType, MetadataNames, MetadataType } from '../../types/Types';
+import { useQuery } from '@apollo/client';
+import { GET_CATEGORIES, GET_METADATA } from '../../ApolloClient/querys';
 
-type Props = {
-    categories: CategoryType[]
-    image: string
-}
-
-export default function Header({ categories, image }: Props) {
+export default function Header() {
     const [width, setWidth] = useState<number>();
     const [menuOpen, setMenuOpen] = useState(false);
     const [query, setQuery] = useState('');
@@ -26,6 +23,11 @@ export default function Header({ categories, image }: Props) {
         window.location.assign(`/search/${query}`);
     };
 
+    const { data: { getCategories: categories } } = useQuery(GET_CATEGORIES);
+    const { data: { getMetadata: metadata } } = useQuery(GET_METADATA);
+
+    const image: MetadataType = metadata.find((data: MetadataType) => data.name === MetadataNames.HEADER_IMAGE);
+
     return (
         <header className={classes.header} data-testid="header">
             <nav className={classes.nav}>
@@ -34,7 +36,7 @@ export default function Header({ categories, image }: Props) {
                         <li className={classes.listItem}>
                             <a className={classes.link}>Categories</a>
                             <ul className={classes.sublist}>
-                                {categories.map(category => {
+                                {categories.map((category: CategoryType) => {
                                     return (
                                         <li key={category.id} className={classes.listItem}>
                                             <Link href={`/categories/${category.path}`}>{category.name}</Link>
@@ -48,7 +50,7 @@ export default function Header({ categories, image }: Props) {
                             <a className={classes.link} onClick={() => setMenuOpen(!menuOpen)}>Menu</a>
                             {menuOpen &&
                                 <ul className={`${classes.sublist} ${classes.open}`}>
-                                    {categories.map(category => {
+                                    {categories.map((category: CategoryType) => {
                                         return (
                                             <li key={category.id} className={classes.listItem}>
                                                 <Link href={`/categories/${category.path}`}>{category.name}</Link>
@@ -72,7 +74,7 @@ export default function Header({ categories, image }: Props) {
             </nav>
             <div className={classes.siteLogoContainer}>
                 <Link href="/">
-                    <Image src={image} height="175" width="670" />
+                    <Image src={image.value} height="175" width="670" />
                 </Link>
             </div>
         </header>

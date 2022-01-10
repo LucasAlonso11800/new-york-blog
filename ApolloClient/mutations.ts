@@ -8,6 +8,34 @@ export const ADD_VISIT = gql`
     }
 `;
 
+// Categories
+
+export const ADD_CATEGORY = gql`
+    mutation Mutation ($categoryName: String!, $categoryPath: String!){
+        addCategory(categoryName: $categoryName, categoryPath: $categoryPath){
+            id
+            name
+            path
+        }
+    }
+`;
+
+export const EDIT_CATEGORY = gql`
+    mutation Mutation ($categoryId: ID!, $categoryName: String!, $categoryPath: String!){
+        editCategory(categoryId: $categoryId, categoryName: $categoryName, categoryPath: $categoryPath){
+            id
+            name
+            path
+        }
+    }
+`;
+
+export const DELETE_CATEGORY = gql`
+    mutation Mutation ($categoryId: ID!){
+        deleteCategory(categoryId: $categoryId)
+    }
+`;
+
 // Comments
 
 export const ADD_COMMENT = gql`

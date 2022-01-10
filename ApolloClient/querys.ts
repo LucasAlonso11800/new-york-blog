@@ -1,10 +1,10 @@
+import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 import { gql } from "apollo-server-micro";
 import { MetadataType } from "../types/Types";
-import { client } from "./ApolloConfig";
 
 // Articles
 
-export async function getAllArticles() {
+export async function getAllArticles(client: ApolloClient<NormalizedCacheObject>) {
     return await client.query({
         query: gql`
             query Query {
@@ -17,77 +17,81 @@ export async function getAllArticles() {
     });
 };
 
-export async function getSingleArticle(slug: string) {
+export const GET_SINGLE_ARTICLE = gql`
+query Query ($slug: String!){
+    getSingleArticle(slug: $slug){
+        id
+        title
+        categoryId
+        categoryName
+        categoryPath
+        image
+        authorName
+        createdAt
+    }
+}
+`;
+export async function getSingleArticle(client: ApolloClient<NormalizedCacheObject>, slug: string) {
     return await client.query({
-        query: gql`
-            query Query ($slug: String!){
-                getSingleArticle(slug: $slug){
-                    id
-                    title
-                    categoryId
-                    categoryName
-                    categoryPath
-                    image
-                    authorName
-                    createdAt
-                }
-            }
-        `,
+        query: GET_SINGLE_ARTICLE,
         variables: {
             slug
         }
     });
 };
 
-export async function getLatestArticles(index: number) {
+export const GET_LATEST_ARTICLES = gql`
+query Query ($index: Int!){
+    getLatestArticles(index: $index){
+        id
+        title
+        categoryName
+        categoryPath
+        image
+        authorName
+        slug
+        description
+    }
+}
+`;
+export async function getLatestArticles(client: ApolloClient<NormalizedCacheObject>, index: number) {
     return await client.query({
-        query: gql`
-            query Query ($index: Int!){
-                getLatestArticles(index: $index){
-                    id
-                    title
-                    categoryName
-                    categoryPath
-                    image
-                    authorName
-                    slug
-                    description
-                }
-            }
-        `,
+        query: GET_LATEST_ARTICLES,
         variables: {
             index
         }
     });
 };
 
-export async function getMostVisitedArticles() {
+export const GET_MOST_VISITED_ARTICLES = gql`
+query Query {
+    getMostVisitedArticles {
+        id
+        title
+        image
+        slug
+    }
+}
+`;
+export async function getMostVisitedArticles(client: ApolloClient<NormalizedCacheObject>,) {
     return await client.query({
-        query: gql`
-                query Query {
-                    getMostVisitedArticles {
-                        id
-                        title
-                        image
-                        slug
-                    }
-                }
-            `
+        query: GET_MOST_VISITED_ARTICLES
     });
 };
 
-export async function getCategoryArticles(categoryId: string, index: number) {
+export const GET_CATEGORY_ARTICLES = gql`
+query Query ($categoryId: ID!, $index: Int!){
+    getCategoryArticles(categoryId: $categoryId, index: $index){
+        id
+        title
+        image
+        slug
+    }
+}`;
+
+export async function getCategoryArticles(client: ApolloClient<NormalizedCacheObject>, categoryId: string, index: number) {
     return await client.query({
-        query: gql`
-            query Query ($categoryId: ID!, $index: Int!){
-                getCategoryArticles(categoryId: $categoryId, index: $index){
-                    id
-                    title
-                    image
-                    slug
-                }
-            }
-        `,
+        query: GET_CATEGORY_ARTICLES,
         variables: {
             categoryId,
             index
@@ -95,22 +99,22 @@ export async function getCategoryArticles(categoryId: string, index: number) {
     });
 };
 
-export async function getSearchedArticles(search: string, index: number) {
+export const GET_SEARCHED_ARTICLES = gql`
+query Query ($search: String!, $index: Int!){
+    getSearchedArticles(search: $search, index: $index){
+        id
+        title
+        categoryName
+        categoryPath
+        image
+        authorName
+        slug
+        description
+    }
+}`;
+export async function getSearchedArticles(client: ApolloClient<NormalizedCacheObject>, search: string, index: number) {
     return await client.query({
-        query: gql`
-            query Query ($search: String!, $index: Int!){
-                getSearchedArticles(search: $search, index: $index){
-                    id
-                    title
-                    categoryName
-                    categoryPath
-                    image
-                    authorName
-                    slug
-                    description
-                }
-            }
-        `,
+        query: GET_SEARCHED_ARTICLES,
         variables: {
             search,
             index
@@ -118,35 +122,36 @@ export async function getSearchedArticles(search: string, index: number) {
     });
 };
 
-export async function getRelatedArticles(categoryId: string) {
+export const GET_RELATED_ARTICLES =gql`
+query Query ($categoryId: ID!){
+    getRelatedArticles(categoryId: $categoryId){
+        id
+        title
+        image
+        slug
+    }
+}
+`;
+export async function getRelatedArticles(client: ApolloClient<NormalizedCacheObject>, categoryId: string) {
     return await client.query({
-        query: gql`
-            query Query ($categoryId: ID!){
-                getRelatedArticles(categoryId: $categoryId){
-                    id
-                    title
-                    image
-                    slug
-                }
-            }
-        `,
+        query: GET_RELATED_ARTICLES,
         variables: {
             categoryId,
         }
     });
 };
 
-export async function getAdjacentArticles(id: string) {
+export const GET_ADJACENT_ARTICLES = gql`
+query Query ($id: ID!){
+    getAdjacentArticles(id: $id){
+        id
+        slug
+        title
+    }
+}`;
+export async function getAdjacentArticles(client: ApolloClient<NormalizedCacheObject>, id: string) {
     return await client.query({
-        query: gql`
-            query Query ($id: ID!){
-                getAdjacentArticles(id: $id){
-                    id
-                    slug
-                    title
-                }
-            }
-        `,
+        query: GET_ADJACENT_ARTICLES,
         variables: {
             id
         }
@@ -155,7 +160,7 @@ export async function getAdjacentArticles(id: string) {
 
 // Count
 
-export async function getTotalArticleCount() {
+export async function getTotalArticleCount(client: ApolloClient<NormalizedCacheObject>,) {
     return await client.query({
         query: gql`
             query Query {
@@ -165,7 +170,7 @@ export async function getTotalArticleCount() {
     });
 };
 
-export async function getCategoryArticleCount(categoryId: string) {
+export async function getCategoryArticleCount(client: ApolloClient<NormalizedCacheObject>, categoryId: string) {
     return await client.query({
         query: gql`
             query Query ($categoryId: ID!) {
@@ -178,7 +183,7 @@ export async function getCategoryArticleCount(categoryId: string) {
     });
 };
 
-export async function getSearchedArticleCount(search: string) {
+export async function getSearchedArticleCount(client: ApolloClient<NormalizedCacheObject>, search: string) {
     return await client.query({
         query: gql`
             query Query ($search: String!){
@@ -193,37 +198,38 @@ export async function getSearchedArticleCount(search: string) {
 
 // Categories
 
-export async function getCategories() {
+export const GET_CATEGORIES = gql`
+query Query {
+    getCategories {
+        id
+        name
+        path
+    }
+}
+`;
+export async function getCategories(client: ApolloClient<NormalizedCacheObject>) {
     return await client.query({
-        query: gql`
-            query Query {
-                getCategories {
-                    id
-                    name
-                    path
-                }
-            }
-        `
+        query: GET_CATEGORIES
     });
 };
 
 // Article Components
 
-export async function getArticleComponents(articleId: string) {
+export const GET_ARTICLE_COMPONENTS = gql`
+query Query ($articleId: ID!) {
+    getArticleComponents(articleId: $articleId) {
+        id
+        componentName
+        order
+        image
+        text
+        fontWeight
+        textAlign
+    }
+}`;
+export async function getArticleComponents(client: ApolloClient<NormalizedCacheObject>, articleId: string) {
     return await client.query({
-        query: gql`
-            query Query ($articleId: ID!) {
-                getArticleComponents(articleId: $articleId) {
-                    id
-                    componentName
-	                order
-	                image
-	                text
-	                fontWeight
-	                textAlign
-                }
-            }
-        `,
+        query: GET_ARTICLE_COMPONENTS,
         variables: {
             articleId
         }
@@ -232,25 +238,18 @@ export async function getArticleComponents(articleId: string) {
 
 // Metadata
 
-export async function getMetadata() {
-    const metadata = await client.query({
-        query: gql`
-            query Query {
-                getMetadata {
-                    name
-                    value
-                }
-            }
-        `
-    });
-    return {
-        headIcon: metadata.data.getMetadata.find((data: MetadataType) => data.name === 'head_icon').value,
-        headerImage: metadata.data.getMetadata.find((data: MetadataType) => data.name === 'header_image').value,
-        footerText: metadata.data.getMetadata.find((data: MetadataType) => data.name === 'footer_text').value,
-        aboutImage: metadata.data.getMetadata.find((data: MetadataType) => data.name === 'about_image').value,
-        aboutTitle: metadata.data.getMetadata.find((data: MetadataType) => data.name === 'about_title').value,
-        mostVisitedArticlesTitle: metadata.data.getMetadata.find((data: MetadataType) => data.name === 'most_visited_articles_title').value
+export const GET_METADATA = gql`
+query Query {
+    getMetadata {
+        id
+        name
+        value
     }
+}`;
+export async function getMetadata(client: ApolloClient<NormalizedCacheObject>,) {
+    return await client.query({
+        query: GET_METADATA
+    });
 };
 
 // Comments
@@ -266,7 +265,7 @@ export const GET_ARTICLE_COMMENTS = gql`
     }
 `;
 
-export async function getArticleComments(articleId: string) {
+export async function getArticleComments(client: ApolloClient<NormalizedCacheObject>, articleId: string) {
     return await client.query({
         query: GET_ARTICLE_COMMENTS,
         variables: {

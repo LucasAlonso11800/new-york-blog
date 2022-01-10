@@ -5,17 +5,26 @@ import Footer from './Footer';
 import Header from './Header';
 import Head from './Head';
 // Types
-import { LayoutProps } from '../../types/Types';
+import { GET_METADATA } from '../../ApolloClient/querys';
+import { useQuery } from '@apollo/client';
+import { MetadataNames, MetadataType } from '../../types/Types';
 
-export default function Layout(props: LayoutProps) {
-    const { title, children, asideArticles, categories, aboutImage, aboutTitle, footerText, headerImage, mostVisitedArticlesTitle, headIcon } = props;
+type Props = {
+    children: React.ReactNode,
+    title: string
+}
+
+export default function Layout({ children, title }: Props) {
+    const { data: { getMetadata: metadata } } = useQuery(GET_METADATA);
+    const headIcon: MetadataType = metadata.find((data: MetadataType) => data.name === MetadataNames.HEAD_ICON);
+
     return (
         <div id="page-container">
-            <Head title={title} icon={headIcon}/>
-            <Header categories={categories} image={headerImage}/>
+            <Head title={title} icon={headIcon.value} />
+            <Header />
             {children}
-            <Aside articles={asideArticles} title={aboutTitle} image={aboutImage} mostVisitedArticlesTitle={mostVisitedArticlesTitle}/>
-            <Footer text={footerText}/>
+            <Aside />
+            <Footer />
         </div>
     )
 };

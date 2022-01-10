@@ -1,8 +1,8 @@
 import React from 'react';
 // GraphQL
-import { LazyQueryResult, OperationVariables, QueryLazyOptions, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { ADD_COMMENT } from '../ApolloClient/mutations';
-import { GET_COMMENT_REPLIES } from '../ApolloClient/querys';
+import { GET_ARTICLE_COMMENTS, GET_COMMENT_REPLIES } from '../ApolloClient/querys';
 // Form
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -25,11 +25,9 @@ type Props = {
     isResponse: 'Y' | 'N'
     isResponseToCommentId: string | null
     setFormOpen: React.Dispatch<React.SetStateAction<boolean>> | null
-    getComments: ((options?: QueryLazyOptions<OperationVariables> | undefined) => Promise<LazyQueryResult<any, OperationVariables>>) | null
 };
 
-export default function CommentForm({ articleId, author, isResponse, isResponseToCommentId, setFormOpen, getComments }: Props) {
-
+export default function CommentForm({ articleId, author, isResponse, isResponseToCommentId, setFormOpen }: Props) {
     const [addComment, { loading }] = useMutation(ADD_COMMENT, {
         update(proxy, result) {
             formik.resetForm();
@@ -46,8 +44,17 @@ export default function CommentForm({ articleId, author, isResponse, isResponseT
                     data: { getCommentReplies: [result.data.addComment, ...data.getCommentReplies] }
                 });
             }
-            if (isResponse === 'N' && getComments) {
-                getComments({ variables: { articleId } });
+            if (isResponse === 'N') {
+                const data = proxy.readQuery({
+                    query: GET_ARTICLE_COMMENTS,
+                    variables: { articleId }
+                }) as any;
+
+                proxy.writeQuery({
+                    query: GET_ARTICLE_COMMENTS,
+                    variables: { articleId },
+                    data: { getArticleComments: [result.data.addComment, ...data.getArticleComments] }
+                })
             };
         },
         onError: (error) => console.log(JSON.stringify(error))

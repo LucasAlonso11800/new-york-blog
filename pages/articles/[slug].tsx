@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 // Components
 import Layout from '../../components/LayoutComponents/Layout';
 import Main from '../../components/LayoutComponents/Main';
@@ -7,47 +7,34 @@ import RelatedArticles from '../../components/RelatedArticles';
 import CommentSection from '../../components/CommentSection';
 import AdjacentArticles from '../../components/AdjacentArticles';
 import CommentForm from '../../components/CommentForm';
-import LoadingIcon from '../../components/LoadingIcon';
 import ExternalLinksSection from '../../components/ExternalLinksSection';
 // Querys
-import { getAdjacentArticles, getAllArticles, getArticleComments, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getRelatedArticles, getSingleArticle, GET_ARTICLE_COMMENTS } from '../../ApolloClient/querys';
-// Mutations
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { getAdjacentArticles, getAllArticles, getArticleComments, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getRelatedArticles, getSingleArticle, GET_ADJACENT_ARTICLES, GET_ARTICLE_COMMENTS, GET_ARTICLE_COMPONENTS, GET_RELATED_ARTICLES, GET_SINGLE_ARTICLE } from '../../ApolloClient/querys';
+import { useMutation, useQuery } from '@apollo/client';
+import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
 import { ADD_VISIT } from '../../ApolloClient/mutations';
-// Const
-import { DEFAULT_METADATA } from '../../const/defaultMetadata';
 // Types
-import { ArticleComponentType, ArticleType, CommentType, LayoutProps } from '../../types/Types';
+import { ArticleType } from '../../types/Types';
 
 type Props = {
-    mainArticle: ArticleType
-    layoutProps: LayoutProps
-    articleComponents: ArticleComponentType[]
-    relatedArticles: ArticleType[]
-    adjacentArticles: ArticleType[]
-    comments: CommentType[]
-};
+    slug: string
+}
 
 export default function ArticlePage(props: Props) {
-    const { mainArticle, layoutProps, articleComponents, relatedArticles, adjacentArticles } = props;
-    const [comments, setComments] = useState<CommentType[]>();
-
     const [addVisit] = useMutation(ADD_VISIT);
-    const [getComments, { loading }] = useLazyQuery(GET_ARTICLE_COMMENTS, {
-        onCompleted: (result) => setComments(result.getArticleComments)
-    });
+
+    const { data: { getSingleArticle: mainArticle } } = useQuery(GET_SINGLE_ARTICLE, { variables: { slug: props.slug } });
+    const { data: { getArticleComments: comments } } = useQuery(GET_ARTICLE_COMMENTS, { variables: { articleId: mainArticle.id } });
+    const { data: { getArticleComponents: articleComponents } } = useQuery(GET_ARTICLE_COMPONENTS, { variables: { articleId: mainArticle.id } });
+    const { data: { getAdjacentArticles: adjacentArticles } } = useQuery(GET_ADJACENT_ARTICLES, { variables: { id: mainArticle.id } });
+    const { data: { getRelatedArticles: relatedArticles } } = useQuery(GET_RELATED_ARTICLES, { variables: { categoryId: mainArticle.categoryId } });
 
     useEffect(() => {
-        addVisit({
-            variables: {
-                articleId: mainArticle.id
-            }
-        });
-        setComments(props.comments);
+        addVisit({ variables: { articleId: mainArticle.id } });
     }, [mainArticle.id]);
 
     return (
-        <Layout {...layoutProps}>
+        <Layout title={mainArticle.title}>
             <Main>
                 <MainArticle
                     title={mainArticle.title}
@@ -62,16 +49,16 @@ export default function ArticlePage(props: Props) {
                 <ExternalLinksSection />
                 <AdjacentArticles articles={adjacentArticles} />
                 <RelatedArticles articles={relatedArticles} />
-                {loading ? <LoadingIcon /> : <></>}
-                {!loading && comments && comments.length > 0 ? <CommentSection comments={comments} articleId={mainArticle.id} /> : <></>}
-                <CommentForm articleId={mainArticle.id} author={null} isResponse='N' isResponseToCommentId={null} setFormOpen={null} getComments={getComments}/>
+                {comments && comments.length > 0 ? <CommentSection comments={comments} articleId={mainArticle.id} /> : <></>}
+                <CommentForm articleId={mainArticle.id} author={null} isResponse='N' isResponseToCommentId={null} setFormOpen={null} />
             </Main>
         </Layout>
     )
 };
 
+const client = initializeApollo();
 export async function getStaticPaths() {
-    const articles = await getAllArticles();
+    const articles = await getAllArticles(client);
 
     return {
         paths: articles.data.getAllArticles.map((article: ArticleType) => {
@@ -94,47 +81,27 @@ type GetStaticPropsParams = {
 
 export async function getStaticProps({ params }: GetStaticPropsParams) {
     try {
-        const article = await getSingleArticle(params.slug);
-        const relatedArticles = await getRelatedArticles(article.data.getSingleArticle.categoryId);
-        const adjacentArticles = await getAdjacentArticles(article.data.getSingleArticle.id);
-        const components = await getArticleComponents(article.data.getSingleArticle.id);
-        const comments = await getArticleComments(article.data.getSingleArticle.id);
-        const asideArticles = await getMostVisitedArticles();
-        const categories = await getCategories();
-        const metadata = await getMetadata();
+        const article = await getSingleArticle(client, params.slug);
+        await getRelatedArticles(client, article.data.getSingleArticle.categoryId);
+        await getAdjacentArticles(client, article.data.getSingleArticle.id);
+        await getArticleComponents(client, article.data.getSingleArticle.id);
+        await getArticleComments(client, article.data.getSingleArticle.id);
+        await getMostVisitedArticles(client);
+        await getCategories(client);
+        await getMetadata(client);
 
-        return {
+        return addApolloState(client, {
             props: {
-                mainArticle: article.data.getSingleArticle,
-                relatedArticles: relatedArticles.data.getRelatedArticles,
-                adjacentArticles: adjacentArticles.data.getAdjacentArticles,
-                articleComponents: components.data.getArticleComponents,
-                comments: comments.data.getArticleComments,
-                layoutProps: {
-                    asideArticles: asideArticles.data.getMostVisitedArticles,
-                    title: article.data.getSingleArticle.title + " - ",
-                    categories: categories.data.getCategories,
-                    ...metadata
-                }
+                slug: params.slug,
             }
-        }
+        });
     }
     catch (err) {
         console.log(err);
-        return {
+        addApolloState(client, {
             props: {
-                mainArticle: {},
-                relatedArticles: [],
-                adjacentArticles: [],
-                articleComponents: [],
-                comments: [],
-                layoutProps: {
-                    asideArticles: [],
-                    title: "",
-                    categories: [],
-                    ...DEFAULT_METADATA
-                }
+                slug: params.slug,
             }
-        }
+        });
     }
 };

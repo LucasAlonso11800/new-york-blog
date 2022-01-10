@@ -1,3 +1,25 @@
+export enum ModalActions {
+    ADD_CATEGORY,
+    EDIT_CATEGORY,
+    DELETE_CATEGORY,
+    EDIT_METADATA
+};
+
+export enum MetadataNames {
+    HEADER_IMAGE = 'header_image',
+    FOOTER_TEXT = 'footer_text',
+    ABOUT_TITLE = 'about_title',
+    MOST_VISITED_ARTICLES_TITLE = 'most_visited_articles_title',
+    ABOUT_IMAGE = 'about_image',
+    HEAD_ICON = 'head_icon'
+}
+
+export type ModalInfoType = {
+    action: ModalActions | null
+    open: boolean
+    title: string
+};
+
 export type CategoryType = {
     id: string
     name: string
@@ -36,23 +58,11 @@ export type ArticleComponentType = {
 };
 
 export type MetadataType = {
+    id: string
     name: string
     value: string
     description: string
 }
-
-export type LayoutProps = {
-    title: string
-    children: JSX.Element | JSX.Element[]
-    asideArticles: ArticleType[]
-    categories: CategoryType[]
-    headerImage: string
-    footerText: string
-    aboutImage: string
-    aboutTitle: string
-    mostVisitedArticlesTitle: string
-    headIcon: string
-};
 
 export type CommentType = {
     id: string

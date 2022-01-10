@@ -1,6 +1,6 @@
 import { STORED_PROCEDURES } from "../const/StoredProcedures";
 
-export type CallSPParams = RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
+export type CallSPParams = AddCategory | EditCategory | DeleteCategory | RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
 
 // Articles
 
@@ -54,6 +54,21 @@ type AddVisit = {
 type GetCategories = {
     procedure: STORED_PROCEDURES.GET_CATEGORIES,
     values: []
+};
+
+type AddCategory = {
+    procedure: STORED_PROCEDURES.ADD_CATEGORY,
+    values: [string, string]
+};
+
+type EditCategory = {
+    procedure: STORED_PROCEDURES.EDIT_CATEGORY,
+    values: [number, string, string]
+};
+
+type DeleteCategory = {
+    procedure: STORED_PROCEDURES.DELETE_CATEGORY,
+    values: [number]
 };
 
 // Count

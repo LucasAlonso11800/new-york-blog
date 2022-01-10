@@ -10,22 +10,19 @@ import LoadingIcon from '../../components/LoadingIcon';
 import { useMutation } from '@apollo/client';
 import { REGISTER_USER } from '../../ApolloClient/mutations';
 import { getCategories, getMetadata } from '../../ApolloClient/querys';
+import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
 // Form
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-// Const
-import { DEFAULT_METADATA } from '../../const/defaultMetadata';
-// Types
-import { LayoutProps } from '../../types/Types';
 
-type Props = { layoutProps: LayoutProps }
+export default function RegisterPage() {
+    const { user, setUser } = useContext(GlobalContext);
 
-export default function RegisterPage({ layoutProps }: Props) {
-    const { setUser } = useContext(GlobalContext);
+    if (user !== null) return window.location.assign('/admin');
 
     const [registerUser, { loading }] = useMutation(REGISTER_USER, {
         onCompleted: (data) => {
-            if(typeof localStorage !== 'undefined') localStorage.setItem('token', data.loginUser.token);
+            if (typeof localStorage !== 'undefined') localStorage.setItem('token', data.loginUser.token);
             setUser(data.registerUser)
             window.location.assign('/admin');
         },
@@ -49,7 +46,7 @@ export default function RegisterPage({ layoutProps }: Props) {
     });
 
     return (
-        <AdminLayout {...layoutProps}>
+        <AdminLayout title="Register - ">
             <Main>
                 <h1 className={classes.title}>Please create an account to enter the admin section</h1>
                 <form className={classes.form} onSubmit={formik.handleSubmit}>
@@ -93,30 +90,19 @@ export default function RegisterPage({ layoutProps }: Props) {
 };
 
 export async function getStaticProps() {
+    const client = initializeApollo();
     try {
-        const categories = await getCategories();
-        const metadata = await getMetadata();
+        await getCategories(client);
+        await getMetadata(client);
 
-        return {
-            props: {
-                layoutProps: {
-                    title: "Register" + " - ",
-                    categories: categories.data.getCategories,
-                    ...metadata
-                }
-            }
-        }
+        return addApolloState(client, {
+            props: {}
+        })
     }
     catch (err) {
         console.log(err);
-        return {
-            props: {
-                layoutProps: {
-                    title: "",
-                    categories: [],
-                    ...DEFAULT_METADATA
-                }
-            }
-        }
+        return addApolloState(client, {
+            props: {}
+        });
     }
 };

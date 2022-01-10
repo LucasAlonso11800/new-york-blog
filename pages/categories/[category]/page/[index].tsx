@@ -4,37 +4,43 @@ import CategoryArticles from '../../../../components/CategoryArticles';
 import Layout from '../../../../components/LayoutComponents/Layout';
 import Main from '../../../../components/LayoutComponents/Main';
 import Pagination from '../../../../components/Pagination';
-// Querys
-import { getCategories, getCategoryArticleCount, getCategoryArticles, getMetadata, getMostVisitedArticles, getTotalArticleCount } from '../../../../ApolloClient/querys';
+// GraphQL
+import { getCategories, getCategoryArticleCount, getCategoryArticles, getMetadata, getMostVisitedArticles, getTotalArticleCount, GET_CATEGORY_ARTICLES } from '../../../../ApolloClient/querys';
+import { addApolloState, initializeApollo } from '../../../../ApolloClient/NewApolloConfig';
+import { useQuery } from '@apollo/client';
 // Const
-import { DEFAULT_METADATA } from '../../../../const/defaultMetadata';
 import { CATEGORY_ARTICLE_LIMIT } from '../../../../const/Limits';
 // Types
-import { ArticleType, CategoryType, LayoutProps } from '../../../../types/Types';
+import { CategoryType } from '../../../../types/Types';
 
 type Props = {
-    category: string
-    categoryArticles: ArticleType[]
-    categoryArticleCount: number
-    layoutProps: LayoutProps
+    category: CategoryType
+    articleCount: number
+    title: string
     index: number
 };
 
-export default function CategoryPage({ category, categoryArticles, categoryArticleCount, layoutProps, index }: Props) {
+export default function CategoryPage({ category, articleCount, title, index }: Props) {
+    const { data: { getCategoryArticles: articles } } = useQuery(GET_CATEGORY_ARTICLES, { variables: { categoryId: category.id, index } })
+
     return (
-        <Layout {...layoutProps}>
+        <Layout title={title}>
             <Main>
-                <CategoryArticles articles={categoryArticles} />
-                <Pagination index={index} category={category} articleCount={categoryArticleCount} />
+                <CategoryArticles articles={articles} />
+                <Pagination index={index} category={category.path} articleCount={articleCount} />
             </Main>
         </Layout>
     )
 };
 
+const client = initializeApollo();
+
 export async function getStaticPaths() {
-    const categories = await getCategories();
-    const articleCount = await getTotalArticleCount();
+    const categories = await getCategories(client);
+    const articleCount = await getTotalArticleCount(client);
+
     const paths: { params: { index: string, category: string } }[] = [];
+
     categories.data.getCategories.forEach((category: CategoryType) => {
         for (let i = 0; i < Math.ceil(articleCount.data.getTotalArticleCount / CATEGORY_ARTICLE_LIMIT); i++) {
             paths.push({
@@ -46,7 +52,7 @@ export async function getStaticPaths() {
 
         }
     });
-    console.log(paths)
+
     return {
         paths,
         fallback: false
@@ -61,46 +67,33 @@ type GetStaticPropsParams = {
 }
 
 export async function getStaticProps({ params }: GetStaticPropsParams) {
-    const title = params.category.substring(0, 1).toUpperCase() + params.category.substring(1) + " - ";
     try {
-        const categories = await getCategories();
+        const categories = await getCategories(client);
         const category: CategoryType = categories.data.getCategories.find((category: CategoryType) => category.path === params.category);
-        const categoryArticles = await getCategoryArticles(category.id, parseInt(params.index));
-        const categoryArticleCount = await getCategoryArticleCount(category.id);
+        await getCategoryArticles(client, category.id, parseInt(params.index));
+        const articleCount = await getCategoryArticleCount(client, category.id);
 
-        const asideArticles = await getMostVisitedArticles();
-        const metadata = await getMetadata();
+        await getMostVisitedArticles(client);
+        await getMetadata(client);
 
-        return {
+        return addApolloState(client, {
             props: {
-                category: params.category,
-                categoryArticles: categoryArticles.data.getCategoryArticles,
-                categoryArticleCount: categoryArticleCount.data.getCategoryArticleCount,
-                layoutProps: {
-                    asideArticles: asideArticles.data.getMostVisitedArticles,
-                    title,
-                    categories: categories.data.getCategories,
-                    ...metadata
-                },
+                category,
+                title: category.name + " - ",
+                articleCount: articleCount.data.getCategoryArticleCount,
                 index: parseInt(params.index)
             }
-        };
+        });
     }
     catch (err) {
         console.log(err);
-        return {
+        return addApolloState(client, {
             props: {
-                category: params.category,
-                categoryArticles: [],
-                categoryArticleCount: 0,
-                layoutProps: {
-                    asideArticles: [],
-                    title,
-                    categories: [],
-                    ...DEFAULT_METADATA
-                },
+                category: {},
+                title: "",
+                articleCount: 0,
                 index: parseInt(params.index)
             }
-        }
-    }
+        })
+    };
 };

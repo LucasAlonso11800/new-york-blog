@@ -11,6 +11,9 @@ export enum STORED_PROCEDURES {
     ADD_VISIT = 'AddVisit',
         // Categories
     GET_CATEGORIES = 'GetCategories',
+    ADD_CATEGORY = 'AddCategory',
+    EDIT_CATEGORY = 'EditCategory',
+    DELETE_CATEGORY = 'DeleteCategory',
         // Count
     GET_TOTAL_ARTICLE_COUNT = 'GetTotalArticleCount',
     GET_CATEGORY_ARTICLE_COUNT = 'GetCategoryArticleCount',

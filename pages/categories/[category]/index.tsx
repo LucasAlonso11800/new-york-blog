@@ -4,33 +4,35 @@ import Main from '../../../components/LayoutComponents/Main';
 import CategoryArticles from '../../../components/CategoryArticles';
 import Pagination from '../../../components/Pagination';
 import Layout from '../../../components/LayoutComponents/Layout';
-// Querys
-import { getCategories, getCategoryArticleCount, getCategoryArticles, getMetadata, getMostVisitedArticles } from '../../../ApolloClient/querys';
-// Const
-import { DEFAULT_METADATA } from '../../../const/defaultMetadata';
+// GraphQL
+import { addApolloState, initializeApollo } from '../../../ApolloClient/NewApolloConfig';
+import { useQuery } from '@apollo/client';
+import { getCategories, getCategoryArticleCount, getCategoryArticles, getMetadata, getMostVisitedArticles, GET_CATEGORY_ARTICLES } from '../../../ApolloClient/querys';
 // Types
-import { ArticleType, CategoryType, LayoutProps } from '../../../types/Types';
+import { CategoryType } from '../../../types/Types';
 
 type Props = {
-    category: string
-    categoryArticles: ArticleType[]
-    categoryArticleCount: number
-    layoutProps: LayoutProps
+    category: CategoryType
+    title: string
+    articleCount: number
 };
 
-export default function CategoryPage({ category, categoryArticles, categoryArticleCount, layoutProps }: Props) {
+export default function CategoryPage({ category, title, articleCount }: Props) {
+    const { data: { getCategoryArticles: articles } } = useQuery(GET_CATEGORY_ARTICLES, { variables: { categoryId: category.id, index: 1 } })
     return (
-        <Layout {...layoutProps}>
+        <Layout title={title}>
             <Main>
-                <CategoryArticles articles={categoryArticles} />
-                <Pagination index={1} category={category} articleCount={categoryArticleCount}/>
+                <CategoryArticles articles={articles} />
+                <Pagination index={1} category={category.path} articleCount={articleCount} />
             </Main>
         </Layout>
     )
 };
 
+const client = initializeApollo();
+
 export async function getStaticPaths() {
-    const categories = await getCategories();
+    const categories = await getCategories(client);
     return {
         paths: categories.data.getCategories.map((category: CategoryType) => {
             return {
@@ -51,44 +53,31 @@ type GetStaticPropsParams = {
 };
 
 export async function getStaticProps({ params }: GetStaticPropsParams) {
-    const title = params.category.substring(0, 1).toUpperCase() + params.category.substring(1) + " - ";
     try {
-        const categories = await getCategories();
+        const categories = await getCategories(client);
         const category: CategoryType = categories.data.getCategories.find((category: CategoryType) => category.path === params.category);
-        const categoryArticles = await getCategoryArticles(category.id, 1);
-        const categoryArticleCount = await getCategoryArticleCount(category.id);
+        await getCategoryArticles(client, category.id, 1);
+        const articleCount = await getCategoryArticleCount(client, category.id);
 
-        const asideArticles = await getMostVisitedArticles();
-        const metadata = await getMetadata();
+        await getMostVisitedArticles(client);
+        await getMetadata(client);
 
-        return {
+        return addApolloState(client, {
             props: {
-                category: params.category,
-                categoryArticles: categoryArticles.data.getCategoryArticles,
-                categoryArticleCount: categoryArticleCount.data.getCategoryArticleCount,
-                layoutProps: {
-                    asideArticles: asideArticles.data.getMostVisitedArticles,
-                    title,
-                    categories: categories.data.getCategories,
-                    ...metadata
-                }
+                articleCount: articleCount.data.getCategoryArticleCount,
+                category,
+                title: category.name + " - "
             }
-        };
+        });
     }
     catch (err) {
         console.log(err);
-        return {
+        return addApolloState(client, {
             props: {
-                category: params.category,
-                categoryArticles: [],
-                categoryArticleCount: 0,
-                layoutProps: {
-                    asideArticles: [],
-                    title,
-                    categories: [],
-                    ...DEFAULT_METADATA
-                }
+                articleCount: 0,
+                category: {},
+                title: ""
             }
-        }
+        });
     }
 };

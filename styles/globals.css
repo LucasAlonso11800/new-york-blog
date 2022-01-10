@@ -25,6 +25,7 @@ div#page-container {
     min-height: 100vh;
     font-family: var(--raleway);
     line-height: 1.5;
+    position: relative;
 }
 
 div#page-container.admin {
@@ -36,6 +37,7 @@ div#page-container.admin {
     min-height: 100vh;
     font-family: var(--raleway);
     line-height: 1.5;
+    position: relative;
 }
 
 @media all and (max-width: 1250px) {

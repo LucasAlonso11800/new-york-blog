@@ -3,6 +3,12 @@ export {
 } from './articles';
 
 export {
+    addCategory,
+    editCategory,
+    deleteCategory
+} from './categories';
+
+export {
     addComment
 } from './comments'
 
