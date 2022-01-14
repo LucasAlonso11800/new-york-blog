@@ -1,13 +1,13 @@
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 import { gql } from "apollo-server-micro";
-import { MetadataType } from "../types/Types";
+import { CORE_ARTICLE_FIELDS, COMMENTS_FIELDS } from './fragments';
 
 // Articles
 
 export async function getAllArticles(client: ApolloClient<NormalizedCacheObject>) {
     return await client.query({
         query: gql`
-            query Query {
+            query GetAllArticles {
                 getAllArticles {
                     id
                     slug
@@ -18,18 +18,17 @@ export async function getAllArticles(client: ApolloClient<NormalizedCacheObject>
 };
 
 export const GET_SINGLE_ARTICLE = gql`
-query Query ($slug: String!){
-    getSingleArticle(slug: $slug){
-        id
-        title
-        categoryId
-        categoryName
-        categoryPath
-        image
-        authorName
-        createdAt
+    ${CORE_ARTICLE_FIELDS}
+    query GetSingleArticle ($slug: String!){
+        getSingleArticle(slug: $slug){
+            ...CoreArticleFields
+            categoryId
+            categoryName
+            categoryPath
+            authorName
+            createdAt
+        }
     }
-}
 `;
 export async function getSingleArticle(client: ApolloClient<NormalizedCacheObject>, slug: string) {
     return await client.query({
@@ -41,18 +40,16 @@ export async function getSingleArticle(client: ApolloClient<NormalizedCacheObjec
 };
 
 export const GET_LATEST_ARTICLES = gql`
-query Query ($index: Int!){
-    getLatestArticles(index: $index){
-        id
-        title
-        categoryName
-        categoryPath
-        image
-        authorName
-        slug
-        description
+    ${CORE_ARTICLE_FIELDS}
+    query GetLatestArticles ($index: Int!){
+        getLatestArticles(index: $index){
+            ...CoreArticleFields
+            categoryName
+            categoryPath
+            authorName
+            description
+        }
     }
-}
 `;
 export async function getLatestArticles(client: ApolloClient<NormalizedCacheObject>, index: number) {
     return await client.query({
@@ -64,14 +61,12 @@ export async function getLatestArticles(client: ApolloClient<NormalizedCacheObje
 };
 
 export const GET_MOST_VISITED_ARTICLES = gql`
-query Query {
-    getMostVisitedArticles {
-        id
-        title
-        image
-        slug
+    ${CORE_ARTICLE_FIELDS}
+    query GetMostVisitedArticles {
+        getMostVisitedArticles {
+            ...CoreArticleFields
+        }
     }
-}
 `;
 export async function getMostVisitedArticles(client: ApolloClient<NormalizedCacheObject>,) {
     return await client.query({
@@ -80,14 +75,13 @@ export async function getMostVisitedArticles(client: ApolloClient<NormalizedCach
 };
 
 export const GET_CATEGORY_ARTICLES = gql`
-query Query ($categoryId: ID!, $index: Int!){
-    getCategoryArticles(categoryId: $categoryId, index: $index){
-        id
-        title
-        image
-        slug
+    ${CORE_ARTICLE_FIELDS}
+    query GetCategoryArticles ($categoryId: ID!, $index: Int!){
+        getCategoryArticles(categoryId: $categoryId, index: $index){
+            ...CoreArticleFields
+        }
     }
-}`;
+`;
 
 export async function getCategoryArticles(client: ApolloClient<NormalizedCacheObject>, categoryId: string, index: number) {
     return await client.query({
@@ -100,18 +94,17 @@ export async function getCategoryArticles(client: ApolloClient<NormalizedCacheOb
 };
 
 export const GET_SEARCHED_ARTICLES = gql`
-query Query ($search: String!, $index: Int!){
-    getSearchedArticles(search: $search, index: $index){
-        id
-        title
-        categoryName
-        categoryPath
-        image
-        authorName
-        slug
-        description
+    ${CORE_ARTICLE_FIELDS}
+    query GetSearchedArticles ($search: String!, $index: Int!){
+        getSearchedArticles(search: $search, index: $index){
+            ...CoreArticleFields
+            categoryName
+            categoryPath
+            authorName
+            description
+        }
     }
-}`;
+`;
 export async function getSearchedArticles(client: ApolloClient<NormalizedCacheObject>, search: string, index: number) {
     return await client.query({
         query: GET_SEARCHED_ARTICLES,
@@ -122,15 +115,13 @@ export async function getSearchedArticles(client: ApolloClient<NormalizedCacheOb
     });
 };
 
-export const GET_RELATED_ARTICLES =gql`
-query Query ($categoryId: ID!){
-    getRelatedArticles(categoryId: $categoryId){
-        id
-        title
-        image
-        slug
+export const GET_RELATED_ARTICLES = gql`
+    ${CORE_ARTICLE_FIELDS}
+    query GetRelatedArticles ($categoryId: ID!){
+        getRelatedArticles(categoryId: $categoryId){
+            ...CoreArticleFields
+        }
     }
-}
 `;
 export async function getRelatedArticles(client: ApolloClient<NormalizedCacheObject>, categoryId: string) {
     return await client.query({
@@ -142,13 +133,14 @@ export async function getRelatedArticles(client: ApolloClient<NormalizedCacheObj
 };
 
 export const GET_ADJACENT_ARTICLES = gql`
-query Query ($id: ID!){
-    getAdjacentArticles(id: $id){
-        id
-        slug
-        title
+    query GetAdjacentArticles ($id: ID!){
+        getAdjacentArticles(id: $id){
+            id
+            slug
+            title
+        }
     }
-}`;
+`;
 export async function getAdjacentArticles(client: ApolloClient<NormalizedCacheObject>, id: string) {
     return await client.query({
         query: GET_ADJACENT_ARTICLES,
@@ -163,7 +155,7 @@ export async function getAdjacentArticles(client: ApolloClient<NormalizedCacheOb
 export async function getTotalArticleCount(client: ApolloClient<NormalizedCacheObject>,) {
     return await client.query({
         query: gql`
-            query Query {
+            query GetTotalArticleCount {
                 getTotalArticleCount
             } 
         `
@@ -173,7 +165,7 @@ export async function getTotalArticleCount(client: ApolloClient<NormalizedCacheO
 export async function getCategoryArticleCount(client: ApolloClient<NormalizedCacheObject>, categoryId: string) {
     return await client.query({
         query: gql`
-            query Query ($categoryId: ID!) {
+            query GetCategoryArticleCount ($categoryId: ID!) {
                 getCategoryArticleCount (categoryId: $categoryId)
             } 
         `,
@@ -186,7 +178,7 @@ export async function getCategoryArticleCount(client: ApolloClient<NormalizedCac
 export async function getSearchedArticleCount(client: ApolloClient<NormalizedCacheObject>, search: string) {
     return await client.query({
         query: gql`
-            query Query ($search: String!){
+            query GetSearchedArticleCount ($search: String!){
                 getSearchedArticleCount(search: $search)
             } 
         `,
@@ -199,13 +191,13 @@ export async function getSearchedArticleCount(client: ApolloClient<NormalizedCac
 // Categories
 
 export const GET_CATEGORIES = gql`
-query Query {
-    getCategories {
-        id
-        name
-        path
+    query GetCategories {
+        getCategories {
+            id
+            name
+            path
+        }
     }
-}
 `;
 export async function getCategories(client: ApolloClient<NormalizedCacheObject>) {
     return await client.query({
@@ -216,17 +208,18 @@ export async function getCategories(client: ApolloClient<NormalizedCacheObject>)
 // Article Components
 
 export const GET_ARTICLE_COMPONENTS = gql`
-query Query ($articleId: ID!) {
-    getArticleComponents(articleId: $articleId) {
-        id
-        componentName
-        order
-        image
-        text
-        fontWeight
-        textAlign
+    query GetArticleComponents ($articleId: ID!) {
+        getArticleComponents(articleId: $articleId) {
+            id
+            componentName
+            order
+            image
+            text
+            fontWeight
+            textAlign
+        }
     }
-}`;
+`;
 export async function getArticleComponents(client: ApolloClient<NormalizedCacheObject>, articleId: string) {
     return await client.query({
         query: GET_ARTICLE_COMPONENTS,
@@ -239,13 +232,14 @@ export async function getArticleComponents(client: ApolloClient<NormalizedCacheO
 // Metadata
 
 export const GET_METADATA = gql`
-query Query {
-    getMetadata {
-        id
-        name
-        value
+    query GetMetadata {
+        getMetadata {
+            id
+            name
+            value
+        }
     }
-}`;
+`;
 export async function getMetadata(client: ApolloClient<NormalizedCacheObject>,) {
     return await client.query({
         query: GET_METADATA
@@ -255,12 +249,10 @@ export async function getMetadata(client: ApolloClient<NormalizedCacheObject>,) 
 // Comments
 
 export const GET_ARTICLE_COMMENTS = gql`
-    query Query ($articleId: ID!) {
+    ${COMMENTS_FIELDS}
+    query GetArticleComments($articleId: ID!) {
         getArticleComments(articleId: $articleId){
-            id
-            author
-            createdAt
-            body
+            ...CommentFields
         } 
     }
 `;
@@ -275,12 +267,10 @@ export async function getArticleComments(client: ApolloClient<NormalizedCacheObj
 };
 
 export const GET_COMMENT_REPLIES = gql`
-    query Query ($commentId: ID!) {
+    ${COMMENTS_FIELDS}
+    query GetCommentReplies ($commentId: ID!) {
         getCommentReplies(commentId: $commentId){
-            id
-            author
-            createdAt
-            body
+            ...CommentFields
         }
     }
 `;

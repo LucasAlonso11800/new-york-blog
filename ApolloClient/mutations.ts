@@ -1,9 +1,10 @@
 import { gql } from "@apollo/client";
+import { COMMENTS_FIELDS } from "./fragments";
 
 // Articles
 
 export const ADD_VISIT = gql`
-    mutation Mutation ($articleId: ID!) {
+    mutation AddVisit($articleId: ID!) {
         addVisit(articleId: $articleId)
     }
 `;
@@ -11,7 +12,7 @@ export const ADD_VISIT = gql`
 // Categories
 
 export const ADD_CATEGORY = gql`
-    mutation Mutation ($categoryName: String!, $categoryPath: String!){
+    mutation AddCategory($categoryName: String!, $categoryPath: String!){
         addCategory(categoryName: $categoryName, categoryPath: $categoryPath){
             id
             name
@@ -21,7 +22,7 @@ export const ADD_CATEGORY = gql`
 `;
 
 export const EDIT_CATEGORY = gql`
-    mutation Mutation ($categoryId: ID!, $categoryName: String!, $categoryPath: String!){
+    mutation EditCategory($categoryId: ID!, $categoryName: String!, $categoryPath: String!){
         editCategory(categoryId: $categoryId, categoryName: $categoryName, categoryPath: $categoryPath){
             id
             name
@@ -31,7 +32,7 @@ export const EDIT_CATEGORY = gql`
 `;
 
 export const DELETE_CATEGORY = gql`
-    mutation Mutation ($categoryId: ID!){
+    mutation DeleteCategory($categoryId: ID!){
         deleteCategory(categoryId: $categoryId)
     }
 `;
@@ -39,19 +40,17 @@ export const DELETE_CATEGORY = gql`
 // Comments
 
 export const ADD_COMMENT = gql`
-    mutation Mutation($articleId: ID!, $commenter: String!, $email: String!, $website: String, $body: String!, $isResponse: String!, $isResponseToCommentId: ID){
+    ${COMMENTS_FIELDS}
+    mutation AddComment($articleId: ID!, $commenter: String!, $email: String!, $website: String, $body: String!, $isResponse: String!, $isResponseToCommentId: ID){
         addComment(articleId: $articleId, commenter: $commenter, email: $email, website: $website, body: $body, isResponse: $isResponse, isResponseToCommentId: $isResponseToCommentId){
-            id
-            author
-            createdAt
-            body
+            ...CommentFields
         }
     }
 `;
 
 // Users
 export const REGISTER_USER = gql`
-    mutation Mutation($username: String!, $email: String!, $password: String!) {
+    mutation RegisterUser($username: String!, $email: String!, $password: String!) {
         registerUser(username: $username, email: $email, password: $password){
             id
             username
@@ -63,7 +62,7 @@ export const REGISTER_USER = gql`
 `;
 
 export const LOGIN_USER = gql`
-    mutation Mutation($email: String!, $password: String!) {
+    mutation LoginUser($email: String!, $password: String!) {
         loginUser(email: $email, password: $password){
             id
             username
@@ -77,7 +76,7 @@ export const LOGIN_USER = gql`
 // Metadata
 
 export const EDIT_METADATA = gql`
-    mutation Mutation($id: ID!, $name: String!, $value: String!){
+    mutation EditMetadata($id: ID!, $name: String!, $value: String!){
         editMetadata(id: $id, name: $name, value: $value){
             id
             name

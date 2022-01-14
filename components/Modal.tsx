@@ -98,7 +98,7 @@ export default function Modal({ category, metadata, setSelectedCategory, setSele
             };
             handleModalClose();
         },
-        onError: (err: any) => console.log(JSON.stringify(err, null, 2))
+        onError: (err) => console.log(err.message)
     });
 
     const formik = useFormik({
@@ -121,7 +121,7 @@ export default function Modal({ category, metadata, setSelectedCategory, setSele
             };
         }
     });
-    
+
     const handleReaderLoaded = (readerEvt: any) => {
         const binaryString = readerEvt.target.result
         setImage({ ...image, src: btoa(binaryString) })
@@ -168,6 +168,9 @@ export default function Modal({ category, metadata, setSelectedCategory, setSele
                                 disabled={loading}
                             />
                         </div>
+                        {formik.touched.name && formik.errors.name &&
+                            <p className={classes.error}>{formik.errors.name}</p>
+                        }
                         {isAnImage &&
                             <div className={classes.imageContainer}>
                                 <img
@@ -210,6 +213,9 @@ export default function Modal({ category, metadata, setSelectedCategory, setSele
                                 disabled={loading || action === ModalActions.DELETE_CATEGORY}
                             />
                         </div>
+                        {formik.touched.name && formik.errors.name &&
+                            <p className={classes.error}>{formik.errors.name}</p>
+                        }
                         <div className={classes.inputContainer}>
                             <label className={classes.label}>Path</label>
                             <input
@@ -221,6 +227,9 @@ export default function Modal({ category, metadata, setSelectedCategory, setSele
                                 disabled={loading || action === ModalActions.DELETE_CATEGORY}
                             />
                         </div>
+                        {formik.touched.path && formik.errors.path &&
+                            <p className={classes.error}>{formik.errors.path}</p>
+                        }
                         <div className={classes.buttonsContainer}>
                             <button className={classes.button} type="submit">Confirm</button>
                             <button className={classes.button} type="button" onClick={() => handleModalClose()}>Cancel</button>
