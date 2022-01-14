@@ -20,6 +20,7 @@ export enum STORED_PROCEDURES {
     GET_SEARCHED_ARTICLE_COUNT = 'GetSearchedArticleCount',
         // Metadata
     GET_METADATA = 'GetMetadata',
+    EDIT_METADATA = 'EditMetadata',
         // Article components
     GET_ARTICLE_COMPONENTS = 'GetArticleComponents',
         // Comments

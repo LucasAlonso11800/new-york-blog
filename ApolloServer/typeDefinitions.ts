@@ -38,6 +38,8 @@ export const typeDefs = gql`
         # Users
         loginUser(email: String!, password: String!): User
         registerUser(username: String!, email: String!, password: String!): User
+        # Metadata
+        editMetadata(id: ID!, name: String!, value: String!): Metadata
     }
 
     type Article {

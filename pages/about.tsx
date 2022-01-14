@@ -4,29 +4,28 @@ import Layout from '../components/LayoutComponents/Layout';
 import Main from '../components/LayoutComponents/Main';
 import MainArticle from '../components/MainArticle';
 // Querys
-import { getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getSingleArticle } from '../ApolloClient/querys';
-// Const
-import { DEFAULT_METADATA } from '../const/defaultMetadata';
+import { getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getSingleArticle, GET_ARTICLE_COMPONENTS, GET_SINGLE_ARTICLE } from '../ApolloClient/querys';
 // Types
-import { ArticleComponentType, ArticleType, LayoutProps } from '../types/Types';
+import { ArticleComponentType, ArticleType } from '../types/Types';
+import { addApolloState, initializeApollo } from '../ApolloClient/NewApolloConfig';
+import { useQuery } from '@apollo/client';
 
-type Props = {
-    layoutProps: LayoutProps,
-    aboutArticle: ArticleType,
-    articleComponents: ArticleComponentType[]
-};
+export default function AboutPage() {
+    const { data: { getSingleArticle: article } } = useQuery(GET_SINGLE_ARTICLE, { variables: { slug: "about" } });
+    const { data: { getArticleComponents: articleComponents } } = useQuery(GET_ARTICLE_COMPONENTS, { variables: { articleId: article.id } });
 
-export default function AboutPage({ layoutProps, aboutArticle, articleComponents }: Props) {
     return (
-        <Layout {...layoutProps}>
+        <Layout title="About - ">
             <Main>
                 <MainArticle 
-                    title={aboutArticle.title}
-                    image={aboutArticle.image}
+                    title={article.title}
+                    image={article.image}
                     articleComponents={articleComponents}
                     categoryName=""
                     categoryPath=""
                     authorName=""
+                    createdAt={article.createdAt}
+                    commentCount={0}
                 />
             </Main>
         </Layout>
@@ -34,39 +33,22 @@ export default function AboutPage({ layoutProps, aboutArticle, articleComponents
 };
 
 export async function getStaticProps() {
+    const client = initializeApollo();
     try {
-        const aboutArticle = await getSingleArticle("about");
-        const components = await getArticleComponents(aboutArticle.data.getSingleArticle.id);
-        const asideArticles = await getMostVisitedArticles();
-        const categories = await getCategories();
-        const metadata = await getMetadata();
+        const aboutArticle = await getSingleArticle(client, "about");
+        await getArticleComponents(client, aboutArticle.data.getSingleArticle.id);
+        await getMostVisitedArticles(client);
+        await getCategories(client);
+        await getMetadata(client);
 
-        return {
-            props: {
-                aboutArticle: aboutArticle.data.getSingleArticle,
-                layoutProps: {
-                    asideArticles: asideArticles.data.getMostVisitedArticles,
-                    title: "About ",
-                    categories: categories.data.getCategories,
-                    ...metadata
-                },
-                articleComponents: components.data.getArticleComponents
-            }
-        }
+        return addApolloState(client, {
+            props: {}
+        });
     }
     catch (err) {
         console.log(err)
-        return {
-            props: {
-                aboutArticle: {},
-                layoutProps: {
-                    asideArticles: [],
-                    title: "",
-                    categories: [],
-                    ...DEFAULT_METADATA
-                },
-                articleComponents: []
-            }
-        }
+        return addApolloState(client, {
+            props: {}
+        });
     }
 };

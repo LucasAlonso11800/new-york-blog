@@ -1,6 +1,6 @@
 import { STORED_PROCEDURES } from "../const/StoredProcedures";
 
-export type CallSPParams = AddCategory | EditCategory | DeleteCategory | RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
+export type CallSPParams = EditMetadata | AddCategory | EditCategory | DeleteCategory | RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
 
 // Articles
 
@@ -94,6 +94,11 @@ type GetMetadata = {
     procedure: STORED_PROCEDURES.GET_METADATA,
     values: []
 };
+
+type EditMetadata = {
+    procedure: STORED_PROCEDURES.EDIT_METADATA,
+    values: [number, string, string]
+}
 
 // Article components
 

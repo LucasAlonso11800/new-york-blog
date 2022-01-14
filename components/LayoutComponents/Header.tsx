@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 // Components
 import Link from 'next/link';
 import Image from 'next/image';
+import { GET_CATEGORIES, GET_METADATA } from '../../ApolloClient/querys';
+// Utils
+import { fixFirebaseURL } from '../../utils/fixFirebaseURL';
 // Styles
 import classes from '../../styles/components/LayoutComponents/Header.module.css';
 // Types
 import { CategoryType, MetadataNames, MetadataType } from '../../types/Types';
 import { useQuery } from '@apollo/client';
-import { GET_CATEGORIES, GET_METADATA } from '../../ApolloClient/querys';
 
 export default function Header() {
     const [width, setWidth] = useState<number>();
@@ -74,7 +76,7 @@ export default function Header() {
             </nav>
             <div className={classes.siteLogoContainer}>
                 <Link href="/">
-                    <Image src={image.value} height="175" width="670" />
+                    <Image src={fixFirebaseURL(image.value)} height="175" width="670" />
                 </Link>
             </div>
         </header>

@@ -34,7 +34,7 @@ export default function ArticlePage(props: Props) {
     }, [mainArticle.id]);
 
     return (
-        <Layout title={mainArticle.title}>
+        <Layout title={mainArticle.title + " - "}>
             <Main>
                 <MainArticle
                     title={mainArticle.title}

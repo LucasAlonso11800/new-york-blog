@@ -20,7 +20,7 @@ export default function Layout({ children, title }: Props) {
 
     return (
         <div id="page-container">
-            <Head title={title} icon={headIcon.value} />
+            <Head title={title} />
             <Header />
             {children}
             <Aside />

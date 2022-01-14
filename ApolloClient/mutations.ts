@@ -73,3 +73,15 @@ export const LOGIN_USER = gql`
         }
     }
 `;
+
+// Metadata
+
+export const EDIT_METADATA = gql`
+    mutation Mutation($id: ID!, $name: String!, $value: String!){
+        editMetadata(id: $id, name: $name, value: $value){
+            id
+            name
+            value
+        }
+    }
+`;

@@ -17,7 +17,7 @@
     min-height: 400px;
     max-height: min-content;
     max-width: 1200px;
-    margin: 100px auto;
+    margin: 50px auto;
     border-radius: 10px;
     background-color: #FFF;
     border: 1px solid var(--light-brown);
@@ -61,6 +61,21 @@
     letter-spacing: 2px;
     padding: 10px 2px;
     width: 100%;
+}
+.input:disabled{
+    color: #AAA;
+}
+
+.imageContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 3rem 0;
+}
+
+.image {
+    max-height: 20rem;
+    border-radius: 5px;
 }
 
 .buttonsContainer {

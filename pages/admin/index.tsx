@@ -22,6 +22,7 @@ export default function AdminPage() {
     if (user === null && typeof window !== 'undefined') window.location.assign('/');
 
     const handleModalOpen = (action: ModalActions, title: string) => {
+        scroll({ top: 0, behavior: 'smooth' });
         setModalInfo({
             open: true,
             action,
@@ -46,14 +47,14 @@ export default function AdminPage() {
     return (
         <AdminLayout title="Admin - ">
             <Main>
-                <Modal category={selectedCategory} setSelectedCategory={setSelectedCategory} setSelectedMetadata={setSelectedMetadata}/>
+                <Modal category={selectedCategory} metadata={selectedMetadata} setSelectedCategory={setSelectedCategory} setSelectedMetadata={setSelectedMetadata} />
                 <h1 className={classes.title}>Admin page</h1>
                 <section className={classes.section}>
                     <h4 className={classes.subtitle}>List of categories</h4>
                     <div className={classes.tableContainer}>
                         <div className={classes.table}>
                             {categories.map((category: CategoryType) => {
-                                return <div className={selectedCategory?.id === category.id ? classes.rowSelected : classes.row}
+                                return <div key={category.id} className={selectedCategory?.id === category.id ? classes.rowSelected : classes.row}
                                     onClick={() => handleRowSelected(category, 'C')}>
                                     {category.name}
                                 </div>
@@ -78,6 +79,28 @@ export default function AdminPage() {
                                     icon="bx:bxs-message-rounded-add"
                                     fontSize={40}
                                     onClick={() => handleModalOpen(ModalActions.ADD_CATEGORY, 'Add a category')}
+                                />
+                            }
+                        </div>
+                    </div>
+                </section>
+                <section className={classes.section}>
+                    <h4 className={classes.subtitle}>Metadata</h4>
+                    <div className={classes.tableContainer}>
+                        <div className={classes.table}>
+                            {metadata.map((metadata: MetadataType) => {
+                                return <div key={metadata.id} className={selectedMetadata?.id === metadata.id ? classes.rowSelected : classes.row}
+                                    onClick={() => handleRowSelected(metadata, 'M')}>
+                                    {metadata.name}
+                                </div>
+                            })}
+                        </div>
+                        <div className={classes.buttons}>
+                            {selectedMetadata &&
+                                <Icon
+                                    icon="bx:bxs-message-square-edit"
+                                    fontSize={40}
+                                    onClick={() => handleModalOpen(ModalActions.EDIT_METADATA, 'Edit metadata')}
                                 />
                             }
                         </div>

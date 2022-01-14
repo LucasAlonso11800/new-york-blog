@@ -3,6 +3,8 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import AsideArticle from '../AsideArticle';
+// Utils
+import { fixFirebaseURL } from '../../utils/fixFirebaseURL';
 // Styles
 import classes from '../../styles/components/LayoutComponents/Aside.module.css';
 // GraphQL
@@ -24,7 +26,7 @@ export default function Aside() {
             <section className={classes.about}>
                 <h2 className={classes.title}>{title.value}</h2>
                 <Link href="/about">
-                    <Image src={image.value} width="400" height="400" />
+                    <Image src={fixFirebaseURL(image.value)} width="400" height="400" />
                 </Link>
             </section>
             <section className={classes.mostVisitedArticles}>

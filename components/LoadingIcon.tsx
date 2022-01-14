@@ -6,7 +6,7 @@ export default function LoadingIcon() {
     return (
         <div className={classes.container}>
             <div className={classes.icon}>
-                <Icon icon="uiw:loading"  fontSize={24}/>
+                <Icon icon="uiw:loading"  fontSize={30}/>
             </div>
         </div>
     )

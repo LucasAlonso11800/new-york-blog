@@ -32,21 +32,23 @@ export default function MainArticle(props: Props) {
         const commentForm = document.querySelector('#commentForm');
         const options: ScrollIntoViewOptions = { inline: 'start', block: 'start', behavior: 'smooth' };
 
-        if(commentSection) return commentSection.scrollIntoView(options);
+        if (commentSection) return commentSection.scrollIntoView(options);
         return commentForm?.scrollIntoView(options);
     };
+
+    const isTheAboutBlogArticle = categoryName === "" && categoryPath === "" && authorName === ""
 
     return (
         <article className={classes.article}>
             <h1 className={classes.title}>{title}</h1>
-            {categoryName !== "" && categoryPath !== "" && authorName !== "" &&
+            {!isTheAboutBlogArticle &&
                 <ArticleMeta
                     categoryName={categoryName}
                     categoryPath={categoryPath}
                     authorName={authorName}
                 />
             }
-            <Image src={image} height="535" width="800" priority/>
+            <Image src={image} height="535" width="800" priority />
             {articleComponents.map(component => {
                 switch (component.componentName) {
                     case "ArticleQuote": return <ArticleQuote key={component.id} text={component.text} />
@@ -57,7 +59,9 @@ export default function MainArticle(props: Props) {
                 }
             })}
             <p className={classes.createdAt}>Posted on {formatDate(createdAt)}</p>
-            <p className={classes.commentCount} onClick={() => handleClick()}>{commentCount} {commentCount === 1 ? 'Comment' : 'Comments'}</p>
+            {!isTheAboutBlogArticle &&
+                <p className={classes.commentCount} onClick={() => handleClick()}>{commentCount} {commentCount === 1 ? 'Comment' : 'Comments'}</p>
+            }
         </article>
     )
 };

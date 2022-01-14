@@ -16,3 +16,7 @@ export {
     loginUser,
     registerUser
 } from './users';
+
+export {
+    editMetadata
+} from './metadata'
