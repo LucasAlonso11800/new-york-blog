@@ -10,9 +10,9 @@ import { Icon } from '@iconify/react';
 // GraphQL
 import { getCategories, getMetadata, GET_CATEGORIES, GET_METADATA } from '../../ApolloClient/querys';
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
+import { useQuery } from '@apollo/client';
 // Types
 import { CategoryType, MetadataType, ModalActions } from '../../types/Types';
-import { useQuery } from '@apollo/client';
 
 export default function AdminPage() {
     const { user, setModalInfo } = useContext(GlobalContext);
@@ -52,15 +52,19 @@ export default function AdminPage() {
                 <section className={classes.section}>
                     <h4 className={classes.subtitle}>List of categories</h4>
                     <div className={classes.tableContainer}>
-                        <div className={classes.table}>
+                        <div className={classes.table} data-testid="admin-page__categoriesTable">
                             {categories.map((category: CategoryType) => {
-                                return <div key={category.id} className={selectedCategory?.id === category.id ? classes.rowSelected : classes.row}
-                                    onClick={() => handleRowSelected(category, 'C')}>
-                                    {category.name}
-                                </div>
+                                return (
+                                    <div key={category.id}
+                                        className={selectedCategory?.id === category.id ? classes.rowSelected : classes.row}
+                                        onClick={() => handleRowSelected(category, 'C')}
+                                    >
+                                        {category.name}
+                                    </div>
+                                )
                             })}
                         </div>
-                        <div className={classes.buttons}>
+                        <div className={classes.buttons} data-testid="admin-page__categoriesButtons">
                             {selectedCategory ?
                                 <>
                                     <Icon
@@ -87,15 +91,19 @@ export default function AdminPage() {
                 <section className={classes.section}>
                     <h4 className={classes.subtitle}>Metadata</h4>
                     <div className={classes.tableContainer}>
-                        <div className={classes.table}>
+                        <div className={classes.table} data-testid="admin-page__metadataTable">
                             {metadata.map((metadata: MetadataType) => {
-                                return <div key={metadata.id} className={selectedMetadata?.id === metadata.id ? classes.rowSelected : classes.row}
-                                    onClick={() => handleRowSelected(metadata, 'M')}>
-                                    {metadata.name}
-                                </div>
+                                return (
+                                    <div key={metadata.id}
+                                        className={selectedMetadata?.id === metadata.id ? classes.rowSelected : classes.row}
+                                        onClick={() => handleRowSelected(metadata, 'M')}
+                                    >
+                                        {metadata.name}
+                                    </div>
+                                )
                             })}
                         </div>
-                        <div className={classes.buttons}>
+                        <div className={classes.buttons} data-testid="admin-page__metadataButtons">
                             {selectedMetadata &&
                                 <Icon
                                     icon="bx:bxs-message-square-edit"

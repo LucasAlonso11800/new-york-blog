@@ -6,6 +6,8 @@ import classes from '../../styles/components/LoginAndRegisterPages.module.css';
 import AdminLayout from '../../components/LayoutComponents/AdminLayout';
 import Main from '../../components/LayoutComponents/Main';
 import LoadingIcon from '../../components/LoadingIcon';
+// Const
+import { EMAIL_REGEX } from '../../const/EmailRegex';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../../ApolloClient/mutations';
@@ -30,7 +32,7 @@ export default function LoginPage() {
     });
 
     const validationSchema = yup.object({
-        email: yup.string().max(100, 'Maximum length 100 characters').required('Please provide an email'),
+        email: yup.string().matches(EMAIL_REGEX, 'Please provide a valid email').max(100, 'Maximum length 100 characters').required('Please provide an email'),
         password: yup.string().max(20, 'Maximum length 20 characters').required('Please provide the password')
     });
 
@@ -47,7 +49,7 @@ export default function LoginPage() {
         <AdminLayout title="Login - ">
             <Main>
                 <h1 className={classes.title}>Please login to enter the admin section</h1>
-                <form className={classes.form} onSubmit={formik.handleSubmit}>
+                <form className={classes.form} onSubmit={formik.handleSubmit} data-testid="loginForm">
                     <div className={classes.inputContainer}>
                         <label className={classes.label}>Email</label>
                         <input
@@ -58,6 +60,9 @@ export default function LoginPage() {
                             onChange={formik.handleChange}
                         />
                     </div>
+                    {formik.touched.email && formik.errors.email &&
+                        <p className={classes.error}>{formik.errors.email}</p>
+                    }
                     <div className={classes.inputContainer}>
                         <label className={classes.label}>Password</label>
                         <input
@@ -69,6 +74,9 @@ export default function LoginPage() {
                             type='password'
                         />
                     </div>
+                    {formik.touched.password && formik.errors.password &&
+                        <p className={classes.error}>{formik.errors.password}</p>
+                    }
                     <button type="submit" className={classes.submitButton} disabled={loading}>Login</button>
                 </form>
                 {loading ? <LoadingIcon /> : <></>}

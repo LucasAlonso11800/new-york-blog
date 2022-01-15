@@ -76,7 +76,7 @@ export default function Header() {
             </nav>
             <div className={classes.siteLogoContainer}>
                 <Link href="/">
-                    <Image src={fixFirebaseURL(image.value)} height="175" width="670" />
+                    <Image src={fixFirebaseURL(image.value)} height="106" width="705" />
                 </Link>
             </div>
         </header>

@@ -13,6 +13,7 @@
     "apollo-server-micro": "^3.5.0",
     "bcrypt": "^5.0.1",
     "cypress": "^9.2.0",
+    "cypress-file-upload": "^5.0.8",
     "deep-merge": "^1.0.0",
     "firebase": "^9.6.2",
     "formik": "^2.2.9",

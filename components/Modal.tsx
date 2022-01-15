@@ -9,8 +9,10 @@ import * as yup from 'yup';
 // Utils
 import { toKebabCase } from '../utils/toKebabCase';
 import { fixFirebaseURL } from '../utils/fixFirebaseURL';
+import { getImageSize } from '../utils/getImageSize';
 // Components
 import LoadingIcon from './LoadingIcon';
+import Image from 'next/image';
 // GraphQL
 import { ADD_CATEGORY, DELETE_CATEGORY, EDIT_CATEGORY, EDIT_METADATA } from '../ApolloClient/mutations';
 import { GET_CATEGORIES, GET_METADATA } from '../ApolloClient/querys';
@@ -143,7 +145,7 @@ export default function Modal({ category, metadata, setSelectedCategory, setSele
 
     return (
         <div className={classes.container} style={{ display: open ? 'flex' : 'none' }}>
-            <div className={classes.modal}>
+            <div className={classes.modal} data-testid="modal">
                 <h2 className={classes.title}>{title}</h2>
                 {action === ModalActions.EDIT_METADATA ?
                     <form className={classes.form} onSubmit={formik.handleSubmit}>
@@ -168,15 +170,16 @@ export default function Modal({ category, metadata, setSelectedCategory, setSele
                                 disabled={loading}
                             />
                         </div>
-                        {formik.touched.name && formik.errors.name &&
-                            <p className={classes.error}>{formik.errors.name}</p>
+                        {formik.touched.value && formik.errors.value &&
+                            <p className={classes.error}>{formik.errors.value}</p>
                         }
                         {isAnImage &&
-                            <div className={classes.imageContainer}>
-                                <img
+                            <div className={classes.imageContainer} data-testid="metadataImage">
+                                <Image
                                     src={file ? `data:image/png;base64,${image.src}` : fixFirebaseURL(metadata?.value as string)}
                                     alt={image.alt}
-                                    className={classes.image}
+                                    height={getImageSize(metadata?.name as MetadataNames, false)}
+                                    width={getImageSize(metadata?.name as MetadataNames, true)}
                                 />
                                 <input
                                     style={{ display: "none" }}

@@ -23,3 +23,25 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', () => {
+    const query = `
+        mutation loginUser {
+            loginUser(email:"lucasalonso11800@gmail.com", password:"pulqui123"){
+                id
+                username
+                roleId
+                roleName
+                token
+            }
+        }`;
+
+    cy.request({
+        url: `${Cypress.env('URL')}/api/graphql`,
+        body: { query },
+        method: 'POST',
+        failOnStatusCode: false
+    }).then(response => window.localStorage.setItem('token', response.body.data.loginUser.token));
+})
+
+import 'cypress-file-upload';

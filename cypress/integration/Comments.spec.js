@@ -71,4 +71,4 @@ describe('Comments', () => {
     });
 });
 
-export { };
+;

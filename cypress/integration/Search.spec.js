@@ -18,4 +18,4 @@ describe('Search for articles', () => {
     });
 });
 
-export { };
+;

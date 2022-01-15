@@ -6,6 +6,8 @@ import classes from '../../styles/components/LoginAndRegisterPages.module.css';
 import AdminLayout from '../../components/LayoutComponents/AdminLayout';
 import Main from '../../components/LayoutComponents/Main';
 import LoadingIcon from '../../components/LoadingIcon';
+// Const
+import { EMAIL_REGEX } from '../../const/EmailRegex';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { REGISTER_USER } from '../../ApolloClient/mutations';
@@ -22,7 +24,7 @@ export default function RegisterPage() {
 
     const [registerUser, { loading }] = useMutation(REGISTER_USER, {
         onCompleted: (data) => {
-            if (typeof localStorage !== 'undefined') localStorage.setItem('token', data.loginUser.token);
+            if (typeof localStorage !== 'undefined') localStorage.setItem('token', data.registerUser.token);
             setUser(data.registerUser)
             window.location.assign('/admin');
         },
@@ -30,9 +32,9 @@ export default function RegisterPage() {
     });
 
     const validationSchema = yup.object({
-        username: yup.string().max(40, 'Maximum length 40 characters').required('Please provide an email'),
-        email: yup.string().max(100, 'Maximum length 100 characters').required('Please provide an email'),
-        password: yup.string().min(6, 'Password lenght must be at least 6 characters').max(20, 'Maximum length 20 characters').required('Please provide the password')
+        username: yup.string().max(40, 'Maximum length 40 characters').required('Please provide an username'),
+        email: yup.string().matches(EMAIL_REGEX, 'Please provide a valid email').max(100, 'Maximum length 100 characters').required('Please provide an email'),
+        password: yup.string().min(6, 'Password length must be at least 6 characters').max(20, 'Maximum length 20 characters').required('Please provide a password')
     });
 
     const formik = useFormik({
@@ -49,9 +51,9 @@ export default function RegisterPage() {
         <AdminLayout title="Register - ">
             <Main>
                 <h1 className={classes.title}>Please create an account to enter the admin section</h1>
-                <form className={classes.form} onSubmit={formik.handleSubmit}>
+                <form className={classes.form} onSubmit={formik.handleSubmit} data-testid="registerForm">
                     <div className={classes.inputContainer}>
-                        <label className={classes.label}>Email</label>
+                        <label className={classes.label}>Username</label>
                         <input
                             name='username'
                             className={classes.input}
@@ -60,6 +62,9 @@ export default function RegisterPage() {
                             onChange={formik.handleChange}
                         />
                     </div>
+                    {formik.touched.username && formik.errors.username &&
+                        <p className={classes.error}>{formik.errors.username}</p>
+                    }
                     <div className={classes.inputContainer}>
                         <label className={classes.label}>Email</label>
                         <input
@@ -70,6 +75,9 @@ export default function RegisterPage() {
                             onChange={formik.handleChange}
                         />
                     </div>
+                    {formik.touched.email && formik.errors.email &&
+                        <p className={classes.error}>{formik.errors.email}</p>
+                    }
                     <div className={classes.inputContainer}>
                         <label className={classes.label}>Password</label>
                         <input
@@ -81,6 +89,9 @@ export default function RegisterPage() {
                             type='password'
                         />
                     </div>
+                    {formik.touched.password && formik.errors.password &&
+                        <p className={classes.error}>{formik.errors.password}</p>
+                    }
                     <button type="submit" className={classes.submitButton} disabled={loading}>Register</button>
                 </form>
                 {loading ? <LoadingIcon /> : <></>}

@@ -1,3 +1,1 @@
-export const formatId = (param: string | number): number => {
-    return typeof param === 'number' ? param : parseInt(param)
-};
+export const formatId = (param: string | number): number => typeof param === 'number' ? param : parseInt(param);
