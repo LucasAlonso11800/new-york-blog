@@ -12,6 +12,12 @@ export async function getAllArticles(client: ApolloClient<NormalizedCacheObject>
                 getAllArticles {
                     id
                     slug
+                    title
+                    categoryName
+                    image
+                    visits
+                    createdAt
+                    authorName
                 }
             }
         `

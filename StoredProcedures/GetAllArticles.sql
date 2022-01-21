@@ -23,6 +23,6 @@ BEGIN
 								FROM article_statuses
                                 WHERE article_status_name = "Accepted"
 							)
-    ORDER BY article_id;
+    ORDER BY article_created_at DESC;
 END$$
 DELIMITER ;

@@ -1,19 +1,21 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 // Components
 import Footer from './Footer';
 import Header from './Header';
 import Head from './Head';
-// Types
-import { LayoutProps } from '../../types/Types';
 
-export default function AdminLayout(props: LayoutProps) {
-    const { title, children, categories, footerText, headerImage, headIcon } = props;
+type Props = {
+    title: string
+    children: ReactNode
+}
+
+export default function AdminLayout({ title, children }: Props) {
     return (
         <div id="page-container" className="admin">
-            <Head title={title} icon={headIcon}/>
-            <Header categories={categories} image={headerImage}/>
+            <Head title={title} />
+            <Header />
             {children}
-            <Footer text={footerText}/>
+            <Footer />
         </div>
     )
 };

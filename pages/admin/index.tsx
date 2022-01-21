@@ -57,13 +57,13 @@ export default function AdminPage({ categories, metadata }: Props) {
                     <h4 className={classes.subtitle}>Article management</h4>
                     <div className={classes.links}>
                         <button className={classes.button}>
-                            <Link href="/admin/most-visited-articles">Most visited articles</Link>
-                        </button>
-                        <button className={classes.button}>
-                            <Link href="/admin/new-article">Create new article</Link>
+                            <Link href="/admin/article-list">Posted article's list</Link>
                         </button>
                         <button className={classes.button}>
                             <Link href="/admin/article-queue">Article queue</Link>
+                        </button>
+                        <button className={classes.button}>
+                            <Link href="/admin/new-article">Create new article</Link>
                         </button>
                     </div>
                 </section>
