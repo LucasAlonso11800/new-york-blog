@@ -1,6 +1,7 @@
 .container {
     margin: auto;
-    height: 20vh;
+    max-height: 20vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

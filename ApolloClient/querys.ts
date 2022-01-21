@@ -5,22 +5,28 @@ import { CORE_ARTICLE_FIELDS, COMMENTS_FIELDS } from './fragments';
 
 // Articles
 
-export async function getAllArticles(client: ApolloClient<NormalizedCacheObject>) {
+export const GET_ALL_ARTICLES = gql`
+    query GetAllArticles ($statusName: String!){
+        getAllArticles (statusName: $statusName) {
+            id
+            slug
+            title
+            categoryName
+            image
+            visits
+            createdAt
+            authorId
+            authorName
+        }
+    }
+`;
+
+export async function getAllArticles(client: ApolloClient<NormalizedCacheObject>, status: string) {
     return await client.query({
-        query: gql`
-            query GetAllArticles {
-                getAllArticles {
-                    id
-                    slug
-                    title
-                    categoryName
-                    image
-                    visits
-                    createdAt
-                    authorName
-                }
-            }
-        `
+        query: GET_ALL_ARTICLES,
+        variables: {
+            statusName: status
+        }
     });
 };
 

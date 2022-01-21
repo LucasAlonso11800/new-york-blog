@@ -10,6 +10,8 @@ export enum STORED_PROCEDURES {
     GET_ADJACENT_ARTICLES = 'GetAdjacentArticles',
     ADD_VISIT = 'AddVisit',
     ADD_ARTICLE = 'AddArticle',
+    EDIT_ARTICLE = 'EditArticle',
+    DELETE_ARTICLE = 'DeleteArticle',
         // Categories
     GET_CATEGORIES = 'GetCategories',
     ADD_CATEGORY = 'AddCategory',

@@ -40,6 +40,12 @@ export const ADD_ARTICLE = gql`
     }
 `;
 
+export const DELETE_ARTICLE = gql`
+    mutation deleteArticle($articleId: ID!){
+        deleteArticle(articleId: $articleId)
+    }
+`;
+
 // Categories
 
 export const ADD_CATEGORY = gql`

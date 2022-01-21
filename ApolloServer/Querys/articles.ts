@@ -17,10 +17,11 @@ type Args = {
     statusName: string
 };
 
-export const getAllArticles = async () => {
+export const getAllArticles = async (_: any, args: Args) => {
     const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_ALL_ARTICLES;
+    const values: [string] = [args.statusName]
 
-    const articles: ArticleType[] = await callSP({ procedure, values: [] });
+    const articles: ArticleType[] = await callSP({ procedure, values });
     return articles;
 };
 

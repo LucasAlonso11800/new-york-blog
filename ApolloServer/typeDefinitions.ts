@@ -3,7 +3,7 @@ import { gql } from "apollo-server-micro";
 export const typeDefs = gql`
     type Query {
         # Articles
-        getAllArticles: [Article]
+        getAllArticles(statusName: String!): [Article]
         getSingleArticle(slug: String!): Article
         getLatestArticles(index: Int!, statusName: String!): [Article]
         getMostVisitedArticles: [Article]
@@ -31,6 +31,7 @@ export const typeDefs = gql`
         # Articles
         addVisit(articleId: ID!): String
         addArticle(userId: ID!, userRole: String!, title: String!, categoryId: ID!, components: [ArticleComponentInput]!, image: String!, slug: String!): [Article]
+        deleteArticle(articleId: ID!): String
         # Categories
         addCategory(categoryName: String!, categoryPath: String!): Category
         editCategory(categoryId: ID!, categoryName: String!, categoryPath: String!): Category

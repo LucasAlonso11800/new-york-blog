@@ -1,5 +1,7 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllArticles`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllArticles`(
+	IN 	PArticleStatus 			VARCHAR(20)
+)
 BEGIN
 	SELECT         
 		article_id 				AS id,
@@ -21,7 +23,7 @@ BEGIN
 	WHERE category_path != "about"
 	AND article_status_id = (SELECT article_status_id 
 								FROM article_statuses
-                                WHERE article_status_name = "Accepted"
+                                WHERE article_status_name = PArticleStatus
 							)
     ORDER BY article_created_at DESC;
 END$$

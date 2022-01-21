@@ -40,10 +40,19 @@
 
 .table tr {
     border-bottom: 1px solid var(--light-blue);
+    height: 81.4px;
 }
 
+.table tr.delete {
+    background-color: rgba(255, 190, 190, 0.4);
+}
+ 
 .table td {
     padding: 4px 0;
+}
+
+.table svg {
+    cursor: pointer;
 }
 
 .pagination {
