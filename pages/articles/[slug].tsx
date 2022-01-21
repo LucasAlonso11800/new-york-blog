@@ -14,7 +14,7 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
 import { ADD_VISIT } from '../../ApolloClient/mutations';
 // Types
-import { ArticleComponentType, ArticleType, CommentType } from '../../types/Types';
+import { ArticleComponentType, ArticleStatus, ArticleType, CommentType } from '../../types/Types';
 
 type Props = {
     article: ArticleType
@@ -52,7 +52,7 @@ export default function ArticlePage({ article, relatedArticles, adjacentArticles
 
 const client = initializeApollo();
 export async function getStaticPaths() {
-    const articles = await getAllArticles(client);
+    const articles = await getAllArticles(client, ArticleStatus.ACCEPTED);
 
     return {
         paths: articles.data.getAllArticles.map((article: ArticleType) => {
@@ -76,13 +76,15 @@ type GetStaticPropsParams = {
 export async function getStaticProps({ params }: GetStaticPropsParams) {
     try {
         const article = await getSingleArticle(client, params.slug);
-        const relatedArticles = await getRelatedArticles(client, article.data.getSingleArticle.categoryId);
-        const adjacentArticles = await getAdjacentArticles(client, article.data.getSingleArticle.id);
-        const articleComponents = await getArticleComponents(client, article.data.getSingleArticle.id);
-        const comments = await getArticleComments(client, article.data.getSingleArticle.id);
-        await getMostVisitedArticles(client);
-        await getCategories(client);
-        await getMetadata(client);
+        const [relatedArticles, adjacentArticles, articleComponents, comments] = await Promise.all([
+            await getRelatedArticles(client, article.data.getSingleArticle.categoryId),
+            await getAdjacentArticles(client, article.data.getSingleArticle.id),
+            await getArticleComponents(client, article.data.getSingleArticle.id),
+            await getArticleComments(client, article.data.getSingleArticle.id),
+            await getMostVisitedArticles(client),
+            await getCategories(client),
+            await getMetadata(client)
+        ]);
 
         return addApolloState(client, {
             props: {
@@ -91,7 +93,8 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                 adjacentArticles: adjacentArticles.data.getAdjacentArticles,
                 articleComponents: articleComponents.data.getArticleComponents,
                 comments: comments.data.getArticleComments
-            }
+            },
+            revalidate: 60 * 60 * 24
         });
     }
     catch (err) {

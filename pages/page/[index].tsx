@@ -77,19 +77,21 @@ type GetStaticPropsParams = {
 
 export async function getStaticProps({ params }: GetStaticPropsParams) {
     try {
-        const articleCount = await getTotalArticleCount(client);
-        const articles = await getLatestArticles(client, parseInt(params.index), ArticleStatus.ACCEPTED);
-
-        await getMostVisitedArticles(client);
-        await getCategories(client);
-        await getMetadata(client)
+        const [articles, articleCount] = await Promise.all([
+            await getLatestArticles(client, parseInt(params.index), ArticleStatus.ACCEPTED),
+            await getTotalArticleCount(client),
+            await getMostVisitedArticles(client),
+            await getCategories(client),
+            await getMetadata(client)
+        ]);
 
         return addApolloState(client, {
             props: {
                 index: parseInt(params.index),
                 articleCount: articleCount.data.getTotalArticleCount,
                 articles: articles.data.getLatestArticles
-            }
+            },
+            revalidate: 60 * 60 * 24
         })
     }
     catch (err) {

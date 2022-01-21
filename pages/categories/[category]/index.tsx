@@ -57,11 +57,13 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
     try {
         const categories = await getCategories(client);
         const category = categories.data.getCategories.find((category: CategoryType) => category.path === params.category);
-        const articles = await getCategoryArticles(client, category.id, 1);
-        const articleCount = await getCategoryArticleCount(client, category.id);
-
-        await getMostVisitedArticles(client);
-        await getMetadata(client);
+        
+        const [articles, articleCount] = await Promise.all([
+            await getCategoryArticles(client, category.id, 1),
+            await getCategoryArticleCount(client, category.id),
+            await getMostVisitedArticles(client),
+            await getMetadata(client)
+        ]);
 
         return addApolloState(client, {
             props: {
@@ -69,7 +71,8 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                 category,
                 title: category.name + " - ",
                 articles: articles.data.getCategoryArticles
-            }
+            },
+            revalidate: 60 * 60 * 24
         });
     }
     catch (err) {

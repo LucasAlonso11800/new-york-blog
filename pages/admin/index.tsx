@@ -136,14 +136,17 @@ export default function AdminPage({ categories, metadata }: Props) {
 export async function getStaticProps() {
     const client = initializeApollo();
     try {
-        const categories = await getCategories(client);
-        const metadata = await getMetadata(client);
+        const [categories, metadata] = await Promise.all([
+            await getCategories(client),
+            await getMetadata(client)
+        ]);
 
         return addApolloState(client, {
             props: {
                 categories: categories.data.getCategories,
                 metadata: metadata.data.getMetadata
-            }
+            },
+            revalidate: 60 * 60
         })
     }
     catch (err) {

@@ -420,15 +420,18 @@ export default function NewArticle({ categories, components }: Props) {
 export async function getStaticProps() {
     const client = initializeApollo();
     try {
-        const categories = await getCategories(client);
-        const components = await getComponentsList(client);
-        await getMetadata(client);
+        const [categories, components] = await Promise.all([
+            await getCategories(client),
+            await getComponentsList(client),
+            await getMetadata(client)
+        ]);
 
         return addApolloState(client, {
             props: {
                 categories: categories.data.getCategories,
                 components: components.data.getComponentsList
-            }
+            },
+            revalidate: 60 * 60
         })
     }
     catch (err) {

@@ -107,11 +107,14 @@ export default function RegisterPage() {
 export async function getStaticProps() {
     const client = initializeApollo();
     try {
-        await getCategories(client);
-        await getMetadata(client);
+        await Promise.all([
+            await getCategories(client),
+            await getMetadata(client)
+        ]);
 
         return addApolloState(client, {
-            props: {}
+            props: {},
+            revalidate: 60 * 60 * 24
         })
     }
     catch (err) {

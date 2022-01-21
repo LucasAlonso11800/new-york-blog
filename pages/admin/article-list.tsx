@@ -178,14 +178,17 @@ export default function ArticleList({ categories }: Props) {
 export async function getStaticProps() {
     const client = initializeApollo();
     try {
-        await getAllArticles(client, ArticleStatus.ACCEPTED);
-        const categories = await getCategories(client);
-        await getMetadata(client);
+        const [categories] = await Promise.all([
+            await getCategories(client),
+            await getAllArticles(client, ArticleStatus.ACCEPTED),
+            await getMetadata(client)
+        ]);
 
         return addApolloState(client, {
             props: {
                 categories: categories.data.getCategories
-            }
+            },
+            revalidate: 60 * 60
         });
     }
     catch (err) {

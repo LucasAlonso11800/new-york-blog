@@ -37,14 +37,17 @@ export async function getStaticProps() {
     const client = initializeApollo();
     try {
         const articles = await getLatestArticles(client, 1, ArticleStatus.ACCEPTED);
-        await getMostVisitedArticles(client);
-        await getCategories(client);
-        await getMetadata(client);
+        await Promise.all([
+            await getMostVisitedArticles(client),
+            await getCategories(client),
+            await getMetadata(client)
+        ]);
 
         return addApolloState(client, {
             props: {
                 articles: articles.data.getLatestArticles
-            }
+            },
+            revalidate: 60 * 60 * 24
         });
     }
     catch (err: any) {
