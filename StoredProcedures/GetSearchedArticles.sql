@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSearchedArticles`(
 	IN PSearch					VARCHAR(255)
 )
@@ -25,5 +26,10 @@ BEGIN
 		AND article_components.article_component_order = 2
 	WHERE article_title LIKE CONCAT('%', trim(PSearch), '%') 
 		AND  category_path != "about"
+        AND article_status_id = (SELECT article_status_id 
+									FROM article_statuses
+									WHERE article_status_name = "Accepted"
+								)
 	ORDER BY article_created_at DESC, article_id DESC;
-END
+END$$
+DELIMITER ;

@@ -1,8 +1,25 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetArticleComponents`(
-	IN	PArticleId		INT
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AddArticleComponent`(
+	IN 	PComponentId				 		INT,
+    IN	PArticleId					 		INT,
+    IN 	POrder					 			INT,
+    IN	PImage					 			VARCHAR(255),
+    IN	PText				 				LONGTEXT,
+    IN	PFontWeight					 		INT,
+    IN 	PTextAlign					 		CHAR(1)
 )
 BEGIN
+	INSERT INTO article_components (
+		article_component_component_id,
+		article_component_article_id,
+		article_component_order,
+		article_component_image,
+		article_component_text,
+		article_component_font_weight,
+		article_component_text_align
+    )
+    VALUES (PComponentId, PArticleId, POrder, PImage, PText, PFontWeight, PTextAlign);
+    
 	SELECT         
 		article_component_id 				AS id,
 		article_component_component_id 		AS componentId,

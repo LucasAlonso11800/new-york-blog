@@ -20,6 +20,7 @@ export {
 } from './categories';
 
 export {
+    getComponentsList,
     getArticleComponents
 } from './articleComponents';
 

@@ -40,7 +40,7 @@ export default function Comment({ articleId, commentId, author, createdAt, body 
                     <p>{formOpen ? "Cancel" : "Reply"}</p>
                 </div>
             </li>
-            {formOpen && <CommentForm articleId={articleId} author={author} isResponse="Y" isResponseToCommentId={commentId} setFormOpen={setFormOpen} getComments={null}/>}
+            {formOpen && <CommentForm articleId={articleId} author={author} isResponse="Y" isResponseToCommentId={commentId} setFormOpen={setFormOpen}/>}
             {!loading && data.getCommentReplies && data.getCommentReplies.length > 0 &&
                 <ul className={classes.replies} data-testid="replies">
                     {data.getCommentReplies.map((reply: CommentType) => (

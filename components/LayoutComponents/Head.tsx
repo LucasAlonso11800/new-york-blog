@@ -14,7 +14,8 @@ type Props = {
 };
 
 export default function CustomHead({ title }: Props) {
-    const { data: { getMetadata: metadata } } = useQuery(GET_METADATA);
+    const { data: metadataQuery } = useQuery(GET_METADATA);
+    const metadata = metadataQuery?.getMetadata || [];
 
     const icon: MetadataType = metadata.find((data: MetadataType) => data.name === MetadataNames.HEAD_ICON);
 
@@ -24,7 +25,7 @@ export default function CustomHead({ title }: Props) {
             <meta name="keywords" content="New York, NYC, Traveling, Lifestyle" />
             <meta name="description" content="Tracysnewyorklife.com is a lifestyle and travel blog based in NYC. Creator Tracy Kaler and bloggers feature the best of living, food, culture, travel, and more to readers around the world. The blog offers the best of New York City life, Tracy's adventures in the Big Apple and beyond, as well as musings and opinions from New Yorkers. Tracy informs and entertains on this top New York-centric blog." />
             <meta name="author" content="Lucas Alonso" />
-            <link rel="icon" href={fixFirebaseURL(icon.value)} sizes="32x32" />
+            <link rel="icon" href={icon?.value ? fixFirebaseURL(icon.value) : '/vercel.svg'} sizes="32x32" />
             <title>{title}Tracy Kaler's New York Life + Travel Blog | Top NYC Blog</title>
         </Head>
     )

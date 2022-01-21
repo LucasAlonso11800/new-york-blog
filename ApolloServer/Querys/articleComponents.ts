@@ -10,6 +10,12 @@ type Args = {
     articleId: string | number
 };
 
+export const getComponentsList = async () => {
+    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_COMPONENT_LIST;
+    const components = await callSP({ procedure, values: []})
+    return components;
+};
+
 export const getArticleComponents = async (_: any, args: Args) => {
     const { articleId } = args;
 

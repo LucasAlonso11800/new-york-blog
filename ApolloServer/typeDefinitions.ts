@@ -5,7 +5,7 @@ export const typeDefs = gql`
         # Articles
         getAllArticles: [Article]
         getSingleArticle(slug: String!): Article
-        getLatestArticles(index: Int!): [Article]
+        getLatestArticles(index: Int!, statusName: String!): [Article]
         getMostVisitedArticles: [Article]
         getCategoryArticles(categoryId: ID!, index: Int!): [Article]
         getRelatedArticles(categoryId: ID!): [Article]
@@ -18,6 +18,7 @@ export const typeDefs = gql`
         # Categories
         getCategories: [Category]
         # ArticleComponents
+        getComponentsList: [Component]
         getArticleComponents(articleId: ID!): [ArticleComponent]
         # Metadata
         getMetadata: [Metadata] 
@@ -29,6 +30,7 @@ export const typeDefs = gql`
     type Mutation {
         # Articles
         addVisit(articleId: ID!): String
+        addArticle(userId: ID!, userRole: String!, title: String!, categoryId: ID!, components: [ArticleComponentInput]!, image: String!, slug: String!): [Article]
         # Categories
         addCategory(categoryName: String!, categoryPath: String!): Category
         editCategory(categoryId: ID!, categoryName: String!, categoryPath: String!): Category
@@ -63,7 +65,24 @@ export const typeDefs = gql`
         path: String
     }
 
+    type Component {
+        id: ID
+        name: String
+    }
+
     type ArticleComponent {
+        id: ID
+        componentId: ID
+        componentName: String
+        articleId: ID
+	    order: Int
+	    image: String
+	    text: String
+	    fontWeight: String
+	    textAlign: String
+    }
+
+    input ArticleComponentInput {
         id: ID
         componentId: ID
         componentName: String

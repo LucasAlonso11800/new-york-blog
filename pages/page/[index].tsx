@@ -5,27 +5,25 @@ import Main from '../../components/LayoutComponents/Main';
 import Pagination from '../../components/Pagination'
 import ArticlePreview from '../../components/ArticlePreview';
 // GraphQL
-import { useQuery } from '@apollo/client';
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
-import { getCategories, getLatestArticles, getMetadata, getMostVisitedArticles, getTotalArticleCount, GET_LATEST_ARTICLES } from '../../ApolloClient/querys';
+import { getCategories, getLatestArticles, getMetadata, getMostVisitedArticles, getTotalArticleCount } from '../../ApolloClient/querys';
 // Const
 import { ARTICLE_LIMIT_PER_PAGE } from '../../const/Limits';
 // Types
-import { ArticleType } from '../../types/Types';
+import { ArticleStatus, ArticleType } from '../../types/Types';
 
 type Props = {
     index: number
     articleCount: number
+    articles: ArticleType[]
 };
 
-export default function LatestArticlesPage({ index, articleCount }: Props) {
-    const { data: { getLatestArticles: articles } } = useQuery(GET_LATEST_ARTICLES, { variables: { index } });
-
+export default function LatestArticlesPage({ index, articleCount, articles }: Props) {
     return (
         <Layout title="">
             <Main>
-                {articles.map((article: ArticleType, index: number) => {
-                    return <ArticlePreview
+                {articles.map((article, index) => (
+                    <ArticlePreview
                         key={article.id}
                         layout={index === 0 ? 'column' : 'row'}
                         title={article.title}
@@ -36,7 +34,7 @@ export default function LatestArticlesPage({ index, articleCount }: Props) {
                         slug={article.slug}
                         description={article.description}
                     />
-                })}
+                ))}
                 <Pagination index={index} articleCount={articleCount} />
             </Main>
         </Layout>
@@ -80,7 +78,7 @@ type GetStaticPropsParams = {
 export async function getStaticProps({ params }: GetStaticPropsParams) {
     try {
         const articleCount = await getTotalArticleCount(client);
-        await getLatestArticles(client, parseInt(params.index));
+        const articles = await getLatestArticles(client, parseInt(params.index), ArticleStatus.ACCEPTED);
 
         await getMostVisitedArticles(client);
         await getCategories(client);
@@ -89,7 +87,8 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         return addApolloState(client, {
             props: {
                 index: parseInt(params.index),
-                articleCount: articleCount.data.getTotalArticleCount
+                articleCount: articleCount.data.getTotalArticleCount,
+                articles: articles.data.getLatestArticles
             }
         })
     }
@@ -98,7 +97,8 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         return addApolloState(client, {
             props: {
                 index: parseInt(params.index),
-                articleCount: 0
+                articleCount: 0,
+                error: JSON.parse(JSON.stringify(err))
             }
         });
     }

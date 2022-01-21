@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `LoginUser`(
 	IN PEmail			VARCHAR(100)
 )
@@ -12,4 +13,5 @@ BEGIN
     JOIN roles
     ON roles.role_id = user_role_id
     WHERE user_email = PEmail;
-END
+END$$
+DELIMITER ;

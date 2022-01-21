@@ -25,9 +25,11 @@ export default function Header() {
         window.location.assign(`/search/${query}`);
     };
 
-    const { data: { getCategories: categories } } = useQuery(GET_CATEGORIES);
-    const { data: { getMetadata: metadata } } = useQuery(GET_METADATA);
+    const { data: categoriesQuery } = useQuery(GET_CATEGORIES);
+    const { data: metadataQuery } = useQuery(GET_METADATA);
 
+    const categories = categoriesQuery?.getCategories || [];
+    const metadata = metadataQuery?.getMetadata || [];
     const image: MetadataType = metadata.find((data: MetadataType) => data.name === MetadataNames.HEADER_IMAGE);
 
     return (
@@ -74,11 +76,13 @@ export default function Header() {
                     />
                 </form>
             </nav>
-            <div className={classes.siteLogoContainer}>
-                <Link href="/">
-                    <Image src={fixFirebaseURL(image.value)} height="106" width="705" />
-                </Link>
-            </div>
+            {image?.value &&
+                <div className={classes.siteLogoContainer}>
+                    <Link href="/">
+                        <Image src={fixFirebaseURL(image.value)} height="106" width="705" />
+                    </Link>
+                </div>
+            }
         </header>
     )
 };

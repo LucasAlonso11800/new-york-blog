@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import classes from '../../styles/components/AdminPage.module.css';
+import classes from '../../styles/components/Admin/AdminPage.module.css';
 // Context
 import { GlobalContext } from '../../context/GlobalContext';
 // Components
@@ -7,14 +7,21 @@ import AdminLayout from '../../components/LayoutComponents/AdminLayout';
 import Main from '../../components/LayoutComponents/Main';
 import Modal from '../../components/Modal';
 import { Icon } from '@iconify/react';
+import Link from 'next/link';
 // GraphQL
-import { getCategories, getMetadata, GET_CATEGORIES, GET_METADATA } from '../../ApolloClient/querys';
+import { getCategories, getMetadata } from '../../ApolloClient/querys';
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
-import { useQuery } from '@apollo/client';
 // Types
+import { ApolloError } from '@apollo/client';
 import { CategoryType, MetadataType, ModalActions } from '../../types/Types';
 
-export default function AdminPage() {
+type Props = {
+    categories: CategoryType[]
+    metadata: MetadataType[]
+    error: ApolloError[]
+}
+
+export default function AdminPage({ categories, metadata }: Props) {
     const { user, setModalInfo } = useContext(GlobalContext);
     const [selectedCategory, setSelectedCategory] = useState<CategoryType>();
     const [selectedMetadata, setSelectedMetadata] = useState<MetadataType>();
@@ -29,9 +36,6 @@ export default function AdminPage() {
             title
         });
     };
-
-    const { data: { getCategories: categories } } = useQuery(GET_CATEGORIES);
-    const { data: { getMetadata: metadata } } = useQuery(GET_METADATA);
 
     const handleRowSelected = (row: CategoryType | MetadataType, type: 'C' | 'M') => {
         if (type === 'C') {
@@ -50,19 +54,31 @@ export default function AdminPage() {
                 <Modal category={selectedCategory} metadata={selectedMetadata} setSelectedCategory={setSelectedCategory} setSelectedMetadata={setSelectedMetadata} />
                 <h1 className={classes.title}>Admin page</h1>
                 <section className={classes.section}>
+                    <h4 className={classes.subtitle}>Article management</h4>
+                    <div className={classes.links}>
+                        <button className={classes.button}>
+                            <Link href="/admin/most-visited-articles">Most visited articles</Link>
+                        </button>
+                        <button className={classes.button}>
+                            <Link href="/admin/new-article">Create new article</Link>
+                        </button>
+                        <button className={classes.button}>
+                            <Link href="/admin/article-queue">Article queue</Link>
+                        </button>
+                    </div>
+                </section>
+                <section className={classes.section}>
                     <h4 className={classes.subtitle}>List of categories</h4>
                     <div className={classes.tableContainer}>
                         <div className={classes.table} data-testid="admin-page__categoriesTable">
-                            {categories.map((category: CategoryType) => {
-                                return (
-                                    <div key={category.id}
-                                        className={selectedCategory?.id === category.id ? classes.rowSelected : classes.row}
-                                        onClick={() => handleRowSelected(category, 'C')}
-                                    >
-                                        {category.name}
-                                    </div>
-                                )
-                            })}
+                            {categories.map(category => (
+                                <div key={category.id}
+                                    className={selectedCategory?.id === category.id ? classes.rowSelected : classes.row}
+                                    onClick={() => handleRowSelected(category, 'C')}
+                                >
+                                    {category.name}
+                                </div>
+                            ))}
                         </div>
                         <div className={classes.buttons} data-testid="admin-page__categoriesButtons">
                             {selectedCategory ?
@@ -92,16 +108,14 @@ export default function AdminPage() {
                     <h4 className={classes.subtitle}>Metadata</h4>
                     <div className={classes.tableContainer}>
                         <div className={classes.table} data-testid="admin-page__metadataTable">
-                            {metadata.map((metadata: MetadataType) => {
-                                return (
-                                    <div key={metadata.id}
-                                        className={selectedMetadata?.id === metadata.id ? classes.rowSelected : classes.row}
-                                        onClick={() => handleRowSelected(metadata, 'M')}
-                                    >
-                                        {metadata.name}
-                                    </div>
-                                )
-                            })}
+                            {metadata.map(metadata => (
+                                <div key={metadata.id}
+                                    className={selectedMetadata?.id === metadata.id ? classes.rowSelected : classes.row}
+                                    onClick={() => handleRowSelected(metadata, 'M')}
+                                >
+                                    {metadata.name}
+                                </div>
+                            ))}
                         </div>
                         <div className={classes.buttons} data-testid="admin-page__metadataButtons">
                             {selectedMetadata &&
@@ -122,17 +136,24 @@ export default function AdminPage() {
 export async function getStaticProps() {
     const client = initializeApollo();
     try {
-        await getCategories(client);
-        await getMetadata(client);
+        const categories = await getCategories(client);
+        const metadata = await getMetadata(client);
 
         return addApolloState(client, {
-            props: {}
+            props: {
+                categories: categories.data.getCategories,
+                metadata: metadata.data.getMetadata
+            }
         })
     }
     catch (err) {
         console.log(err);
         return addApolloState(client, {
-            props: {}
+            props: {
+                categories: [],
+                metadata: [],
+                error: JSON.parse(JSON.stringify(err))
+            }
         });
     }
 };

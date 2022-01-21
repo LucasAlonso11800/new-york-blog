@@ -1,0 +1,1 @@
+export const getBase64Src = (image: string): string => `data:image/png;base64,${image}`;

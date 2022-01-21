@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `RegisterUser`(
     IN PUsername			VARCHAR(40),
 	IN PEmail				VARCHAR(100),
@@ -22,4 +23,5 @@ BEGIN
     JOIN roles
     ON roles.role_id = user_role_id
     WHERE user_id = last_insert_id();
-END
+END$$
+DELIMITER ;

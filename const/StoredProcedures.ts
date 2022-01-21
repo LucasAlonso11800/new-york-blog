@@ -9,6 +9,7 @@ export enum STORED_PROCEDURES {
     GET_SEARCHED_ARTICLES = 'GetSearchedArticles',
     GET_ADJACENT_ARTICLES = 'GetAdjacentArticles',
     ADD_VISIT = 'AddVisit',
+    ADD_ARTICLE = 'AddArticle',
         // Categories
     GET_CATEGORIES = 'GetCategories',
     ADD_CATEGORY = 'AddCategory',
@@ -23,6 +24,8 @@ export enum STORED_PROCEDURES {
     EDIT_METADATA = 'EditMetadata',
         // Article components
     GET_ARTICLE_COMPONENTS = 'GetArticleComponents',
+    ADD_ARTICLE_COMPONENT = 'AddArticleComponent',
+    GET_COMPONENT_LIST = 'GetComponentList',
         // Comments
     GET_ARTICLE_COMMENTS = 'GetArticleComments',
     GET_COMMENT_REPLIES = 'GetCommentReplies',

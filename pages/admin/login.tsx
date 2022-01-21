@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { GlobalContext } from '../../context/GlobalContext';
 // Styles
-import classes from '../../styles/components/LoginAndRegisterPages.module.css';
+import classes from '../../styles/components/Admin/LoginAndRegisterPages.module.css';
 // Components
 import AdminLayout from '../../components/LayoutComponents/AdminLayout';
 import Main from '../../components/LayoutComponents/Main';
@@ -9,13 +9,17 @@ import LoadingIcon from '../../components/LoadingIcon';
 // Const
 import { EMAIL_REGEX } from '../../const/EmailRegex';
 // GraphQL
-import { useMutation } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../../ApolloClient/mutations';
 import { getCategories, getMetadata } from '../../ApolloClient/querys';
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
 // Form
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+
+type Props = {
+    error: ApolloError
+};
 
 export default function LoginPage() {
     const { user, setUser } = useContext(GlobalContext);
@@ -28,7 +32,7 @@ export default function LoginPage() {
             setUser(data.loginUser);
             window.location.assign('/admin');
         },
-        onError: (error) => console.log(error)
+        onError: (err) => console.log(err)
     });
 
     const validationSchema = yup.object({
@@ -98,7 +102,9 @@ export async function getStaticProps() {
     catch (err) {
         console.log(err);
         return addApolloState(client, {
-            props: {}
+            props: {
+                error: JSON.parse(JSON.stringify(err))
+            }
         });
     }
 };

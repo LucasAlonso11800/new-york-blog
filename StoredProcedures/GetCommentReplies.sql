@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCommentReplies`(
 	IN PCommentId			INT
 )
@@ -11,4 +12,5 @@ BEGIN
 	FROM comments
 	WHERE comment_is_response = 'Y' AND comment_is_response_to_comment_id = PCommentId
 	ORDER BY comment_created_at DESC;
-END
+END$$
+DELIMITER ;

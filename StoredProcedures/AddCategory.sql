@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AddCategory`(
 	IN PCategoryName		VARCHAR(40),
     IN PCategoryPath		VARCHAR(40)
@@ -12,4 +13,5 @@ BEGIN
         category_path AS path
 	FROM categories
     WHERE category_id = last_insert_id();
-END
+END$$
+DELIMITER ;

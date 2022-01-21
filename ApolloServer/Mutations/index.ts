@@ -1,5 +1,6 @@
 export {    
-    addVisit
+    addVisit,
+    addArticle
 } from './articles';
 
 export {

@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCategories`()
 BEGIN
 	SELECT 
@@ -6,4 +7,5 @@ BEGIN
 		category_path AS path
 	FROM categories
 	WHERE category_path NOT IN("dev", "about");
-END
+END$$
+DELIMITER ;

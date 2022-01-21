@@ -11,18 +11,17 @@ import { useQuery } from '@apollo/client';
 // Const
 import { CATEGORY_ARTICLE_LIMIT } from '../../../../const/Limits';
 // Types
-import { CategoryType } from '../../../../types/Types';
+import { ArticleType, CategoryType } from '../../../../types/Types';
 
 type Props = {
     category: CategoryType
     articleCount: number
     title: string
     index: number
+    articles: ArticleType[]
 };
 
-export default function CategoryPage({ category, articleCount, title, index }: Props) {
-    const { data: { getCategoryArticles: articles } } = useQuery(GET_CATEGORY_ARTICLES, { variables: { categoryId: category.id, index } })
-
+export default function CategoryPage({ category, articleCount, title, index, articles }: Props) {
     return (
         <Layout title={title}>
             <Main>
@@ -70,7 +69,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
     try {
         const categories = await getCategories(client);
         const category: CategoryType = categories.data.getCategories.find((category: CategoryType) => category.path === params.category);
-        await getCategoryArticles(client, category.id, parseInt(params.index));
+        const articles = await getCategoryArticles(client, category.id, parseInt(params.index));
         const articleCount = await getCategoryArticleCount(client, category.id);
 
         await getMostVisitedArticles(client);
@@ -81,7 +80,8 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                 category,
                 title: category.name + " - ",
                 articleCount: articleCount.data.getCategoryArticleCount,
-                index: parseInt(params.index)
+                index: parseInt(params.index),
+                articles: articles.data.getCategoryArticles
             }
         });
     }
@@ -92,7 +92,9 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                 category: {},
                 title: "",
                 articleCount: 0,
-                index: parseInt(params.index)
+                index: parseInt(params.index),
+                articles: [],
+                error: JSON.parse(JSON.stringify(err))
             }
         })
     };

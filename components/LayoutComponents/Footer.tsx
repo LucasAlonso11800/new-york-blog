@@ -8,7 +8,8 @@ import { GET_METADATA } from '../../ApolloClient/querys';
 import { MetadataNames, MetadataType } from '../../types/Types';
 
 export default function Footer() {
-    const { data: { getMetadata: metadata } } = useQuery(GET_METADATA);
+    const { data: metadataQuery } = useQuery(GET_METADATA);
+    const metadata = metadataQuery?.getMetadata || [];
 
     const text: MetadataType = metadata.find((data: MetadataType) => data.name === MetadataNames.FOOTER_TEXT);
 
@@ -16,7 +17,7 @@ export default function Footer() {
         <footer className={classes.footer}>
             <div></div>
             <div className={classes.copyright}>
-                <p>{text.value}</p>
+                <p>{text?.value}</p>
             </div>
             <div></div>
         </footer>

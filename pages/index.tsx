@@ -6,30 +6,27 @@ import ArticlePreview from '../components/ArticlePreview';
 import Pagination from '../components/Pagination';
 // GraphQL
 import { addApolloState, initializeApollo } from '../ApolloClient/NewApolloConfig';
-import { useQuery } from '@apollo/client';
-import { getCategories, getLatestArticles, getMetadata, getMostVisitedArticles, GET_LATEST_ARTICLES } from '../ApolloClient/querys';
+import { getCategories, getLatestArticles, getMetadata, getMostVisitedArticles } from '../ApolloClient/querys';
 // Types
-import { ArticleType } from '../types/Types';
+import { ApolloError } from '@apollo/client'
+import { ArticleStatus, ArticleType } from '../types/Types';
 
-export default function HomePage() {
-    const { data: { getLatestArticles: articles } } = useQuery(GET_LATEST_ARTICLES, { variables: { index: 1 } });
+type Props = {
+    articles: ArticleType[],
+    error: ApolloError
+};
 
+export default function HomePage({ articles }: Props) {
     return (
         <Layout title="">
             <Main>
-                {articles.map((article: ArticleType, index: number) => {
-                    return <ArticlePreview
+                {articles.map((article, index) => (
+                    <ArticlePreview
                         key={article.id}
                         layout={index === 0 ? 'column' : 'row'}
-                        title={article.title}
-                        categoryName={article.categoryName}
-                        categoryPath={article.categoryPath}
-                        image={article.image}
-                        authorName={article.authorName}
-                        slug={article.slug}
-                        description={article.description}
+                        {...article}
                     />
-                })}
+                ))}
                 <Pagination index={1} />
             </Main>
         </Layout>
@@ -39,18 +36,23 @@ export default function HomePage() {
 export async function getStaticProps() {
     const client = initializeApollo();
     try {
-        await getLatestArticles(client, 1);
+        const articles = await getLatestArticles(client, 1, ArticleStatus.ACCEPTED);
         await getMostVisitedArticles(client);
         await getCategories(client);
         await getMetadata(client);
 
         return addApolloState(client, {
-            props: {}
+            props: {
+                articles: articles.data.getLatestArticles
+            }
         });
     }
-    catch (err) {
+    catch (err: any) {
         return addApolloState(client, {
-            props: {}
+            props: {
+                articles: [],
+                error: JSON.parse(JSON.stringify(err))
+            }
         });
     }
 };

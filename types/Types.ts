@@ -12,6 +12,25 @@ export enum MetadataNames {
     MOST_VISITED_ARTICLES_TITLE = 'most_visited_articles_title',
     ABOUT_IMAGE = 'about_image',
     HEAD_ICON = 'head_icon'
+};
+
+export enum ArticleComponentNames {
+    ARTICLE_QUOTE = 'Quote',
+    ARTICLE_SUBTITLE = 'Subtitle',
+    ARTICLE_TEXT = 'Text',
+    ARTICLE_TITLE = 'Title',
+    IMAGE = 'Image'
+};
+
+export enum UserRoles {
+    ADMIN = 'Admin',
+    WRITER = 'Writer'
+};
+
+export enum ArticleStatus {
+    ACCEPTED = 'Accepted',
+    STAND_BY = 'Stand By',
+    REJECTED = 'Rejected'
 }
 
 export type ModalInfoType = {
@@ -45,10 +64,15 @@ export type ArticleType = {
     description: string
 };
 
+export type ComponentType = {
+    id: string
+    name: ArticleComponentNames
+}
+
 export type ArticleComponentType = {
     id: string
     componentId: string
-    componentName: string
+    componentName: ArticleComponentNames
     articleId: string
     order: number
     image: string
@@ -76,7 +100,7 @@ export type UserType = {
     username: string
     token: string
     roleId: string
-    roleName: string
+    roleName: UserRoles
     password?: string
 }
 

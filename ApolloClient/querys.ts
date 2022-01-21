@@ -1,5 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 import { gql } from "apollo-server-micro";
+import { ArticleStatus } from "../types/Types";
 import { CORE_ARTICLE_FIELDS, COMMENTS_FIELDS } from './fragments';
 
 // Articles
@@ -41,8 +42,8 @@ export async function getSingleArticle(client: ApolloClient<NormalizedCacheObjec
 
 export const GET_LATEST_ARTICLES = gql`
     ${CORE_ARTICLE_FIELDS}
-    query GetLatestArticles ($index: Int!){
-        getLatestArticles(index: $index){
+    query GetLatestArticles ($index: Int!, $statusName: String!){
+        getLatestArticles(index: $index, statusName: $statusName){
             ...CoreArticleFields
             categoryName
             categoryPath
@@ -51,11 +52,12 @@ export const GET_LATEST_ARTICLES = gql`
         }
     }
 `;
-export async function getLatestArticles(client: ApolloClient<NormalizedCacheObject>, index: number) {
+export async function getLatestArticles(client: ApolloClient<NormalizedCacheObject>, index: number, status: ArticleStatus) {
     return await client.query({
         query: GET_LATEST_ARTICLES,
         variables: {
-            index
+            index,
+            statusName: status
         }
     });
 };
@@ -206,6 +208,20 @@ export async function getCategories(client: ApolloClient<NormalizedCacheObject>)
 };
 
 // Article Components
+
+export const GET_COMPONENTS_LIST = gql`
+    query GetComponentsList {
+        getComponentsList {
+            id
+            name
+        }
+    }
+`;
+export async function getComponentsList(client: ApolloClient<NormalizedCacheObject>) {
+    return await client.query({
+        query: GET_COMPONENTS_LIST,
+    });
+};
 
 export const GET_ARTICLE_COMPONENTS = gql`
     query GetArticleComponents ($articleId: ID!) {

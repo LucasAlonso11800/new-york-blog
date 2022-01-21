@@ -6,19 +6,20 @@ import Pagination from '../../../components/Pagination';
 import Layout from '../../../components/LayoutComponents/Layout';
 // GraphQL
 import { addApolloState, initializeApollo } from '../../../ApolloClient/NewApolloConfig';
-import { useQuery } from '@apollo/client';
-import { getCategories, getCategoryArticleCount, getCategoryArticles, getMetadata, getMostVisitedArticles, GET_CATEGORY_ARTICLES } from '../../../ApolloClient/querys';
+import { ApolloError } from '@apollo/client';
+import { getCategories, getCategoryArticleCount, getCategoryArticles, getMetadata, getMostVisitedArticles } from '../../../ApolloClient/querys';
 // Types
-import { CategoryType } from '../../../types/Types';
+import { ArticleType, CategoryType } from '../../../types/Types';
 
 type Props = {
     category: CategoryType
     title: string
     articleCount: number
+    articles: ArticleType[]
+    error: ApolloError
 };
 
-export default function CategoryPage({ category, title, articleCount }: Props) {
-    const { data: { getCategoryArticles: articles } } = useQuery(GET_CATEGORY_ARTICLES, { variables: { categoryId: category.id, index: 1 } })
+export default function CategoryPage({ category, title, articleCount, articles }: Props) {
     return (
         <Layout title={title}>
             <Main>
@@ -55,8 +56,8 @@ type GetStaticPropsParams = {
 export async function getStaticProps({ params }: GetStaticPropsParams) {
     try {
         const categories = await getCategories(client);
-        const category: CategoryType = categories.data.getCategories.find((category: CategoryType) => category.path === params.category);
-        await getCategoryArticles(client, category.id, 1);
+        const category = categories.data.getCategories.find((category: CategoryType) => category.path === params.category);
+        const articles = await getCategoryArticles(client, category.id, 1);
         const articleCount = await getCategoryArticleCount(client, category.id);
 
         await getMostVisitedArticles(client);
@@ -66,7 +67,8 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
             props: {
                 articleCount: articleCount.data.getCategoryArticleCount,
                 category,
-                title: category.name + " - "
+                title: category.name + " - ",
+                articles: articles.data.getCategoryArticles
             }
         });
     }
@@ -76,7 +78,9 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
             props: {
                 articleCount: 0,
                 category: {},
-                title: ""
+                title: "",
+                articles: [],
+                error: JSON.parse(JSON.stringify(err))
             }
         });
     }

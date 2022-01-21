@@ -15,12 +15,9 @@ type Props = {
 }
 
 export default function Layout({ children, title }: Props) {
-    const { data: { getMetadata: metadata } } = useQuery(GET_METADATA);
-    const headIcon: MetadataType = metadata.find((data: MetadataType) => data.name === MetadataNames.HEAD_ICON);
-
     return (
         <div id="page-container">
-            <Head title={title} />
+            <Head title={title}/>
             <Header />
             {children}
             <Aside />

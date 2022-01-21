@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ReadMoreButton from './ReadMoreButton';
 import ArticleMeta from './ArticleComponents/ArticleMeta';
+// Utils
+import { fixFirebaseURL } from '../utils/fixFirebaseURL';
 // Styles
 import classes from '../styles/components/ArticlePreview.module.css';
 
@@ -25,7 +27,7 @@ export default function ArticlePreview(props: Props) {
     return (
         <article className={`${classes.article} ${classes[layout]}`} data-testid="articlePreview">
             <Link href={`/articles/${slug}`}>
-                <Image src={image} {...imageDimensions} />
+                <Image src={fixFirebaseURL(image)} {...imageDimensions} />
             </Link>
             <div className={classes.content}>
                 <h2 className={classes.title}><Link href={`/articles/${slug}`}>{title}</Link></h2>

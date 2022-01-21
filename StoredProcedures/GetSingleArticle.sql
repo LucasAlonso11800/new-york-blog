@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSingleArticle`(
 	IN PArticleSlug				VARCHAR(255)
 )
@@ -20,4 +21,5 @@ BEGIN
 	JOIN users
 		ON users.user_id = article_user_id
 	WHERE article_slug = PArticleSlug;	
-END
+END$$
+DELIMITER ;

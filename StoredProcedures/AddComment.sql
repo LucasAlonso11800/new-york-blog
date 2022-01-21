@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AddComment`(
 	IN PCommenter				VARCHAR(40),
 	IN PEmail					VARCHAR(255),
@@ -33,4 +34,5 @@ BEGIN
 		comment_article_id 			AS articleId
 	FROM comments
 	WHERE comment_id = BNewCommentId;
-END
+END$$
+DELIMITER ;

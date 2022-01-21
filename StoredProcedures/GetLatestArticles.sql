@@ -1,4 +1,7 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetLatestArticles`()
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetLatestArticles`(
+	IN 	PStatus			VARCHAR(20)
+)
 BEGIN
 	SELECT         
 		article_id 				AS id,
@@ -22,5 +25,10 @@ BEGIN
 		ON article_components.article_component_article_id = article_id 
 		AND article_components.article_component_order = 2
 	WHERE category_path != "about"
+    AND article_status_id = (SELECT article_status_id 
+								FROM article_statuses
+                                WHERE article_status_name = PStatus
+							)
 	ORDER BY article_created_at DESC, article_id DESC;
-END
+END$$
+DELIMITER ;

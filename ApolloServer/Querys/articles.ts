@@ -14,6 +14,7 @@ type Args = {
     categoryId: number | string
     search: string
     slug: string
+    statusName: string
 };
 
 export const getAllArticles = async () => {
@@ -34,11 +35,11 @@ export const getSingleArticle = async (_: any, args: Args) => {
 };
 
 export const getLatestArticles = async (_: any, args: Args) => {
-    const { index } = args;
+    const { index, statusName } = args;
 
     const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_LATEST_ARTICLES;
 
-    const articles: ArticleType[] = await callSP({ procedure, values: [] });
+    const articles: ArticleType[] = await callSP({ procedure, values: [statusName] });
     return articles.slice((index - 1) * ARTICLE_LIMIT_PER_PAGE, (index - 1) * ARTICLE_LIMIT_PER_PAGE + ARTICLE_LIMIT_PER_PAGE);
 };
 

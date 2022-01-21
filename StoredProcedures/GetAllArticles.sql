@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllArticles`()
 BEGIN
 	SELECT         
@@ -18,5 +19,10 @@ BEGIN
 	JOIN users
 		ON users.user_id = article_user_id
 	WHERE category_path != "about"
+	AND article_status_id = (SELECT article_status_id 
+								FROM article_statuses
+                                WHERE article_status_name = "Accepted"
+							)
     ORDER BY article_id;
-END
+END$$
+DELIMITER ;

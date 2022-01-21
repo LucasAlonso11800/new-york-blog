@@ -1,11 +1,42 @@
 import { gql } from "@apollo/client";
-import { COMMENTS_FIELDS } from "./fragments";
+import { COMMENTS_FIELDS, CORE_ARTICLE_FIELDS } from "./fragments";
 
 // Articles
 
 export const ADD_VISIT = gql`
     mutation AddVisit($articleId: ID!) {
         addVisit(articleId: $articleId)
+    }
+`;
+
+export const ADD_ARTICLE = gql`
+    ${CORE_ARTICLE_FIELDS}
+    mutation AddArticle(
+        $userId: ID!, 
+        $userRole: String!, 
+        $title: String!, 
+        $categoryId: ID!, 
+        $components: [ArticleComponentInput]!, 
+        $image: String!, 
+        $slug: String!
+    ){
+        addArticle (
+            userId: $userId, 
+            userRole: $userRole, 
+            title: $title, 
+            categoryId: $categoryId, 
+            components: $components, 
+            image: $image, 
+            slug: $slug
+            )
+        {
+            ...CoreArticleFields
+            categoryName
+            categoryPath
+            authorName
+            createdAt
+            description
+        }
     }
 `;
 

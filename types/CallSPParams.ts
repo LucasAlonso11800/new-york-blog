@@ -1,6 +1,6 @@
 import { STORED_PROCEDURES } from "../const/StoredProcedures";
 
-export type CallSPParams = EditMetadata | AddCategory | EditCategory | DeleteCategory | RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
+export type CallSPParams = GetComponentList | AddArticleComponent | AddArticle | EditMetadata | AddCategory | EditCategory | DeleteCategory | RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
 
 // Articles
 
@@ -16,7 +16,7 @@ type GetSingleArticle = {
 
 type GetLatestArticles = {
     procedure: STORED_PROCEDURES.GET_LATEST_ARTICLES,
-    values: []
+    values: [string]
 };
 
 type GetMostVisitedArticles = {
@@ -47,6 +47,11 @@ type GetAdjacentArticles = {
 type AddVisit = {
     procedure: STORED_PROCEDURES.ADD_VISIT,
     values: [number]
+};
+
+type AddArticle = {
+    procedure: STORED_PROCEDURES.ADD_ARTICLE,
+    values: [string, number, number, string, string, number, string, string]
 };
 
 // Categories
@@ -105,6 +110,16 @@ type EditMetadata = {
 type GetArticleComponents = {
     procedure: STORED_PROCEDURES.GET_ARTICLE_COMPONENTS,
     values: [number]
+};
+
+type AddArticleComponent = {
+    procedure: STORED_PROCEDURES.ADD_ARTICLE_COMPONENT,
+    values: [number, number, number, string, string, string, string]
+};
+
+type GetComponentList = {
+    procedure: STORED_PROCEDURES.GET_COMPONENT_LIST,
+    values: []
 };
 
 // Comments

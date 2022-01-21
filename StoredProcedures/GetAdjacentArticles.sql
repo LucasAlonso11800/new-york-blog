@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAdjacentArticles`(
 	PArticleId					INT
 )
@@ -10,7 +11,12 @@ BEGIN
     FROM articles
 	JOIN categories
 	ON categories.category_id = article_category_id
-	WHERE article_id > PArticleId AND category_path != "about"
+	WHERE article_id > PArticleId 
+    AND category_path != "about"
+	AND article_status_id = (SELECT article_status_id 
+								FROM article_statuses
+                                WHERE article_status_name = "Accepted"
+							)
 	ORDER BY article_id
 	LIMIT 1
 	INTO BPrevious;
@@ -21,8 +27,13 @@ BEGIN
 	FROM articles
     JOIN categories
 	ON categories.category_id = article_category_id
-	WHERE article_id < PArticleId AND category_path != "about"
-	ORDER BY article_id DESC
+	WHERE article_id < PArticleId 
+    AND category_path != "about"
+	AND article_status_id = (SELECT article_status_id 
+								FROM article_statuses
+                                WHERE article_status_name = "Accepted"
+							)
+    ORDER BY article_id DESC
 	LIMIT 1
     INTO BNext;
     
@@ -120,4 +131,5 @@ BEGIN
 				null					AS authorName,
 				null 					AS slug;
 	END IF;
-END
+END$$
+DELIMITER ;

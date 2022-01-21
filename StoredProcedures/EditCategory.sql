@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `EditCategory`(
 	IN PCategoryId			INT,	
 	IN PCategoryName		VARCHAR(40),
@@ -14,4 +15,5 @@ BEGIN
         category_path AS path
 	FROM categories
     WHERE category_id = PCategoryId;
-END
+END$$
+DELIMITER ;

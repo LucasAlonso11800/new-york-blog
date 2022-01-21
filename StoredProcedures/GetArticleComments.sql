@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetArticleComments`(
 	IN PArticleId			INT
 )
@@ -11,4 +12,5 @@ BEGIN
 	FROM comments
 	WHERE comment_is_response = 'N' AND comment_article_id = PArticleId
 	ORDER BY comment_created_at DESC;
-END
+END$$
+DELIMITER ;

@@ -10,8 +10,9 @@ import ArticleSubtitle from './ArticleComponents/ArticleSubtitle';
 import ArticleQuote from './ArticleComponents/ArticleQuote';
 // Utils
 import { formatDate } from '../utils/formatDate';
+import { fixFirebaseURL } from '../utils/fixFirebaseURL';
 // Types
-import { ArticleComponentType } from '../types/Types';
+import { ArticleComponentNames, ArticleComponentType } from '../types/Types';
 
 type Props = {
     title: string
@@ -48,14 +49,14 @@ export default function MainArticle(props: Props) {
                     authorName={authorName}
                 />
             }
-            <Image src={image} height="535" width="800" priority />
+            <Image src={fixFirebaseURL(image)} height="535" width="800" priority />
             {articleComponents.map(component => {
                 switch (component.componentName) {
-                    case "ArticleQuote": return <ArticleQuote key={component.id} text={component.text} />
-                    case "ArticleSubtitle": return <ArticleSubtitle key={component.id} text={component.text} textAlign={component.textAlign === 'L' ? 'left' : 'center'} fontWeight={component.fontWeight} lineHeight={component.fontWeight === "400" ? '45px' : '32.5px'} />
-                    case "ArticleText": return <ArticleText key={component.id} text={component.text} />
-                    case "ArticleTitle": return <ArticleTitle key={component.id} text={component.text} />
-                    case "Image": return <Image key={component.id} src={component.image} height="535" width="800" />
+                    case ArticleComponentNames.ARTICLE_QUOTE: return <ArticleQuote key={component.id} text={component.text} />
+                    case ArticleComponentNames.ARTICLE_SUBTITLE: return <ArticleSubtitle key={component.id} text={component.text} textAlign={component.textAlign === 'L' ? 'left' : 'center'} fontWeight={component.fontWeight} lineHeight={component.fontWeight === "400" ? '45px' : '32.5px'} />
+                    case ArticleComponentNames.ARTICLE_TEXT: return <ArticleText key={component.id} text={component.text} />
+                    case ArticleComponentNames.ARTICLE_TITLE: return <ArticleTitle key={component.id} text={component.text} />
+                    case ArticleComponentNames.IMAGE: return <Image key={component.id} src={fixFirebaseURL(component.image)} height="535" width="800" />
                 }
             })}
             <p className={classes.createdAt}>Posted on {formatDate(createdAt)}</p>

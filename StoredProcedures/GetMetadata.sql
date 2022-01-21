@@ -1,3 +1,4 @@
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetMetadata`()
 BEGIN
 	SELECT 
@@ -6,4 +7,5 @@ BEGIN
 		metadata_description	AS description,
 		metadata_value 			AS value
 	FROM metadata;
-END
+END$$
+DELIMITER ;
