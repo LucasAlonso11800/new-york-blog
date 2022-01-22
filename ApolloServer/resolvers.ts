@@ -1,7 +1,7 @@
 // Querys
-import { getComponentsList, getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles, getCategories, getTotalArticleCount, getCategoryArticleCount, getSearchedArticleCount, getAllArticles, getArticleComponents, getMetadata, getArticleComments, getCommentReplies, getAdjacentArticles } from "./Querys";
+import { getUsers, getComponentsList, getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles, getCategories, getTotalArticleCount, getCategoryArticleCount, getSearchedArticleCount, getAllArticles, getArticleComponents, getMetadata, getArticleComments, getCommentReplies, getAdjacentArticles } from "./Querys";
 // Mutations
-import { approveArticle, deleteArticle, addArticle, addCategory, addComment, addVisit, deleteCategory, editCategory, editMetadata, loginUser, registerUser } from "./Mutations";
+import { changeUserRole, approveArticle, deleteArticle, addArticle, addCategory, addComment, addVisit, deleteCategory, editCategory, editMetadata, loginUser, registerUser } from "./Mutations";
 
 export const resolvers = {
     Query: {
@@ -27,7 +27,9 @@ export const resolvers = {
         getMetadata,
         // Comments
         getArticleComments,
-        getCommentReplies
+        getCommentReplies,
+        // Users
+        getUsers
     },
     Mutation: {
         // Articles
@@ -44,6 +46,7 @@ export const resolvers = {
         // Users
         loginUser,
         registerUser,
+        changeUserRole,
         // Metadata
         editMetadata
     }

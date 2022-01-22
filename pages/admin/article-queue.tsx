@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import classes from '../../styles/components/Admin/ArticleListPage.module.css';
+import classes from '../../styles/components/Admin/ListPages.module.css';
 // Context
 import { GlobalContext } from '../../context/GlobalContext';
 // Components
@@ -103,6 +103,7 @@ export default function ArticleQueue({ categories, error }: Props) {
     return (
         <AdminLayout title="Article queue - ">
             <Main>
+                <h1 className={classes.title}>Article queue</h1>
                 <div className={classes.filters}>
                     <input className={classes.input} placeholder='Filter by title' value={title} onChange={(e) => setTitle(e.target.value)} />
                     <input className={classes.input} placeholder='Filter by author' value={author} onChange={(e) => setAuthor(e.target.value)} />
@@ -116,25 +117,16 @@ export default function ArticleQueue({ categories, error }: Props) {
                 </div>
 
                 <table className={classes.table}>
-                    {popupInfo.text === "" ?
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Image</th>
-                                <th>Category</th>
-                                <th>Created on</th>
-                                <th>Author</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        :
-                        <thead>
-                            <tr>
-                                <th colSpan={4}>Confirm action</th>
-                                <th colSpan={2}></th>
-                            </tr>
-                        </thead>
-                    }
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Image</th>
+                            <th>Category</th>
+                            <th>Created on</th>
+                            <th>Author</th>
+                            <th></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         {filteredArticles.slice(page * ARTICLE_LIST_LIMIT, page * ARTICLE_LIST_LIMIT + ARTICLE_LIST_LIMIT).map(article => (
                             popupInfo.articleId === article.id ?
@@ -203,7 +195,7 @@ export default function ArticleQueue({ categories, error }: Props) {
                                                     fontSize={32}
                                                     onClick={() => {
                                                         setAction('approve')
-                                                        setPopupInfo({ text: `Are you sure you want to approve the article "${article.title}"`, articleId: article.id })
+                                                        setPopupInfo({ text: `Are you sure you want to approve the article "${article.title}"?`, articleId: article.id })
                                                     }}
                                                 />
                                                 <Icon
@@ -216,7 +208,7 @@ export default function ArticleQueue({ categories, error }: Props) {
                                                     fontSize={32}
                                                     onClick={() => {
                                                         setAction('reject');
-                                                        setPopupInfo({ text: `Are you sure you want to delete the article "${article.title}"`, articleId: article.id })
+                                                        setPopupInfo({ text: `Are you sure you want to delete the article "${article.title}"?`, articleId: article.id })
                                                     }}
                                                 />
                                             </>

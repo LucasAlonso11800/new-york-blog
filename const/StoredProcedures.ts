@@ -36,4 +36,6 @@ export enum STORED_PROCEDURES {
         // Users
     REGISTER_USER = 'RegisterUser',
     LOGIN_USER = 'LoginUser',
+    GET_USERS = 'GetUsers',
+    CHANGE_USER_ROLE = 'ChangeUserRole',
 };

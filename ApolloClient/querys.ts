@@ -305,3 +305,22 @@ export const GET_COMMENT_REPLIES = gql`
         }
     }
 `;
+
+// Users
+export const GET_USERS = gql`
+    query GetUsers {
+        getUsers {
+            id
+            username
+            roleName
+            articles
+            visits
+        }
+    }
+`;
+
+export async function getUsers(client: ApolloClient<NormalizedCacheObject>){
+    return await client.query({
+        query: GET_USERS
+    })
+};

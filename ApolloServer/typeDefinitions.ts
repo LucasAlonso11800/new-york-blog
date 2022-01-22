@@ -25,6 +25,8 @@ export const typeDefs = gql`
         # Comments
         getArticleComments(articleId: ID!): [Comment]
         getCommentReplies(commentId: ID!): [Comment]
+        # Users
+        getUsers: [User]
     }
 
     type Mutation {
@@ -42,6 +44,7 @@ export const typeDefs = gql`
         # Users
         loginUser(email: String!, password: String!): User
         registerUser(username: String!, email: String!, password: String!): User
+        changeUserRole(userRole: String!, authorId: ID!, authorRoleName: String!): String
         # Metadata
         editMetadata(id: ID!, name: String!, value: String!): Metadata
     }
@@ -118,5 +121,7 @@ export const typeDefs = gql`
         token: String
         roleId: ID
         roleName: String
+        articles: Int
+        visits: Int
     }
 `;

@@ -17,7 +17,8 @@ export {
 
 export {
     loginUser,
-    registerUser
+    registerUser,
+    changeUserRole
 } from './users';
 
 export {

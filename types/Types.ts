@@ -24,7 +24,8 @@ export enum ArticleComponentNames {
 
 export enum UserRoles {
     ADMIN = 'Admin',
-    WRITER = 'Writer'
+    WRITER = 'Writer',
+    BLOCKED = 'Blocked'
 };
 
 export enum ArticleStatus {
@@ -102,6 +103,8 @@ export type UserType = {
     roleId: string
     roleName: UserRoles
     password?: string
+    articles?: number
+    visits?: number
 }
 
 type DecodedTokenProperties = {

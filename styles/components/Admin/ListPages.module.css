@@ -1,3 +1,12 @@
+.title {
+    font-weight: 400;
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    padding: 0 0 7px;
+    line-height: 42px;
+    font-family: var(--playfair);
+}
 .filters {
     width: 100%;
     display: flex;
@@ -31,6 +40,7 @@
     text-align: center;
     border-collapse: collapse;
     margin-bottom: 20px;
+    table-layout: fixed;
 }
 
 .table th {

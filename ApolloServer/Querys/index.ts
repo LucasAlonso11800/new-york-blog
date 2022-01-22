@@ -31,4 +31,8 @@ export {
 export {
     getArticleComments,
     getCommentReplies
-} from './comments'
+} from './comments';
+
+export {
+    getUsers
+} from './users';

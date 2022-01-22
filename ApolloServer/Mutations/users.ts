@@ -5,9 +5,13 @@ import { STORED_PROCEDURES } from "../../const/StoredProcedures";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 // Types
-import { UserType } from "../../types/Types";
+import { UserRoles, UserType } from "../../types/Types";
+import { formatId } from "../../utils/formatId";
 
 type Args = {
+    userRole: string
+    authorId: string | number
+    authorRoleName: string
     username: string
     email: string
     password: string
@@ -71,6 +75,22 @@ export const loginUser = async (_: any, args: Args) => {
             roleName: user[0].roleName,
             token
         };
+    }
+    catch (err: any) {
+        throw new Error(err)
+    }
+};
+
+export const changeUserRole = async (_: any, args: Args) => {
+    try {
+        const { userRole, authorId, authorRoleName } = args;
+        if(userRole === UserRoles.ADMIN){
+            const procedure: STORED_PROCEDURES = STORED_PROCEDURES.CHANGE_USER_ROLE;
+            const values: [number, string] = [formatId(authorId), authorRoleName];   
+            await callSP({ procedure, values });
+            return "Changed role"
+        }
+        throw new Error("You are not authorized to change a user's role'")
     }
     catch (err: any) {
         throw new Error(err)

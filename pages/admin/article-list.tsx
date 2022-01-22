@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import classes from '../../styles/components/Admin/ArticleListPage.module.css';
+import classes from '../../styles/components/Admin/ListPages.module.css';
 // Context
 import { GlobalContext } from '../../context/GlobalContext';
 // Components
@@ -78,6 +78,7 @@ export default function ArticleList({ categories }: Props) {
     return (
         <AdminLayout title="Article list - ">
             <Main>
+                <h1 className={classes.title}>Article list</h1>
                 <div className={classes.filters}>
                     <input className={classes.input} placeholder='Filter by title' value={title} onChange={(e) => setTitle(e.target.value)} />
                     <input className={classes.input} placeholder='Filter by author' value={author} onChange={(e) => setAuthor(e.target.value)} />
@@ -91,26 +92,17 @@ export default function ArticleList({ categories }: Props) {
                 </div>
 
                 <table className={classes.table}>
-                    {popupInfo.text === '' ?
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Image</th>
-                                <th>Category</th>
-                                <th>Created on</th>
-                                <th>Visits</th>
-                                <th>Author</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        :
-                        <thead>
-                            <tr>
-                                <th colSpan={5}>Confirm action</th>
-                                <th colSpan={2}></th>
-                            </tr>
-                        </thead>
-                    }
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Image</th>
+                            <th>Category</th>
+                            <th>Created on</th>
+                            <th>Visits</th>
+                            <th>Author</th>
+                            <th></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         {filteredArticles.slice(page * ARTICLE_LIST_LIMIT, page * ARTICLE_LIST_LIMIT + ARTICLE_LIST_LIMIT).map(article => (
                             popupInfo.articleId === article.id ?
@@ -173,7 +165,7 @@ export default function ArticleList({ categories }: Props) {
                                                 <Icon
                                                     icon="bx:bxs-trash"
                                                     fontSize={32}
-                                                    onClick={() => setPopupInfo({ text: `Are you sure you want to delete article "${article.title}"`, articleId: article.id })}
+                                                    onClick={() => setPopupInfo({ text: `Are you sure you want to delete article "${article.title}"?`, articleId: article.id })}
                                                 />
                                             </>
                                             : null

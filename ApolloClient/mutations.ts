@@ -126,6 +126,12 @@ export const LOGIN_USER = gql`
     }
 `;
 
+export const CHANGE_USER_ROLE = gql`
+    mutation ChangeUserRole($userRole: String!, $authorId: ID!, $authorRoleName: String!) {
+        changeUserRole(userRole: $userRole, authorId: $authorId, authorRoleName: $authorRoleName)
+    }
+`;
+
 // Metadata
 
 export const EDIT_METADATA = gql`

@@ -1,6 +1,6 @@
 import { STORED_PROCEDURES } from "../const/StoredProcedures";
 
-export type CallSPParams = ApproveArticle | DeleteArticle | GetComponentList | AddArticleComponent | AddArticle | EditMetadata | AddCategory | EditCategory | DeleteCategory | RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
+export type CallSPParams = ChangeUserRole | GetUsers | ApproveArticle | DeleteArticle | GetComponentList | AddArticleComponent | AddArticle | EditMetadata | AddCategory | EditCategory | DeleteCategory | RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
 
 // Articles
 
@@ -159,4 +159,14 @@ type RegisterUser = {
 type LoginUser = {
     procedure: STORED_PROCEDURES.LOGIN_USER,
     values: [string];
+};
+
+type GetUsers = {
+    procedure: STORED_PROCEDURES.GET_USERS,
+    values: []
+};
+
+type ChangeUserRole = {
+    procedure: STORED_PROCEDURES.CHANGE_USER_ROLE,
+    values: [number, string]
 };
