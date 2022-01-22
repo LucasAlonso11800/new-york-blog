@@ -21,10 +21,10 @@ BEGIN
 	JOIN users
 		ON users.user_id = article_user_id
 	WHERE category_path != "about"
-	AND article_status_id = (SELECT article_status_id 
-								FROM article_statuses
-                                WHERE article_status_name = PArticleStatus
-							)
+	AND article_article_status_id = (SELECT article_status_id 
+										FROM article_statuses
+										WHERE article_status_name = PArticleStatus
+									)
     ORDER BY article_created_at DESC;
 END$$
 DELIMITER ;

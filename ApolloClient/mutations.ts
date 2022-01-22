@@ -41,8 +41,24 @@ export const ADD_ARTICLE = gql`
 `;
 
 export const DELETE_ARTICLE = gql`
-    mutation deleteArticle($articleId: ID!){
-        deleteArticle(articleId: $articleId)
+    mutation deleteArticle(
+        $articleId: ID!,
+        $userId: ID!,
+        $userRole: String!,
+        $authorId: ID!
+    ){
+        deleteArticle(
+            articleId: $articleId,
+            userId: $userId,
+            userRole: $userRole,
+            authorId: $authorId
+        )
+    }
+`;
+
+export const APPROVE_ARTICLE = gql`
+    mutation approveArticle($articleId: ID!, $userRole: String!){
+        approveArticle(articleId: $articleId, userRole: $userRole)
     }
 `;
 

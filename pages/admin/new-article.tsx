@@ -59,7 +59,7 @@ export default function NewArticle({ categories, components }: Props) {
                 },
                 data: { getLatestArticles: result.data.addArticle }
             });
-            // Show sign of everything fine
+            window.location.assign('/admin/article-list');
         },
         onError: (err) => console.log(JSON.stringify(err, null, 2))
     });

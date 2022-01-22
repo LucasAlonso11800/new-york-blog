@@ -65,6 +65,9 @@ export default function AdminPage({ categories, metadata }: Props) {
                         <button className={classes.button}>
                             <Link href="/admin/new-article">Create new article</Link>
                         </button>
+                        <button className={classes.button}>
+                            <Link href="/admin/authors">Authors</Link>
+                        </button>
                     </div>
                 </section>
                 <section className={classes.section}>

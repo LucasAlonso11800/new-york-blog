@@ -21,10 +21,10 @@ BEGIN
 	JOIN users
 		ON users.user_id = article_user_id
 	WHERE category_path != "about"
-	AND article_status_id = (SELECT article_status_id 
-								FROM article_statuses
-                                WHERE article_status_name = "Accepted"
-							)
+	AND article_article_status_id = (SELECT article_status_id 
+										FROM article_statuses
+										WHERE article_status_name = "Accepted"
+									)
 	ORDER BY article_visits DESC
 	LIMIT PLimit;
 END$$

@@ -25,7 +25,7 @@ type Props = {
     error: ApolloError
 };
 
-export default function ArticlePage({ article, relatedArticles, adjacentArticles, articleComponents, comments }: Props) {
+export default function ArticlePage({ article, relatedArticles, adjacentArticles, articleComponents, comments, error }: Props) {
     const [addVisit] = useMutation(ADD_VISIT);
 
     useEffect(() => {
@@ -99,7 +99,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
     }
     catch (err) {
         console.log(err);
-        addApolloState(client, {
+        return addApolloState(client, {
             props: {
                 article: {},
                 relatedArticles: [],

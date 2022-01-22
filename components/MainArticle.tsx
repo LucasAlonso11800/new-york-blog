@@ -49,7 +49,7 @@ export default function MainArticle(props: Props) {
                     authorName={authorName}
                 />
             }
-            <Image src={fixFirebaseURL(image)} height="535" width="800" priority />
+            {image ? <Image src={fixFirebaseURL(image)} height="535" width="800" priority /> : null}
             {articleComponents.map(component => {
                 switch (component.componentName) {
                     case ArticleComponentNames.ARTICLE_QUOTE: return <ArticleQuote key={component.id} text={component.text} />
@@ -59,7 +59,7 @@ export default function MainArticle(props: Props) {
                     case ArticleComponentNames.IMAGE: return <Image key={component.id} src={fixFirebaseURL(component.image)} height="535" width="800" />
                 }
             })}
-            <p className={classes.createdAt}>Posted on {formatDate(createdAt)}</p>
+            {createdAt ? <p className={classes.createdAt}>Posted on {formatDate(createdAt)}</p> : null}
             {!isTheAboutBlogArticle &&
                 <p className={classes.commentCount} onClick={() => handleClick()}>{commentCount} {commentCount === 1 ? 'Comment' : 'Comments'}</p>
             }

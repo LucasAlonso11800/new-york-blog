@@ -1,7 +1,8 @@
 export {    
     addVisit,
     addArticle,
-    deleteArticle
+    deleteArticle,
+    approveArticle
 } from './articles';
 
 export {

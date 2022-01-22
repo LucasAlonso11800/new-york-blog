@@ -11,6 +11,7 @@ type Args = {
     articleId: string | number
     userId: string | number
     userRole: string
+    authorId: string | number
     title: string
     slug: string
     categoryId: string | number
@@ -33,16 +34,15 @@ export const addArticle = async (_: any, args: Args) => {
     try {
         const procedure: STORED_PROCEDURES = STORED_PROCEDURES.ADD_ARTICLE;
         const values: [string, number, number, string, string, number, string, string] = [title, 0, formatId(categoryId), image, new Date().toISOString().substring(0, 10), formatId(userId), slug, userRole];
-    
+        console.log(userRole);
         const response: ArticleType[] = await callSP({ procedure, values });
-    
+        console.log(response);
         components.forEach(async component => {
             const procedure: STORED_PROCEDURES = STORED_PROCEDURES.ADD_ARTICLE_COMPONENT;
             const values: [number, number, number, string, string, string, string] = [formatId(component.componentId), formatId(response[0].id), component.order, component.image, component.text, component.fontWeight, component.textAlign]
-            console.log(image)
             await callSP({ procedure, values });
         });
-    
+
         const index = 1;
         const articles: ArticleType[] = await callSP({
             procedure: STORED_PROCEDURES.GET_LATEST_ARTICLES,
@@ -56,13 +56,33 @@ export const addArticle = async (_: any, args: Args) => {
 };
 
 export const deleteArticle = async (_: any, args: Args) => {
+    const { articleId, authorId, userId, userRole } = args;
     try {
-        const procedure: STORED_PROCEDURES = STORED_PROCEDURES.DELETE_ARTICLE;
-        const values: [number] = [formatId(args.articleId)]
-        await callSP({ procedure, values });
-        return "Deleted" 
+        if (formatId(userId) === formatId(authorId) || userRole === UserRoles.ADMIN) {
+            const procedure: STORED_PROCEDURES = STORED_PROCEDURES.DELETE_ARTICLE;
+            const values: [number] = [formatId(articleId)]
+            await callSP({ procedure, values });
+            return "Deleted"
+        };
+        throw new Error("You are not authorized to delete this article");
     }
-    catch(err: any) {
+    catch (err: any) {
         throw new Error(err)
     }
-}
+};
+
+export const approveArticle = async (_: any, args: Args) => {
+    const { articleId, userRole } = args;
+    try {
+        if(userRole === UserRoles.ADMIN) {
+            const procedure: STORED_PROCEDURES = STORED_PROCEDURES.APPROVE_ARTICLE;
+            const values: [number] = [formatId(articleId)];
+            await callSP({ procedure, values });
+            return "Approved"
+        };
+        throw new Error("You are not authorized to delete this article");
+    }
+    catch (err: any) {
+        throw new Error(err)
+    }
+};

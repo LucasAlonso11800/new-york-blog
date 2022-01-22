@@ -1,6 +1,6 @@
 import { STORED_PROCEDURES } from "../const/StoredProcedures";
 
-export type CallSPParams = DeleteArticle | GetComponentList | AddArticleComponent | AddArticle | EditMetadata | AddCategory | EditCategory | DeleteCategory | RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
+export type CallSPParams = ApproveArticle | DeleteArticle | GetComponentList | AddArticleComponent | AddArticle | EditMetadata | AddCategory | EditCategory | DeleteCategory | RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
 
 // Articles
 
@@ -58,6 +58,11 @@ type DeleteArticle = {
     procedure: STORED_PROCEDURES.DELETE_ARTICLE,
     values: [number]
 };
+
+type ApproveArticle = {
+    procedure: STORED_PROCEDURES.APPROVE_ARTICLE,
+    values: [number]
+}
 
 // Categories
 

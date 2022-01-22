@@ -31,7 +31,8 @@ export const typeDefs = gql`
         # Articles
         addVisit(articleId: ID!): String
         addArticle(userId: ID!, userRole: String!, title: String!, categoryId: ID!, components: [ArticleComponentInput]!, image: String!, slug: String!): [Article]
-        deleteArticle(articleId: ID!): String
+        deleteArticle(articleId: ID!, userId: ID!, userRole: String!, authorId: ID!): String
+        approveArticle(articleId: ID!, userRole: String!): String
         # Categories
         addCategory(categoryName: String!, categoryPath: String!): Category
         editCategory(categoryId: ID!, categoryName: String!, categoryPath: String!): Category
@@ -58,6 +59,8 @@ export const typeDefs = gql`
         authorName: String
         slug: String
         description: String
+        statusId: ID
+        statusName: String
     }
     
     type Category {

@@ -1,7 +1,7 @@
 // Querys
 import { getComponentsList, getSingleArticle, getLatestArticles, getMostVisitedArticles, getCategoryArticles, getRelatedArticles, getSearchedArticles, getCategories, getTotalArticleCount, getCategoryArticleCount, getSearchedArticleCount, getAllArticles, getArticleComponents, getMetadata, getArticleComments, getCommentReplies, getAdjacentArticles } from "./Querys";
 // Mutations
-import { deleteArticle, addArticle, addCategory, addComment, addVisit, deleteCategory, editCategory, editMetadata, loginUser, registerUser } from "./Mutations";
+import { approveArticle, deleteArticle, addArticle, addCategory, addComment, addVisit, deleteCategory, editCategory, editMetadata, loginUser, registerUser } from "./Mutations";
 
 export const resolvers = {
     Query: {
@@ -34,6 +34,7 @@ export const resolvers = {
         addVisit,
         addArticle,
         deleteArticle,
+        approveArticle,
         // Categories
         addCategory,
         editCategory,

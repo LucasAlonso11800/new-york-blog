@@ -12,6 +12,7 @@ export enum STORED_PROCEDURES {
     ADD_ARTICLE = 'AddArticle',
     EDIT_ARTICLE = 'EditArticle',
     DELETE_ARTICLE = 'DeleteArticle',
+    APPROVE_ARTICLE = 'ApproveArticle',
         // Categories
     GET_CATEGORIES = 'GetCategories',
     ADD_CATEGORY = 'AddCategory',

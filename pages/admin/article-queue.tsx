@@ -5,34 +5,34 @@ import { GlobalContext } from '../../context/GlobalContext';
 // Components
 import AdminLayout from '../../components/LayoutComponents/AdminLayout';
 import Main from '../../components/LayoutComponents/Main';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Icon } from '@iconify/react';
 import LoadingIcon from '../../components/LoadingIcon';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Icon } from '@iconify/react';
 // Const
 import { ARTICLE_LIST_LIMIT } from '../../const/Limits';
 // Utils
 import { fixFirebaseURL } from '../../utils/fixFirebaseURL';
 import { formatDate } from '../../utils/formatDate';
 // GraphQL
-import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
-import { getAllArticles, getCategories, getMetadata, GET_ALL_ARTICLES } from '../../ApolloClient/querys';
-import { DELETE_ARTICLE } from '../../ApolloClient/mutations';
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
+import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
+import { getAllArticles, getMetadata, getCategories, GET_ALL_ARTICLES, GET_LATEST_ARTICLES } from '../../ApolloClient/querys';
+import { APPROVE_ARTICLE, DELETE_ARTICLE } from '../../ApolloClient/mutations';
 // Types
 import { ArticleStatus, ArticleType, CategoryType, UserRoles } from '../../types/Types';
 
 type Props = {
-    categories: CategoryType[],
+    categories: CategoryType[]
     error: ApolloError
-};
+}
 
-export default function ArticleList({ categories }: Props) {
+export default function ArticleQueue({ categories, error }: Props) {
     const { user } = useContext(GlobalContext);
     if (user === null && typeof window !== 'undefined') window.location.assign('/');
 
-    const { data: articlesQuery } = useQuery(GET_ALL_ARTICLES, { variables: { statusName: ArticleStatus.ACCEPTED } });
-    const articles: ArticleType[] = articlesQuery?.getAllArticles || [];
+    const { data: standByQuery } = useQuery(GET_ALL_ARTICLES, { variables: { statusName: ArticleStatus.STAND_BY } });
+    const articles: ArticleType[] = standByQuery?.getAllArticles || [];
 
     const [page, setPage] = useState<number>(0);
     const [numberOfPages, setNumberOfPages] = useState<number>(Math.ceil(articles.length / ARTICLE_LIST_LIMIT));
@@ -42,6 +42,7 @@ export default function ArticleList({ categories }: Props) {
     const [filteredArticles, setFilteredArticles] = useState<ArticleType[]>(articles);
     const [popupInfo, setPopupInfo] = useState<{ text: string, articleId: string }>({ text: "", articleId: "" });
     const [loading, setLoading] = useState<boolean>();
+    const [action, setAction] = useState<'approve' | 'reject'>();
 
     useEffect(() => {
         const newArticles = articles.filter(article => (
@@ -61,13 +62,10 @@ export default function ArticleList({ categories }: Props) {
 
     const [deleteArticle] = useMutation(DELETE_ARTICLE, {
         update(proxy) {
-            const data = proxy.readQuery({
-                query: GET_ALL_ARTICLES,
-                variables: { statusName: ArticleStatus.ACCEPTED }
-            }) as any;
+            const data = proxy.readQuery({ query: GET_ALL_ARTICLES, variables: { statusName: ArticleStatus.STAND_BY } }) as any;
             proxy.writeQuery({
                 query: GET_ALL_ARTICLES,
-                variables: { statusName: ArticleStatus.ACCEPTED },
+                variables: { statusName: ArticleStatus.STAND_BY },
                 data: { getAllArticles: data.getAllArticles.filter((article: ArticleType) => article.id !== popupInfo.articleId) }
             });
             setPopupInfo({ text: "", articleId: "" });
@@ -75,8 +73,35 @@ export default function ArticleList({ categories }: Props) {
         onError: (err) => console.log(JSON.stringify(err, null, 2))
     });
 
+    const [approveArticle] = useMutation(APPROVE_ARTICLE, {
+        update(proxy) {
+            const allArticles = proxy.readQuery({ query: GET_ALL_ARTICLES, variables: { statusName: ArticleStatus.ACCEPTED } }) as any;
+            const latestArticles = proxy.readQuery({ query: GET_LATEST_ARTICLES, variables: { index: 1, statusName: ArticleStatus.ACCEPTED } }) as any;
+            // All Accepted articles
+            proxy.writeQuery({
+                query: GET_ALL_ARTICLES,
+                variables: { statusName: ArticleStatus.ACCEPTED },
+                data: { getAllArticles: allArticles ? [articles.find(article => article.id === popupInfo.articleId), ...allArticles.getAllArticles] : [articles.find(article => article.id === popupInfo.articleId)] },
+            });
+            // Stand by articles
+            proxy.writeQuery({
+                query: GET_ALL_ARTICLES,
+                variables: { statusName: ArticleStatus.STAND_BY },
+                data: { getAllArticles: articles.filter((article: ArticleType) => article.id !== popupInfo.articleId) }
+            });
+            // Home page articles
+            proxy.writeQuery({
+                query: GET_LATEST_ARTICLES,
+                variables: { index: 1, statusName: ArticleStatus.ACCEPTED },
+                data: { getLatestArticles: latestArticles ? [articles.find(article => article.id === popupInfo.articleId), ...latestArticles.getAllArticles] : [articles.find(article => article.id === popupInfo.articleId)] },
+            });
+            setPopupInfo({ text: "", articleId: "" });
+        },
+        onError: (err) => console.log(JSON.stringify(err, null, 2))
+    });
+
     return (
-        <AdminLayout title="Article list - ">
+        <AdminLayout title="Article queue - ">
             <Main>
                 <div className={classes.filters}>
                     <input className={classes.input} placeholder='Filter by title' value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -91,14 +116,13 @@ export default function ArticleList({ categories }: Props) {
                 </div>
 
                 <table className={classes.table}>
-                    {popupInfo.text === '' ?
+                    {popupInfo.text === "" ?
                         <thead>
                             <tr>
                                 <th>Title</th>
                                 <th>Image</th>
                                 <th>Category</th>
                                 <th>Created on</th>
-                                <th>Visits</th>
                                 <th>Author</th>
                                 <th></th>
                             </tr>
@@ -106,7 +130,7 @@ export default function ArticleList({ categories }: Props) {
                         :
                         <thead>
                             <tr>
-                                <th colSpan={5}>Confirm action</th>
+                                <th colSpan={4}>Confirm action</th>
                                 <th colSpan={2}></th>
                             </tr>
                         </thead>
@@ -114,14 +138,14 @@ export default function ArticleList({ categories }: Props) {
                     <tbody>
                         {filteredArticles.slice(page * ARTICLE_LIST_LIMIT, page * ARTICLE_LIST_LIMIT + ARTICLE_LIST_LIMIT).map(article => (
                             popupInfo.articleId === article.id ?
-                                <tr key={article.id} className={classes.delete}>
-                                    <td colSpan={5}>{popupInfo.text}</td>
+                                <tr key={article.id} className={action === 'approve' ? classes.approve : classes.delete}>
+                                    <td colSpan={4}>{popupInfo.text}</td>
                                     {loading ?
                                         <td colSpan={2}>
                                             <LoadingIcon />
                                         </td>
                                         :
-                                        user?.roleName === UserRoles.ADMIN || user?.id === article.id ?
+                                        user?.roleName === UserRoles.ADMIN ?
                                             <>
                                                 <td>
                                                     <Icon
@@ -133,18 +157,28 @@ export default function ArticleList({ categories }: Props) {
                                                 </td>
                                                 <td>
                                                     <Icon
-                                                        icon="bx:bxs-trash"
+                                                        icon={action === 'approve' ? "teenyicons:tick-circle-solid" : "bx:bxs-trash"}
                                                         fontSize={32}
                                                         onClick={async () => {
+                                                            const mutation = action === 'approve' ?
+                                                                async () => approveArticle({
+                                                                    variables: {
+                                                                        articleId: article.id,
+                                                                        userRole: user.roleName
+                                                                    }
+                                                                })
+                                                                :
+                                                                async () => deleteArticle({
+                                                                    variables: {
+                                                                        articleId: article.id,
+                                                                        userId: user.id,
+                                                                        userRole: user.roleName,
+                                                                        authorId: article.authorId
+                                                                    }
+                                                                });
+
                                                             setLoading(true);
-                                                            await deleteArticle({
-                                                                variables: {
-                                                                    articleId: article.id,
-                                                                    userId: user.id,
-                                                                    userRole: user.roleName,
-                                                                    authorId: article.authorId
-                                                                }
-                                                            });
+                                                            await mutation()
                                                             setLoading(false);
                                                         }}
                                                     />
@@ -160,11 +194,18 @@ export default function ArticleList({ categories }: Props) {
                                     <td><Image src={fixFirebaseURL(article.image)} height="67" width="100" /></td>
                                     <td>{article.categoryName}</td>
                                     <td>{formatDate(article.createdAt)}</td>
-                                    <td>{article.visits}</td>
                                     <td>{article.authorName}</td>
                                     <td>
-                                        {user?.roleName === UserRoles.ADMIN || user?.id === article.id ?
+                                        {user?.roleName === UserRoles.ADMIN ?
                                             <>
+                                                <Icon
+                                                    icon="teenyicons:tick-circle-solid"
+                                                    fontSize={32}
+                                                    onClick={() => {
+                                                        setAction('approve')
+                                                        setPopupInfo({ text: `Are you sure you want to approve the article "${article.title}"`, articleId: article.id })
+                                                    }}
+                                                />
                                                 <Icon
                                                     icon="bx:bxs-message-square-edit"
                                                     fontSize={32}
@@ -173,7 +214,10 @@ export default function ArticleList({ categories }: Props) {
                                                 <Icon
                                                     icon="bx:bxs-trash"
                                                     fontSize={32}
-                                                    onClick={() => setPopupInfo({ text: `Are you sure you want to delete article "${article.title}"`, articleId: article.id })}
+                                                    onClick={() => {
+                                                        setAction('reject');
+                                                        setPopupInfo({ text: `Are you sure you want to delete the article "${article.title}"`, articleId: article.id })
+                                                    }}
                                                 />
                                             </>
                                             : null
@@ -206,7 +250,7 @@ export async function getStaticProps() {
     try {
         const [categories] = await Promise.all([
             await getCategories(client),
-            await getAllArticles(client, ArticleStatus.ACCEPTED),
+            await getAllArticles(client, ArticleStatus.STAND_BY),
             await getMetadata(client)
         ]);
 

@@ -17,6 +17,9 @@ export const GET_ALL_ARTICLES = gql`
             createdAt
             authorId
             authorName
+            statusId
+            statusName
+            description
         }
     }
 `;

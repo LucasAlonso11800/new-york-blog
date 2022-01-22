@@ -25,11 +25,11 @@ BEGIN
 		ON article_components.article_component_article_id = article_id 
 		AND article_components.article_component_order = 2
 	WHERE article_title LIKE CONCAT('%', trim(PSearch), '%') 
-		AND  category_path != "about"
-        AND article_status_id = (SELECT article_status_id 
-									FROM article_statuses
-									WHERE article_status_name = "Accepted"
-								)
+	AND  category_path != "about"
+	AND article_article_status_id = (SELECT article_status_id 
+										FROM article_statuses
+										WHERE article_status_name = "Accepted"
+									)
 	ORDER BY article_created_at DESC, article_id DESC;
 END$$
 DELIMITER ;

@@ -41,10 +41,19 @@
 .table tr {
     border-bottom: 1px solid var(--light-blue);
     height: 81.4px;
+    transition: all 0.4s ease-in-out;
+}
+
+.table tr:hover{
+    background-color: #f0f0f0;
 }
 
 .table tr.delete {
     background-color: rgba(255, 190, 190, 0.4);
+}
+
+.table tr.approve {
+    background-color: rgba(190, 255, 190, 0.4);
 }
  
 .table td {
@@ -53,6 +62,7 @@
 
 .table svg {
     cursor: pointer;
+    margin: 0 0.25rem;
 }
 
 .pagination {
