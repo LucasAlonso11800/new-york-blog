@@ -32,11 +32,17 @@ export const addVisit = async (_: any, args: Args) => {
 export const addArticle = async (_: any, args: Args) => {
     const { userId, userRole, title, categoryId, components, image, slug } = args;
     try {
+        const article: ArticleType[] = await callSP({
+            procedure: STORED_PROCEDURES.GET_SINGLE_ARTICLE,
+            values: [slug] 
+        });
+        if(article[0]) throw new Error("Slug already in use");
+        
         const procedure: STORED_PROCEDURES = STORED_PROCEDURES.ADD_ARTICLE;
         const values: [string, number, number, string, string, number, string, string] = [title, 0, formatId(categoryId), image, new Date().toISOString().substring(0, 10), formatId(userId), slug, userRole];
-        console.log(userRole);
+
         const response: ArticleType[] = await callSP({ procedure, values });
-        console.log(response);
+
         components.forEach(async component => {
             const procedure: STORED_PROCEDURES = STORED_PROCEDURES.ADD_ARTICLE_COMPONENT;
             const values: [number, number, number, string, string, string, string] = [formatId(component.componentId), formatId(response[0].id), component.order, component.image, component.text, component.fontWeight, component.textAlign]

@@ -7,6 +7,7 @@ import AdminLayout from '../../components/LayoutComponents/AdminLayout';
 import Main from '../../components/LayoutComponents/Main';
 import LoadingIcon from '../../components/LoadingIcon';
 import { Icon } from '@iconify/react';
+import { checkAuth } from '../../utils/checkAuth';
 // Const
 import { ARTICLE_LIST_LIMIT } from '../../const/Limits';
 // GraphQL
@@ -22,8 +23,12 @@ type Props = {
 }
 
 export default function Authors({ error }: Props) {
-    const { user } = useContext(GlobalContext);
-    if (user === null && typeof window !== 'undefined') window.location.assign('/');
+    const { user, setToastInfo } = useContext(GlobalContext);
+    checkAuth(user);
+    
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+    }, []);
 
     const { data: usersQuery } = useQuery(GET_USERS);
     const users: UserType[] = usersQuery?.getUsers || [];
@@ -62,7 +67,7 @@ export default function Authors({ error }: Props) {
             })
             setPopupInfo({ text: "", authorId: "" });
         },
-        onError: (err) => console.log(JSON.stringify(err, null, 2))
+        onError: (err) => setToastInfo({ open: true, message: err.message, type: 'error' })
     });
 
     return (
@@ -212,6 +217,7 @@ export async function getStaticProps() {
         });
     }
     catch (err) {
+        console.log(JSON.stringify(err, null, 2));
         return addApolloState(client, {
             props: {
                 error: JSON.parse(JSON.stringify(err))

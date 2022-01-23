@@ -61,7 +61,7 @@ export const loginUser = async (_: any, args: Args) => {
         const values: [string] = [email];
 
         const user: UserType[] = await callSP({ procedure, values });
-        if (!user[0].id) throw new Error('User not found');
+        if (!user[0]) throw new Error('Wrong username or password');
 
         const match = await bcrypt.compare(password, user[0].password as string);
         if (!match) throw new Error('Wrong username or password');

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import classes from '../../styles/components/Admin/AdminPage.module.css';
 // Context
 import { GlobalContext } from '../../context/GlobalContext';
@@ -8,6 +8,8 @@ import Main from '../../components/LayoutComponents/Main';
 import Modal from '../../components/Modal';
 import { Icon } from '@iconify/react';
 import Link from 'next/link';
+// Utils
+import { checkAuth } from '../../utils/checkAuth';
 // GraphQL
 import { getCategories, getMetadata } from '../../ApolloClient/querys';
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
@@ -18,15 +20,23 @@ import { CategoryType, MetadataType, ModalActions } from '../../types/Types';
 type Props = {
     categories: CategoryType[]
     metadata: MetadataType[]
-    error: ApolloError[]
-}
+    error: ApolloError
+};
 
-export default function AdminPage({ categories, metadata }: Props) {
-    const { user, setModalInfo } = useContext(GlobalContext);
+export default function AdminPage({ categories, metadata, error }: Props) {
+    const { user, setModalInfo, setToastInfo } = useContext(GlobalContext);
     const [selectedCategory, setSelectedCategory] = useState<CategoryType>();
     const [selectedMetadata, setSelectedMetadata] = useState<MetadataType>();
 
-    if (user === null && typeof window !== 'undefined') window.location.assign('/');
+    checkAuth(user);
+
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+        if (window.location.search) {
+            setToastInfo({ open: true, message: `Succesfully logged in. Welcome back ${user?.username}`, type: 'success' });
+            window.history.pushState({}, "", window.location.pathname);
+        };
+    }, []);
 
     const handleModalOpen = (action: ModalActions, title: string) => {
         scroll({ top: 0, behavior: 'smooth' });
@@ -153,7 +163,7 @@ export async function getStaticProps() {
         })
     }
     catch (err) {
-        console.log(err);
+        console.log(JSON.stringify(err, null, 2));;
         return addApolloState(client, {
             props: {
                 categories: [],

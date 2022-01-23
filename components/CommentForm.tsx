@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { GlobalContext } from '../context/GlobalContext';
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { ADD_COMMENT } from '../ApolloClient/mutations';
@@ -28,6 +29,8 @@ type Props = {
 };
 
 export default function CommentForm({ articleId, author, isResponse, isResponseToCommentId, setFormOpen }: Props) {
+    const { setToastInfo } = useContext(GlobalContext);
+
     const [addComment, { loading }] = useMutation(ADD_COMMENT, {
         update(proxy, result) {
             formik.resetForm();
@@ -57,7 +60,7 @@ export default function CommentForm({ articleId, author, isResponse, isResponseT
                 })
             };
         },
-        onError: (error) => console.log(JSON.stringify(error))
+        onError: (err) => setToastInfo({ open: true, message: err.message, type: 'error' })
     });
 
     const formik = useFormik({

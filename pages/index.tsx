@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { GlobalContext } from '../context/GlobalContext';
 // Components
 import Layout from '../components/LayoutComponents/Layout';
 import Main from '../components/LayoutComponents/Main';
@@ -7,8 +8,8 @@ import Pagination from '../components/Pagination';
 // GraphQL
 import { addApolloState, initializeApollo } from '../ApolloClient/NewApolloConfig';
 import { getCategories, getLatestArticles, getMetadata, getMostVisitedArticles } from '../ApolloClient/querys';
-// Types
 import { ApolloError } from '@apollo/client'
+// Types
 import { ArticleStatus, ArticleType } from '../types/Types';
 
 type Props = {
@@ -16,7 +17,13 @@ type Props = {
     error: ApolloError
 };
 
-export default function HomePage({ articles }: Props) {
+export default function HomePage({ articles, error }: Props) {
+    const { setToastInfo } = useContext(GlobalContext);
+    
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+    }, []);
+
     return (
         <Layout title="">
             <Main>
@@ -51,6 +58,7 @@ export async function getStaticProps() {
         });
     }
     catch (err: any) {
+        console.log(JSON.stringify(err, null, 2));
         return addApolloState(client, {
             props: {
                 articles: [],

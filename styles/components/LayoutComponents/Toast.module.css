@@ -1,0 +1,27 @@
+.container {
+    position: fixed;
+    top: 200px;
+    right: -500px;
+    font-weight: 600;
+    text-align: center;
+    width: 400px;
+    padding: 16px 24px;
+    margin-left: -200px;
+    z-index: 2000;
+    opacity: 0;
+    transition: all 1s ease-in-out;
+}
+
+.container.open {
+    transform: translateX(-505px);
+    opacity: 1;
+}
+
+.error {
+    background-color: rgba(255, 190, 190, 0.3);
+    box-shadow: inset 0px 0px 5px 1px rgba(255, 190, 190);
+}
+.success {
+    background-color: rgba(190, 255, 190, 0.3);
+    box-shadow: inset 0px 0px 5px 1px rgba(190, 255, 190);
+}

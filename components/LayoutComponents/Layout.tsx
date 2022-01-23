@@ -4,10 +4,7 @@ import Aside from './Aside';
 import Footer from './Footer';
 import Header from './Header';
 import Head from './Head';
-// Types
-import { GET_METADATA } from '../../ApolloClient/querys';
-import { useQuery } from '@apollo/client';
-import { MetadataNames, MetadataType } from '../../types/Types';
+import Toast from './Toast';
 
 type Props = {
     children: React.ReactNode,
@@ -17,8 +14,9 @@ type Props = {
 export default function Layout({ children, title }: Props) {
     return (
         <div id="page-container">
-            <Head title={title}/>
+            <Head title={title} />
             <Header />
+            <Toast />
             {children}
             <Aside />
             <Footer />

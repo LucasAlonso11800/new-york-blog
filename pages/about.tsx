@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { GlobalContext } from '../context/GlobalContext';
 // Components
 import Layout from '../components/LayoutComponents/Layout';
 import Main from '../components/LayoutComponents/Main';
 import MainArticle from '../components/MainArticle';
-// Querys
+// GraphQL
 import { getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getSingleArticle } from '../ApolloClient/querys';
+import { ApolloError } from '@apollo/client';
+import { addApolloState, initializeApollo } from '../ApolloClient/NewApolloConfig';
 // Types
 import { ArticleComponentType, ArticleType } from '../types/Types';
-import { addApolloState, initializeApollo } from '../ApolloClient/NewApolloConfig';
-import { ApolloError } from '@apollo/client';
 
 type Props = {
     article: ArticleType
@@ -16,7 +17,12 @@ type Props = {
     error: ApolloError
 };
 
-export default function AboutPage({ article, articleComponents }: Props) {
+export default function AboutPage({ article, articleComponents, error }: Props) {
+    const { setToastInfo } = useContext(GlobalContext);
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+    }, []);
+
     return (
         <Layout title="About - ">
             <Main>
@@ -51,11 +57,11 @@ export async function getStaticProps() {
                 article: article.data.getSingleArticle,
                 articleComponents: articleComponents.data.getArticleComponents
             },
-            revalidate: 60 * 60 * 24 
+            revalidate: 60 * 60 * 24
         });
     }
     catch (err) {
-        console.log(err)
+        console.log(JSON.stringify(err, null, 2));
         return addApolloState(client, {
             props: {
                 article: {},

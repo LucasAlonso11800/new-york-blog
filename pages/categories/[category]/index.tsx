@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { GlobalContext } from '../../../context/GlobalContext';
 // Components
 import Main from '../../../components/LayoutComponents/Main';
 import CategoryArticles from '../../../components/CategoryArticles';
@@ -19,7 +20,13 @@ type Props = {
     error: ApolloError
 };
 
-export default function CategoryPage({ category, title, articleCount, articles }: Props) {
+export default function CategoryPage({ category, title, articleCount, articles, error }: Props) {
+    const { setToastInfo } = useContext(GlobalContext);
+    
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+    }, []);
+
     return (
         <Layout title={title}>
             <Main>
@@ -76,7 +83,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         });
     }
     catch (err) {
-        console.log(err);
+        console.log(JSON.stringify(err, null, 2));;
         return addApolloState(client, {
             props: {
                 articleCount: 0,

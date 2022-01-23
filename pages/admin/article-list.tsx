@@ -14,6 +14,7 @@ import { ARTICLE_LIST_LIMIT } from '../../const/Limits';
 // Utils
 import { fixFirebaseURL } from '../../utils/fixFirebaseURL';
 import { formatDate } from '../../utils/formatDate';
+import { checkAuth } from '../../utils/checkAuth';
 // GraphQL
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
 import { getAllArticles, getCategories, getMetadata, GET_ALL_ARTICLES } from '../../ApolloClient/querys';
@@ -27,9 +28,17 @@ type Props = {
     error: ApolloError
 };
 
-export default function ArticleList({ categories }: Props) {
-    const { user } = useContext(GlobalContext);
-    if (user === null && typeof window !== 'undefined') window.location.assign('/');
+export default function ArticleList({ categories, error }: Props) {
+    const { user, setToastInfo } = useContext(GlobalContext);
+    checkAuth(user);
+
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+        if (window.location.search) {
+            setToastInfo({ open: true, message: `Your article has been successfully created`, type: 'success' });
+            window.history.pushState({}, "", window.location.pathname);
+        };
+    }, []);
 
     const { data: articlesQuery } = useQuery(GET_ALL_ARTICLES, { variables: { statusName: ArticleStatus.ACCEPTED } });
     const articles: ArticleType[] = articlesQuery?.getAllArticles || [];
@@ -72,7 +81,7 @@ export default function ArticleList({ categories }: Props) {
             });
             setPopupInfo({ text: "", articleId: "" });
         },
-        onError: (err) => console.log(JSON.stringify(err, null, 2))
+        onError: (err) => setToastInfo({ open: true, message: err.message, type: 'error' })
     });
 
     return (
@@ -210,6 +219,7 @@ export async function getStaticProps() {
         });
     }
     catch (err) {
+        console.log(JSON.stringify(err, null, 2));
         return addApolloState(client, {
             props: {
                 categories: [],

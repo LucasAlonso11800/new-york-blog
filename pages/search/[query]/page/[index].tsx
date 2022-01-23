@@ -65,7 +65,7 @@ export async function getServerSideProps({ query }: GetServerSidePropsContext) {
         });
     }
     catch (err) {
-        console.log(err);
+        console.log(JSON.stringify(err, null, 2));;
         return {
             props: {
                 title: "",

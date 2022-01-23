@@ -30,8 +30,7 @@ export enum UserRoles {
 
 export enum ArticleStatus {
     ACCEPTED = 'Accepted',
-    STAND_BY = 'Stand By',
-    REJECTED = 'Rejected'
+    STAND_BY = 'Stand By'
 }
 
 export type ModalInfoType = {
@@ -39,6 +38,12 @@ export type ModalInfoType = {
     open: boolean
     title: string
 };
+
+export type ToastInfoType = {
+    open: boolean
+    message: string
+    type: 'success' | 'error'
+}
 
 export type CategoryType = {
     id: string

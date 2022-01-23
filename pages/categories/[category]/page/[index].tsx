@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
+import { GlobalContext } from '../../../../context/GlobalContext';
 // Components
 import CategoryArticles from '../../../../components/CategoryArticles';
 import Layout from '../../../../components/LayoutComponents/Layout';
 import Main from '../../../../components/LayoutComponents/Main';
 import Pagination from '../../../../components/Pagination';
 // GraphQL
-import { getCategories, getCategoryArticleCount, getCategoryArticles, getMetadata, getMostVisitedArticles, getTotalArticleCount, GET_CATEGORY_ARTICLES } from '../../../../ApolloClient/querys';
+import { getCategories, getCategoryArticleCount, getCategoryArticles, getMetadata, getMostVisitedArticles, getTotalArticleCount } from '../../../../ApolloClient/querys';
 import { addApolloState, initializeApollo } from '../../../../ApolloClient/NewApolloConfig';
-import { useQuery } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 // Const
 import { CATEGORY_ARTICLE_LIMIT } from '../../../../const/Limits';
 // Types
@@ -19,9 +20,16 @@ type Props = {
     title: string
     index: number
     articles: ArticleType[]
+    error: ApolloError
 };
 
-export default function CategoryPage({ category, articleCount, title, index, articles }: Props) {
+export default function CategoryPage({ category, articleCount, title, index, articles, error }: Props) {
+    const { setToastInfo } = useContext(GlobalContext);
+    
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+    }, []);
+    
     return (
         <Layout title={title}>
             <Main>
@@ -69,7 +77,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
     try {
         const categories = await getCategories(client);
         const category: CategoryType = categories.data.getCategories.find((category: CategoryType) => category.path === params.category);
-        
+
         const [articles, articleCount] = await Promise.all([
             await getCategoryArticles(client, category.id, parseInt(params.index)),
             await getCategoryArticleCount(client, category.id),
@@ -90,7 +98,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         });
     }
     catch (err) {
-        console.log(err);
+        console.log(JSON.stringify(err, null, 2));;
         return addApolloState(client, {
             props: {
                 category: {},

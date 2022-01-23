@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { GlobalContext } from '../../context/GlobalContext';
 // Components
 import Layout from '../../components/LayoutComponents/Layout';
 import Main from '../../components/LayoutComponents/Main';
@@ -26,7 +27,12 @@ type Props = {
 };
 
 export default function ArticlePage({ article, relatedArticles, adjacentArticles, articleComponents, comments, error }: Props) {
+    const { setToastInfo } = useContext(GlobalContext);
     const [addVisit] = useMutation(ADD_VISIT);
+
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+    }, []);
 
     useEffect(() => {
         addVisit({ variables: { articleId: article.id } });
@@ -98,7 +104,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         });
     }
     catch (err) {
-        console.log(err);
+        console.log(JSON.stringify(err, null, 2));;
         return addApolloState(client, {
             props: {
                 article: {},

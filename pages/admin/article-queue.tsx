@@ -14,6 +14,7 @@ import { ARTICLE_LIST_LIMIT } from '../../const/Limits';
 // Utils
 import { fixFirebaseURL } from '../../utils/fixFirebaseURL';
 import { formatDate } from '../../utils/formatDate';
+import { checkAuth } from '../../utils/checkAuth';
 // GraphQL
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
@@ -28,9 +29,17 @@ type Props = {
 }
 
 export default function ArticleQueue({ categories, error }: Props) {
-    const { user } = useContext(GlobalContext);
-    if (user === null && typeof window !== 'undefined') window.location.assign('/');
+    const { user, setToastInfo } = useContext(GlobalContext);
+    checkAuth(user);
 
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+        if (window.location.search) {
+            setToastInfo({ open: true, message: `Your article has been successfully created`, type: 'success' });
+            window.history.pushState({}, "", window.location.pathname);
+        };
+    }, []);
+    
     const { data: standByQuery } = useQuery(GET_ALL_ARTICLES, { variables: { statusName: ArticleStatus.STAND_BY } });
     const articles: ArticleType[] = standByQuery?.getAllArticles || [];
 
@@ -70,7 +79,7 @@ export default function ArticleQueue({ categories, error }: Props) {
             });
             setPopupInfo({ text: "", articleId: "" });
         },
-        onError: (err) => console.log(JSON.stringify(err, null, 2))
+        onError: (err) => setToastInfo({ open: true, message: err.message, type: 'error' })
     });
 
     const [approveArticle] = useMutation(APPROVE_ARTICLE, {
@@ -97,7 +106,7 @@ export default function ArticleQueue({ categories, error }: Props) {
             });
             setPopupInfo({ text: "", articleId: "" });
         },
-        onError: (err) => console.log(JSON.stringify(err, null, 2))
+        onError: (err) => setToastInfo({ open: true, message: err.message, type: 'error' })
     });
 
     return (
@@ -254,6 +263,7 @@ export async function getStaticProps() {
         });
     }
     catch (err) {
+        console.log(JSON.stringify(err, null, 2));
         return addApolloState(client, {
             props: {
                 categories: [],

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react'
+import React, { useContext, useState, useRef, useEffect } from 'react'
 // Context
 import { GlobalContext } from '../../context/GlobalContext';
 // Styles
@@ -14,6 +14,7 @@ import LoadingIcon from '../../components/LoadingIcon';
 import { initialImage, initialQuote, initialText, initialSubtitle } from '../../const/initialArticleComponents';
 // Utils
 import { getBase64Src } from '../../utils/getBase64Src';
+import { checkAuth } from '../../utils/checkAuth';
 // Form
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -22,7 +23,7 @@ import { storage } from '../../const/FirebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // GraphQL
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
-import { getCategories, getComponentsList, getMetadata, GET_LATEST_ARTICLES } from '../../ApolloClient/querys';
+import { getCategories, getComponentsList, getMetadata, GET_ALL_ARTICLES, GET_LATEST_ARTICLES } from '../../ApolloClient/querys';
 import { ApolloError, useMutation } from '@apollo/client';
 import { ADD_ARTICLE } from '../../ApolloClient/mutations';
 // Types
@@ -34,9 +35,13 @@ type Props = {
     error: ApolloError
 };
 
-export default function NewArticle({ categories, components }: Props) {
-    const { user } = useContext(GlobalContext);
-    if (user === null && typeof window !== 'undefined') window.location.assign('/');
+export default function NewArticle({ categories, components, error }: Props) {
+    const { user, setToastInfo } = useContext(GlobalContext);
+    checkAuth(user);
+
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+    }, []);
 
     const defaultImage = '/NewArticleImagePlaceholder.jpg';
 
@@ -51,17 +56,31 @@ export default function NewArticle({ categories, components }: Props) {
 
     const [addArticle] = useMutation(ADD_ARTICLE, {
         update(proxy, result) {
+            const statusName = user?.roleName === UserRoles.ADMIN ? ArticleStatus.ACCEPTED : ArticleStatus.STAND_BY;
+            const data = proxy.readQuery({
+                query: GET_ALL_ARTICLES,
+                variables: { statusName }
+            }) as any;
+
             proxy.writeQuery({
-                query: GET_LATEST_ARTICLES,
-                variables: {
-                    index: 1,
-                    statusName: user?.roleName === UserRoles.ADMIN ? ArticleStatus.ACCEPTED : ArticleStatus.STAND_BY
-                },
-                data: { getLatestArticles: result.data.addArticle }
+                query: GET_ALL_ARTICLES,
+                variables: { statusName },
+                data: { getAllArticles: data ? [result.data.addArticle[0], ...data.getAllArticles] : [result.data.addArticle[0]] }
             });
-            window.location.assign('/admin/article-list');
+
+            if (user?.roleName === UserRoles.ADMIN) {
+                proxy.writeQuery({
+                    query: GET_LATEST_ARTICLES,
+                    variables: {
+                        index: 1,
+                        statusName: ArticleStatus.ACCEPTED
+                    },
+                    data: { getLatestArticles: result.data.addArticle }
+                });
+            };
+            window.location.assign(user?.roleName === UserRoles.ADMIN ? '/admin/article-list?newArticle="true"' : '/admin/article-queue?newArticle="true"');
         },
-        onError: (err) => console.log(JSON.stringify(err, null, 2))
+        onError: (err) => setToastInfo({ open: true, message: err.message, type: "error" })
     });
 
     const validationSchema = yup.object({
@@ -103,8 +122,7 @@ export default function NewArticle({ categories, components }: Props) {
                 }]
         },
         validationSchema,
-        enableReinitialize: true,
-        onSubmit: async (values, { resetForm }) => {
+        onSubmit: async (values) => {
             setLoading(true);
             const fileRef = ref(storage, `articles/${values.slug}/main.jpg`);
             await uploadBytes(fileRef, files[0]);
@@ -133,9 +151,6 @@ export default function NewArticle({ categories, components }: Props) {
                     slug: values.slug
                 }
             });
-            resetForm();
-            setImages([{ src: defaultImage, alt: 'Default image' }]);
-            setFiles([]);
             setLoading(false);
         }
     });
@@ -198,6 +213,7 @@ export default function NewArticle({ categories, components }: Props) {
         const newImages = [...images];
         newImages[index] = { src: btoa(result as string), alt: alt ? alt : 'Default image' };
         setImages(newImages);
+        if (index === 0) formik.setFieldValue('image', btoa(result as string));
     };
 
     const handleImg = (e: any, index: number) => {
@@ -206,7 +222,6 @@ export default function NewArticle({ categories, components }: Props) {
             const newFiles = [...files];
             newFiles[index] = file;
             setFiles(newFiles);
-
             const reader = new FileReader();
             reader.onload = (e) => handleReaderLoaded(e, file.name, index);
             reader.readAsBinaryString(file);
@@ -435,7 +450,7 @@ export async function getStaticProps() {
         })
     }
     catch (err) {
-        console.log(err);
+        console.log(JSON.stringify(err, null, 2));;
         return addApolloState(client, {
             props: {
                 categories: [],

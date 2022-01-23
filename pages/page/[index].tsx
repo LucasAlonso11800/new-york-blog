@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 // Components
 import Layout from '../../components/LayoutComponents/Layout';
 import Main from '../../components/LayoutComponents/Main';
@@ -7,18 +7,27 @@ import ArticlePreview from '../../components/ArticlePreview';
 // GraphQL
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
 import { getCategories, getLatestArticles, getMetadata, getMostVisitedArticles, getTotalArticleCount } from '../../ApolloClient/querys';
+import { ApolloError } from '@apollo/client';
 // Const
 import { ARTICLE_LIMIT_PER_PAGE } from '../../const/Limits';
 // Types
 import { ArticleStatus, ArticleType } from '../../types/Types';
+import { GlobalContext } from '../../context/GlobalContext';
 
 type Props = {
     index: number
     articleCount: number
     articles: ArticleType[]
+    error: ApolloError
 };
 
-export default function LatestArticlesPage({ index, articleCount, articles }: Props) {
+export default function LatestArticlesPage({ index, articleCount, articles, error }: Props) {
+    const { setToastInfo } = useContext(GlobalContext);
+    
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+    }, []);
+    
     return (
         <Layout title="">
             <Main>
@@ -60,7 +69,7 @@ export async function getStaticPaths() {
         }
     }
     catch (err) {
-        console.log(err);
+        console.log(JSON.stringify(err, null, 2));;
         return {
             paths: [],
             fallback: false
@@ -95,7 +104,7 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
         })
     }
     catch (err) {
-        console.log(err)
+        console.log(JSON.stringify(err, null, 2));
         return addApolloState(client, {
             props: {
                 index: parseInt(params.index),

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { GlobalContext } from '../../context/GlobalContext';
 // Styles
 import classes from '../../styles/components/Admin/LoginAndRegisterPages.module.css';
@@ -21,18 +21,25 @@ type Props = {
     error: ApolloError
 };
 
-export default function RegisterPage() {
-    const { user, setUser } = useContext(GlobalContext);
+export default function RegisterPage({error}: Props) {
+    const { user, setUser, setToastInfo } = useContext(GlobalContext);
 
     if (user !== null) return window.location.assign('/admin');
+
+    useEffect(() => {
+        if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+    }, []);
 
     const [registerUser, { loading }] = useMutation(REGISTER_USER, {
         onCompleted: (data) => {
             if (typeof localStorage !== 'undefined') localStorage.setItem('token', data.registerUser.token);
             setUser(data.registerUser)
-            window.location.assign('/admin');
+            window.location.assign('/admin?justLoggedIn=true');
         },
-        onError: (error) => console.log(error)
+        onError: (err) => {
+            const message = err.message.includes("ER_DUP_ENTRY") ? "Username or email already registered" : err.message;
+            setToastInfo({ open: true, message, type: 'error' })
+        }
     });
 
     const validationSchema = yup.object({
@@ -118,7 +125,7 @@ export async function getStaticProps() {
         })
     }
     catch (err) {
-        console.log(err);
+        console.log(JSON.stringify(err, null, 2));;
         return addApolloState(client, {
             props: {
                 error: JSON.parse(JSON.stringify(err))
