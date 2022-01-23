@@ -40,6 +40,44 @@ export const ADD_ARTICLE = gql`
     }
 `;
 
+export const EDIT_ARTICLE = gql`
+    mutation EditArticle(
+        $articleId: ID!,
+        $title: String!, 
+        $categoryId: ID!, 
+        $components: [ArticleComponentInput]!, 
+        $image: String!, 
+        $slug: String!,
+        $slugChanged: Boolean!
+    ){
+        editArticle (
+            articleId: $articleId,
+            title: $title, 
+            categoryId: $categoryId, 
+            components: $components, 
+            image: $image, 
+            slug: $slug,
+            slugChanged: $slugChanged
+            )
+        {
+            id
+            slug
+            title
+            categoryId
+            categoryName
+            categoryPath
+            image
+            visits
+            createdAt
+            authorId
+            authorName
+            statusId
+            statusName
+            description
+        }
+    }
+`;
+
 export const DELETE_ARTICLE = gql`
     mutation deleteArticle(
         $articleId: ID!,

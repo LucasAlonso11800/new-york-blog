@@ -1,6 +1,6 @@
 import { STORED_PROCEDURES } from "../const/StoredProcedures";
 
-export type CallSPParams = ChangeUserRole | GetUsers | ApproveArticle | DeleteArticle | GetComponentList | AddArticleComponent | AddArticle | EditMetadata | AddCategory | EditCategory | DeleteCategory | RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
+export type CallSPParams = DeleteArticleComponent | EditArticle | ChangeUserRole | GetUsers | ApproveArticle | DeleteArticle | GetComponentList | AddArticleComponent | AddArticle | EditMetadata | AddCategory | EditCategory | DeleteCategory | RegisterUser | LoginUser | AddComment | AddVisit | GetCommentReplies | GetArticleComments | GetArticleComponents | GetMetadata | GetSearchedArticleCount | GetCategoryArticleCount | GetTotalArticleCount | GetCategories | GetAllArticles | GetSingleArticle | GetLatestArticles | GetMostVisitedArticles | GetCategoryArticles | GetRelatedArticles | GetSearchedArticles | GetAdjacentArticles;
 
 // Articles
 
@@ -52,6 +52,11 @@ type AddVisit = {
 type AddArticle = {
     procedure: STORED_PROCEDURES.ADD_ARTICLE,
     values: [string, number, number, string, string, number, string, string]
+};
+
+type EditArticle = {
+    procedure: STORED_PROCEDURES.EDIT_ARTICLE,
+    values: [number, string, number, string, string]
 };
 
 type DeleteArticle = {
@@ -125,6 +130,11 @@ type GetArticleComponents = {
 type AddArticleComponent = {
     procedure: STORED_PROCEDURES.ADD_ARTICLE_COMPONENT,
     values: [number, number, number, string, string, string, string]
+};
+
+type DeleteArticleComponent = {
+    procedure: STORED_PROCEDURES.DELETE_ARTICLE_COMPONENT,
+    values: [number]
 };
 
 type GetComponentList = {

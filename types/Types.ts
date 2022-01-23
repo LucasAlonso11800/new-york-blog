@@ -76,6 +76,7 @@ export type ComponentType = {
 }
 
 export type ArticleComponentType = {
+    __typename: string
     id: string
     componentId: string
     componentName: ArticleComponentNames

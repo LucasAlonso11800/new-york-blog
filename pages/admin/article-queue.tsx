@@ -35,11 +35,15 @@ export default function ArticleQueue({ categories, error }: Props) {
     useEffect(() => {
         if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
         if (window.location.search) {
-            setToastInfo({ open: true, message: `Your article has been successfully created`, type: 'success' });
+            let message = "";
+            if(window.location.search.split("=")[0].includes("edit")) message = "Your article has been successfully edited";
+            if(window.location.search.split("=")[0].includes("new")) message = "Your article has been successfully created";
+
+            setToastInfo({ open: true, message, type: 'success' });
             window.history.pushState({}, "", window.location.pathname);
         };
     }, []);
-    
+
     const { data: standByQuery } = useQuery(GET_ALL_ARTICLES, { variables: { statusName: ArticleStatus.STAND_BY } });
     const articles: ArticleType[] = standByQuery?.getAllArticles || [];
 
@@ -51,7 +55,7 @@ export default function ArticleQueue({ categories, error }: Props) {
     const [filteredArticles, setFilteredArticles] = useState<ArticleType[]>(articles);
     const [popupInfo, setPopupInfo] = useState<{ text: string, articleId: string }>({ text: "", articleId: "" });
     const [loading, setLoading] = useState<boolean>();
-    const [action, setAction] = useState<'approve' | 'reject'>();
+    const [action, setAction] = useState<'approve' | 'edit' | 'reject'>();
 
     useEffect(() => {
         const newArticles = articles.filter(article => (
@@ -139,7 +143,7 @@ export default function ArticleQueue({ categories, error }: Props) {
                     <tbody>
                         {filteredArticles.slice(page * ARTICLE_LIST_LIMIT, page * ARTICLE_LIST_LIMIT + ARTICLE_LIST_LIMIT).map(article => (
                             popupInfo.articleId === article.id ?
-                                <tr key={article.id} className={action === 'approve' ? classes.approve : classes.delete}>
+                                <tr key={article.id} className={action === 'reject' ? classes.delete : classes.approve}>
                                     <td colSpan={4}>{popupInfo.text}</td>
                                     {loading ?
                                         <td colSpan={2}>
@@ -157,19 +161,36 @@ export default function ArticleQueue({ categories, error }: Props) {
                                                     <p>Cancel</p>
                                                 </td>
                                                 <td>
-                                                    <Icon
-                                                        icon={action === 'approve' ? "teenyicons:tick-circle-solid" : "bx:bxs-trash"}
-                                                        fontSize={32}
-                                                        onClick={async () => {
-                                                            const mutation = action === 'approve' ?
-                                                                async () => approveArticle({
+                                                    {action === 'edit' &&
+                                                        <Icon
+                                                            icon="bx:bxs-message-square-edit"
+                                                            fontSize={32}
+                                                            onClick={() => window.location.assign(`/admin/edit-article/${article.slug}`)}
+                                                        />
+                                                    }
+                                                    {action === 'approve' &&
+                                                        <Icon
+                                                            icon="teenyicons:tick-circle-solid"
+                                                            fontSize={32}
+                                                            onClick={async () => {
+                                                                setLoading(true);
+                                                                approveArticle({
                                                                     variables: {
                                                                         articleId: article.id,
                                                                         userRole: user.roleName
                                                                     }
                                                                 })
-                                                                :
-                                                                async () => deleteArticle({
+                                                                setLoading(false);
+                                                            }}
+                                                        />
+                                                    }
+                                                    {action === 'reject' &&
+                                                        <Icon
+                                                            icon="bx:bxs-trash"
+                                                            fontSize={32}
+                                                            onClick={async () => {
+                                                                setLoading(true);
+                                                                await deleteArticle({
                                                                     variables: {
                                                                         articleId: article.id,
                                                                         userId: user.id,
@@ -177,12 +198,9 @@ export default function ArticleQueue({ categories, error }: Props) {
                                                                         authorId: article.authorId
                                                                     }
                                                                 });
-
-                                                            setLoading(true);
-                                                            await mutation()
-                                                            setLoading(false);
-                                                        }}
-                                                    />
+                                                                setLoading(false);
+                                                            }} />
+                                                    }
                                                     <p>Confirm</p>
                                                 </td>
                                             </>
@@ -210,7 +228,10 @@ export default function ArticleQueue({ categories, error }: Props) {
                                                 <Icon
                                                     icon="bx:bxs-message-square-edit"
                                                     fontSize={32}
-                                                // onClick={() => handleModalOpen(ModalActions.EDIT_CATEGORY, 'Edit a category')}
+                                                    onClick={() => {
+                                                        setAction('edit');
+                                                        setPopupInfo({ text: `Do you want to edit article "${article.title}"?`, articleId: article.id });
+                                                    }}
                                                 />
                                                 <Icon
                                                     icon="bx:bxs-trash"

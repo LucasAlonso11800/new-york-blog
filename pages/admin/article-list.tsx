@@ -49,7 +49,7 @@ export default function ArticleList({ categories, error }: Props) {
     const [author, setAuthor] = useState<string>("");
     const [category, setCategory] = useState<string>("all");
     const [filteredArticles, setFilteredArticles] = useState<ArticleType[]>(articles);
-    const [popupInfo, setPopupInfo] = useState<{ text: string, articleId: string }>({ text: "", articleId: "" });
+    const [popupInfo, setPopupInfo] = useState<{ text: string, articleId: string, action: "edit" | "delete" }>({ text: "", articleId: "", action: "edit" });
     const [loading, setLoading] = useState<boolean>();
 
     useEffect(() => {
@@ -79,7 +79,7 @@ export default function ArticleList({ categories, error }: Props) {
                 variables: { statusName: ArticleStatus.ACCEPTED },
                 data: { getAllArticles: data.getAllArticles.filter((article: ArticleType) => article.id !== popupInfo.articleId) }
             });
-            setPopupInfo({ text: "", articleId: "" });
+            setPopupInfo({ text: "", articleId: "", action: "edit" });
         },
         onError: (err) => setToastInfo({ open: true, message: err.message, type: 'error' })
     });
@@ -115,7 +115,7 @@ export default function ArticleList({ categories, error }: Props) {
                     <tbody>
                         {filteredArticles.slice(page * ARTICLE_LIST_LIMIT, page * ARTICLE_LIST_LIMIT + ARTICLE_LIST_LIMIT).map(article => (
                             popupInfo.articleId === article.id ?
-                                <tr key={article.id} className={classes.delete}>
+                                <tr key={article.id} className={popupInfo.action === 'edit' ? classes.approve : classes.delete}>
                                     <td colSpan={5}>{popupInfo.text}</td>
                                     {loading ?
                                         <td colSpan={2}>
@@ -128,27 +128,36 @@ export default function ArticleList({ categories, error }: Props) {
                                                     <Icon
                                                         icon="ic:sharp-cancel"
                                                         fontSize={32}
-                                                        onClick={() => setPopupInfo({ text: "", articleId: "" })}
+                                                        onClick={() => setPopupInfo({ text: "", articleId: "", action: "edit" })}
                                                     />
                                                     <p>Cancel</p>
                                                 </td>
                                                 <td>
-                                                    <Icon
-                                                        icon="bx:bxs-trash"
-                                                        fontSize={32}
-                                                        onClick={async () => {
-                                                            setLoading(true);
-                                                            await deleteArticle({
-                                                                variables: {
-                                                                    articleId: article.id,
-                                                                    userId: user.id,
-                                                                    userRole: user.roleName,
-                                                                    authorId: article.authorId
-                                                                }
-                                                            });
-                                                            setLoading(false);
-                                                        }}
-                                                    />
+                                                    {popupInfo.action === 'edit' &&
+                                                        <Icon
+                                                            icon="bx:bxs-message-square-edit"
+                                                            fontSize={32}
+                                                            onClick={() => window.location.assign(`/admin/edit-article/${article.slug}`)}
+                                                        />
+                                                    }
+                                                    {popupInfo.action === 'delete' &&
+                                                        <Icon
+                                                            icon="bx:bxs-trash"
+                                                            fontSize={32}
+                                                            onClick={async () => {
+                                                                setLoading(true);
+                                                                await deleteArticle({
+                                                                    variables: {
+                                                                        articleId: article.id,
+                                                                        userId: user.id,
+                                                                        userRole: user.roleName,
+                                                                        authorId: article.authorId
+                                                                    }
+                                                                });
+                                                                setLoading(false);
+                                                            }}
+                                                        />
+                                                    }
                                                     <p>Confirm</p>
                                                 </td>
                                             </>
@@ -169,12 +178,12 @@ export default function ArticleList({ categories, error }: Props) {
                                                 <Icon
                                                     icon="bx:bxs-message-square-edit"
                                                     fontSize={32}
-                                                // onClick={() => handleModalOpen(ModalActions.EDIT_CATEGORY, 'Edit a category')}
+                                                    onClick={() => setPopupInfo({ text: `Do you want to edit article "${article.title}"?`, articleId: article.id, action: "edit" })}
                                                 />
                                                 <Icon
                                                     icon="bx:bxs-trash"
                                                     fontSize={32}
-                                                    onClick={() => setPopupInfo({ text: `Are you sure you want to delete article "${article.title}"?`, articleId: article.id })}
+                                                    onClick={() => setPopupInfo({ text: `Are you sure you want to delete article "${article.title}"?`, articleId: article.id, action: "delete" })}
                                                 />
                                             </>
                                             : null

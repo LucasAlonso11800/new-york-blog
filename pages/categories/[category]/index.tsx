@@ -22,7 +22,7 @@ type Props = {
 
 export default function CategoryPage({ category, title, articleCount, articles, error }: Props) {
     const { setToastInfo } = useContext(GlobalContext);
-    
+
     useEffect(() => {
         if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
     }, []);

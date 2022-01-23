@@ -28,6 +28,7 @@ export enum STORED_PROCEDURES {
         // Article components
     GET_ARTICLE_COMPONENTS = 'GetArticleComponents',
     ADD_ARTICLE_COMPONENT = 'AddArticleComponent',
+    DELETE_ARTICLE_COMPONENT = 'DeleteArticleComponent',
     GET_COMPONENT_LIST = 'GetComponentList',
         // Comments
     GET_ARTICLE_COMMENTS = 'GetArticleComments',

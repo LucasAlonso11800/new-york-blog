@@ -11,17 +11,27 @@ type Args = {
 };
 
 export const getComponentsList = async () => {
-    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_COMPONENT_LIST;
-    const components = await callSP({ procedure, values: []})
-    return components;
+    try {
+        const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_COMPONENT_LIST;
+        const components = await callSP({ procedure, values: []})
+        return components;
+    }
+    catch(err: any){
+        throw new Error(err)
+    }
 };
 
 export const getArticleComponents = async (_: any, args: Args) => {
-    const { articleId } = args;
-
-    const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_ARTICLE_COMPONENTS;
-    const values: [number] = [formatId(articleId)];
-
-    const articleComponents: ArticleComponentType[] = await callSP({ procedure, values });
-    return articleComponents;
+    try {
+        const { articleId } = args;
+    
+        const procedure: STORED_PROCEDURES = STORED_PROCEDURES.GET_ARTICLE_COMPONENTS;
+        const values: [number] = [formatId(articleId)];
+    
+        const articleComponents: ArticleComponentType[] = await callSP({ procedure, values });
+        return articleComponents;
+    }
+    catch(err: any){
+        throw new Error(err);
+    }
 };

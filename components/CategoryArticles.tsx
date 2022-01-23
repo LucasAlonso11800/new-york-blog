@@ -18,9 +18,9 @@ export default function CategoryArticles({ articles }: Props) {
         <div className={classes.container}>
             {articles.map(article => (
                 <article key={article.id} className={classes.article}>
-                    <Image src={fixFirebaseURL(article.image)} height={270} width={270} />
+                    {article.image ? <Image src={fixFirebaseURL(article.image)} height={270} width={270} /> : null}
                     <h4 className={classes.title}>
-                        <Link href={`/articles/${article.slug}`}>{article.title}</Link>
+                    {article.title ? <Link href={`/articles/${article.slug}`}>{article.title}</Link> : null}
                     </h4>
                 </article>
             ))}

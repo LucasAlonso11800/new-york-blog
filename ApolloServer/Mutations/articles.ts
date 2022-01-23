@@ -17,6 +17,8 @@ type Args = {
     categoryId: string | number
     image: string
     components: ArticleComponentType[]
+    statusName: string
+    slugChanged: boolean
 };
 
 export const addVisit = async (_: any, args: Args) => {
@@ -34,10 +36,10 @@ export const addArticle = async (_: any, args: Args) => {
     try {
         const article: ArticleType[] = await callSP({
             procedure: STORED_PROCEDURES.GET_SINGLE_ARTICLE,
-            values: [slug] 
+            values: [slug]
         });
-        if(article[0]) throw new Error("Slug already in use");
-        
+        if (article[0]) throw new Error("Slug already in use");
+
         const procedure: STORED_PROCEDURES = STORED_PROCEDURES.ADD_ARTICLE;
         const values: [string, number, number, string, string, number, string, string] = [title, 0, formatId(categoryId), image, new Date().toISOString().substring(0, 10), formatId(userId), slug, userRole];
 
@@ -55,6 +57,41 @@ export const addArticle = async (_: any, args: Args) => {
             values: [userRole === UserRoles.ADMIN ? ArticleStatus.ACCEPTED : ArticleStatus.STAND_BY]
         });
         return articles.slice((index - 1) * ARTICLE_LIMIT_PER_PAGE, (index - 1) * ARTICLE_LIMIT_PER_PAGE + ARTICLE_LIMIT_PER_PAGE);
+    }
+    catch (err: any) {
+        throw new Error(err)
+    }
+};
+
+export const editArticle = async (_: any, args: Args) => {
+    const { articleId, title, categoryId, components, image, slug, slugChanged } = args;
+    try {
+        const article: ArticleType[] = await callSP({
+            procedure: STORED_PROCEDURES.GET_SINGLE_ARTICLE,
+            values: [slug]
+        });
+        if (slugChanged && article[0]) throw new Error("Slug already in use");
+
+        const procedure: STORED_PROCEDURES = STORED_PROCEDURES.EDIT_ARTICLE;
+        const values: [number, string, number, string, string] = [formatId(articleId), title, formatId(categoryId), image, slug];
+
+        const response: ArticleType[] = await callSP({ procedure, values });
+
+        components.forEach(async component => {
+            if(component.id){
+                const procedure: STORED_PROCEDURES = STORED_PROCEDURES.DELETE_ARTICLE_COMPONENT;
+                const values: [number] = [formatId(component.id)];
+                await callSP({ procedure, values });
+            };
+        });
+
+        components.forEach(async component => {
+            const procedure: STORED_PROCEDURES = STORED_PROCEDURES.ADD_ARTICLE_COMPONENT;
+            const values: [number, number, number, string, string, string, string] = [formatId(component.componentId), formatId(response[0].id), component.order, component.image, component.text, component.fontWeight, component.textAlign]
+            await callSP({ procedure, values });
+        });
+
+        return response[0]
     }
     catch (err: any) {
         throw new Error(err)
@@ -80,7 +117,7 @@ export const deleteArticle = async (_: any, args: Args) => {
 export const approveArticle = async (_: any, args: Args) => {
     const { articleId, userRole } = args;
     try {
-        if(userRole === UserRoles.ADMIN) {
+        if (userRole === UserRoles.ADMIN) {
             const procedure: STORED_PROCEDURES = STORED_PROCEDURES.APPROVE_ARTICLE;
             const values: [number] = [formatId(articleId)];
             await callSP({ procedure, values });

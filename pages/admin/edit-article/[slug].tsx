@@ -1,41 +1,44 @@
 import React, { useContext, useState, useRef, useEffect } from 'react'
 // Context
-import { GlobalContext } from '../../context/GlobalContext';
+import { GlobalContext } from '../../../context/GlobalContext';
 // Styles
-import classes from '../../styles/components/Admin/NewArticlePage.module.css';
+import classes from '../../../styles/components/Admin/NewArticlePage.module.css';
 // Components
-import AdminLayout from '../../components/LayoutComponents/AdminLayout';
-import Main from '../../components/LayoutComponents/Main'
+import AdminLayout from '../../../components/LayoutComponents/AdminLayout';
+import Main from '../../../components/LayoutComponents/Main'
 import Image from 'next/image';
-import ArticleMeta from '../../components/ArticleComponents/ArticleMeta';
+import ArticleMeta from '../../../components/ArticleComponents/ArticleMeta';
 import { Icon } from '@iconify/react';
-import LoadingIcon from '../../components/LoadingIcon';
+import LoadingIcon from '../../../components/LoadingIcon';
 // Const
-import { initialImage, initialQuote, initialText, initialSubtitle } from '../../const/initialArticleComponents';
+import { initialImage, initialQuote, initialText, initialSubtitle } from '../../../const/initialArticleComponents';
 // Utils
-import { getBase64Src } from '../../utils/getBase64Src';
-import { checkAuth } from '../../utils/checkAuth';
+import { getBase64Src } from '../../../utils/getBase64Src';
+import { checkAuth } from '../../../utils/checkAuth';
+import { fixFirebaseURL } from '../../../utils/fixFirebaseURL';
 // Form
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 // Firebase
-import { storage } from '../../const/FirebaseConfig';
+import { storage } from '../../../const/FirebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // GraphQL
-import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
-import { getCategories, getComponentsList, getMetadata, GET_ALL_ARTICLES, GET_LATEST_ARTICLES } from '../../ApolloClient/querys';
+import { addApolloState, initializeApollo } from '../../../ApolloClient/NewApolloConfig';
+import { getAllArticles, getArticleComponents, getCategories, getComponentsList, getMetadata, getSingleArticle, GET_ALL_ARTICLES, GET_LATEST_ARTICLES } from '../../../ApolloClient/querys';
 import { ApolloError, useMutation } from '@apollo/client';
-import { ADD_ARTICLE } from '../../ApolloClient/mutations';
+import { EDIT_ARTICLE } from '../../../ApolloClient/mutations';
 // Types
-import { ArticleComponentNames, ArticleStatus, CategoryType, ComponentType, UserRoles } from '../../types/Types';
+import { ArticleComponentNames, ArticleComponentType, ArticleStatus, ArticleType, CategoryType, ComponentType, UserRoles } from '../../../types/Types';
 
 type Props = {
+    article: ArticleType
+    articleComponents: ArticleComponentType[]
     categories: CategoryType[]
     components: ComponentType[]
     error: ApolloError
 };
 
-export default function NewArticle({ categories, components, error }: Props) {
+export default function EditArticle({ article, articleComponents, categories, components, error }: Props) {
     const { user, setToastInfo } = useContext(GlobalContext);
     checkAuth(user);
 
@@ -54,31 +57,19 @@ export default function NewArticle({ categories, components, error }: Props) {
     const [files, setFiles] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [addArticle] = useMutation(ADD_ARTICLE, {
+    const [editArticle] = useMutation(EDIT_ARTICLE, {
         update(proxy, result) {
-            const statusName = user?.roleName === UserRoles.ADMIN ? ArticleStatus.ACCEPTED : ArticleStatus.STAND_BY;
             const data = proxy.readQuery({
                 query: GET_ALL_ARTICLES,
-                variables: { statusName }
+                variables: { statusName: ArticleStatus.STAND_BY }
             }) as any;
 
             proxy.writeQuery({
                 query: GET_ALL_ARTICLES,
-                variables: { statusName },
-                data: { getAllArticles: data ? [result.data.addArticle[0], ...data.getAllArticles] : [result.data.addArticle[0]] }
+                variables: { statusName: ArticleStatus.STAND_BY },
+                data: { getAllArticles: data ? [result.data.editArticle, ...data.getAllArticles.filter((art: ArticleType) => art.id !== article.id)] : [result.data.editArticle] }
             });
-
-            if (user?.roleName === UserRoles.ADMIN) {
-                proxy.writeQuery({
-                    query: GET_LATEST_ARTICLES,
-                    variables: {
-                        index: 1,
-                        statusName: ArticleStatus.ACCEPTED
-                    },
-                    data: { getLatestArticles: result.data.addArticle }
-                });
-            };
-            window.location.assign(user?.roleName === UserRoles.ADMIN ? '/admin/article-list?newArticle="true"' : '/admin/article-queue?newArticle="true"');
+            window.location.assign('/admin/article-queue?editArticle="true"');
         },
         onError: (err) => setToastInfo({ open: true, message: err.message, type: "error" })
     });
@@ -97,40 +88,26 @@ export default function NewArticle({ categories, components, error }: Props) {
 
     const formik = useFormik({
         initialValues: {
-            title: "Add your new article's title",
-            categoryId: categories[0].id,
-            image: images[0].src,
-            slug: 'your-new-article',
-            components: [
-                {
-                    image: null,
-                    componentId: components.find(component => component.name === ArticleComponentNames.ARTICLE_TITLE)?.id,
-                    componentName: ArticleComponentNames.ARTICLE_TITLE,
-                    order: 1,
-                    text: "Add your new article's second title",
-                    fontWeight: null,
-                    textAlign: null
-                },
-                {
-                    image: null,
-                    componentId: components.find(component => component.name === ArticleComponentNames.ARTICLE_TEXT)?.id,
-                    componentName: ArticleComponentNames.ARTICLE_TEXT,
-                    order: 2,
-                    text: "Add a paragraph",
-                    fontWeight: null,
-                    textAlign: null
-                }]
+            title: article.title,
+            categoryId: article.categoryId ? article.categoryId.toString() : categories[0].id,
+            image: article.image,
+            slug: article.slug,
+            components: articleComponents
         },
         validationSchema,
         onSubmit: async (values) => {
             setLoading(true);
-            const fileRef = ref(storage, `articles/${values.slug}/main.jpg`);
-            await uploadBytes(fileRef, files[0]);
-            const imageURL = await getDownloadURL(fileRef);
+            let imageURL = formik.values.image;
+
+            if (!imageURL.includes('firebase')) {
+                const fileRef = ref(storage, `articles/${values.slug}/main.jpg`);
+                await uploadBytes(fileRef, files[0]);
+                imageURL = await getDownloadURL(fileRef);
+            };
 
             const components = await Promise.all(
-                values.components.map(async (component, index) => {
-                    if (component.image !== null) {
+                values.components.map(async ({ __typename, ...component }, index) => {
+                    if (component.image !== null && !component.image.includes('firebase')) {
                         const fileRef = ref(storage, `articles/${values.slug}/${component.order}.jpg`);
                         await uploadBytes(fileRef, files[index]);
                         const url = await getDownloadURL(fileRef);
@@ -140,15 +117,15 @@ export default function NewArticle({ categories, components, error }: Props) {
                 })
             );
 
-            await addArticle({
+            await editArticle({
                 variables: {
-                    userId: user?.id,
-                    userRole: user?.roleName,
+                    articleId: article.id,
                     title: values.title,
                     categoryId: values.categoryId,
                     components,
                     image: imageURL,
-                    slug: values.slug
+                    slug: values.slug,
+                    slugChanged: values.slug !== article.slug
                 }
             });
             setLoading(false);
@@ -232,7 +209,7 @@ export default function NewArticle({ categories, components, error }: Props) {
     const onMainImageClick = () => imageRef.current.click();
 
     return (
-        <AdminLayout title="Create a new article - ">
+        <AdminLayout title={`Edit article "${article.title}" - `}>
             <Main>
                 <form className={classes.form} onSubmit={formik.handleSubmit}>
                     <div className={classes.articleContainer}>
@@ -244,7 +221,7 @@ export default function NewArticle({ categories, components, error }: Props) {
                         />
                         <div style={{ position: 'relative' }}>
                             <Image
-                                src={formik.values.image === defaultImage ? formik.values.image : getBase64Src(formik.values.image)}
+                                src={formik.values.image?.includes('firebase') ? fixFirebaseURL(formik.values.image) : getBase64Src(formik.values.image)}
                                 alt="Main image"
                                 height="535"
                                 width="800"
@@ -272,7 +249,7 @@ export default function NewArticle({ categories, components, error }: Props) {
                                     />
                                 );
                                 case ArticleComponentNames.ARTICLE_TEXT: return (
-                                    <section className={classes.component} key={index}> 
+                                    <section className={classes.component} key={index}>
                                         <textarea
                                             className={classes.text}
                                             value={component.text}
@@ -296,7 +273,7 @@ export default function NewArticle({ categories, components, error }: Props) {
                                     <section className={classes.component} key={index}>
                                         <input
                                             className={classes.quote}
-                                            value={`"${component.text}"`}
+                                            value={component.text}
                                             name="text"
                                             onChange={(e) => handleComponentChange(e, index, component.componentName)}
                                             spellCheck={false}
@@ -330,7 +307,7 @@ export default function NewArticle({ categories, components, error }: Props) {
                                 case ArticleComponentNames.IMAGE: return (
                                     <section className={classes.component} key={index}>
                                         <Image
-                                            src={images[index] ? getBase64Src(images[index].src) : component.image as any}
+                                            src={images[index] ? getBase64Src(images[index].src) : fixFirebaseURL(component.image)}
                                             alt={images[index] ? images[index].alt : "Article image"}
                                             height="535"
                                             width="800"
@@ -358,7 +335,7 @@ export default function NewArticle({ categories, components, error }: Props) {
                         <div className={classes.addComponent}>
                             <p>Add a new section</p>
                             <ul className={classes.list}>
-                                <li className={classes.listItem} onClick={() => setMenuOpen(!menuOpen)}>{newComponent.name}</li>
+                                <li className={classes.listItem} onClick={() => setMenuOpen(!menuOpen)}>{newComponent?.name}</li>
                                 <ul className={menuOpen ? `${classes.sublist} ${classes.open}` : classes.sublist}>
                                     {components
                                         .filter(component => component.id !== newComponent.id && component.name !== ArticleComponentNames.ARTICLE_TITLE)
@@ -367,7 +344,7 @@ export default function NewArticle({ categories, components, error }: Props) {
                                         ))}
                                 </ul>
                             </ul>
-                            {!menuOpen && newComponent.name === ArticleComponentNames.ARTICLE_SUBTITLE &&
+                            {!menuOpen && newComponent?.name === ArticleComponentNames.ARTICLE_SUBTITLE &&
                                 <ul className={classes.list}>
                                     <li className={classes.listItem} onClick={() => setSecondaryMenuOpen(!secondaryMenuOpen)}>{subtitleVariant === 'C' ? 'Centered' : 'To the left'}</li>
                                     <ul className={secondaryMenuOpen ? `${classes.sublist} ${classes.open}` : classes.sublist}>
@@ -382,7 +359,7 @@ export default function NewArticle({ categories, components, error }: Props) {
                                 onClick={() => handleComponentAdd()}
                             />
                         </div>
-                        <button type="submit" className={classes.submitButton} disabled={loading}>Post new article</button>
+                        <button type="submit" className={classes.submitButton} disabled={loading}>Edit article "{article.title}"</button>
                         {loading && <LoadingIcon />}
                     </div>
                     <div className={classes.options}>
@@ -433,10 +410,36 @@ export default function NewArticle({ categories, components, error }: Props) {
     )
 };
 
-export async function getStaticProps() {
-    const client = initializeApollo();
+const client = initializeApollo();
+export async function getStaticPaths() {
+    const accepted = await getAllArticles(client, ArticleStatus.ACCEPTED);
+    const standBy = await getAllArticles(client, ArticleStatus.STAND_BY);
+    const articles = accepted.data.getAllArticles.concat(standBy.data.getAllArticles)
+    return {
+        paths: articles.map((article: ArticleType) => {
+            return {
+                params: {
+                    slug: article.slug
+                }
+            }
+        }),
+        fallback: false
+    };
+
+};
+
+type GetStaticPropsParams = {
+    params: {
+        slug: string,
+    }
+}
+
+export async function getStaticProps({ params }: GetStaticPropsParams) {
     try {
-        const [categories, components] = await Promise.all([
+        const article = await getSingleArticle(client, params.slug);
+
+        const [articleComponents, categories, components] = await Promise.all([
+            await getArticleComponents(client, article.data.getSingleArticle.id),
             await getCategories(client),
             await getComponentsList(client),
             await getMetadata(client)
@@ -444,6 +447,8 @@ export async function getStaticProps() {
 
         return addApolloState(client, {
             props: {
+                article: article.data.getSingleArticle,
+                articleComponents: articleComponents.data.getArticleComponents,
                 categories: categories.data.getCategories,
                 components: components.data.getComponentsList
             },
@@ -454,6 +459,8 @@ export async function getStaticProps() {
         console.log(JSON.stringify(err, null, 2));;
         return addApolloState(client, {
             props: {
+                article: {},
+                articleComponents: [],
                 categories: [],
                 components: [],
                 error: JSON.parse(JSON.stringify(err))

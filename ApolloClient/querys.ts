@@ -11,7 +11,9 @@ export const GET_ALL_ARTICLES = gql`
             id
             slug
             title
+            categoryId
             categoryName
+            categoryPath
             image
             visits
             createdAt
@@ -242,6 +244,7 @@ export const GET_ARTICLE_COMPONENTS = gql`
     query GetArticleComponents ($articleId: ID!) {
         getArticleComponents(articleId: $articleId) {
             id
+            componentId
             componentName
             order
             image

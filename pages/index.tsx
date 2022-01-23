@@ -19,7 +19,7 @@ type Props = {
 
 export default function HomePage({ articles, error }: Props) {
     const { setToastInfo } = useContext(GlobalContext);
-    
+
     useEffect(() => {
         if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
     }, []);

@@ -26,15 +26,23 @@ export default function ArticlePreview(props: Props) {
     const imageDimensions = layout === 'column' ? { width: '850', height: '475' } : { width: '400', height: '400' };
     return (
         <article className={`${classes.article} ${classes[layout]}`} data-testid="articlePreview">
-            <Link href={`/articles/${slug}`}>
-                <Image src={fixFirebaseURL(image)} {...imageDimensions} />
-            </Link>
-            <div className={classes.content}>
-                <h2 className={classes.title}><Link href={`/articles/${slug}`}>{title}</Link></h2>
-                <ArticleMeta categoryName={categoryName} categoryPath={categoryPath} authorName={authorName}/>
-                <p className={classes.body}>{description ? `${description.substring(0, 320)}[...]` : ''}</p>
-                <ReadMoreButton link={`/articles/${slug}`}/>
-            </div>
+            {slug && image && title ?
+                <>
+                    <Link href={`/articles/${slug}`}>
+                        <Image src={fixFirebaseURL(image)} {...imageDimensions} />
+                    </Link>
+
+                    <div className={classes.content}>
+                        <h2 className={classes.title}>
+                            <Link href={`/articles/${slug}`}>{title}</Link>
+                        </h2>
+                        <ArticleMeta categoryName={categoryName} categoryPath={categoryPath} authorName={authorName} />
+                        <p className={classes.body}>{description ? `${description.substring(0, 320)}${description.length > 320 ? '[...]' : ''}` : ''}</p>
+                        <ReadMoreButton link={`/articles/${slug}`} />
+                    </div>
+                </>
+                : null
+            }
         </article>
     )
 };

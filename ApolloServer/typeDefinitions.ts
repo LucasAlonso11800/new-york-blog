@@ -33,6 +33,7 @@ export const typeDefs = gql`
         # Articles
         addVisit(articleId: ID!): String
         addArticle(userId: ID!, userRole: String!, title: String!, categoryId: ID!, components: [ArticleComponentInput]!, image: String!, slug: String!): [Article]
+        editArticle(articleId: ID!, title: String!, categoryId: ID!, components: [ArticleComponentInput]!, image: String!, slug: String!, slugChanged: Boolean!): Article
         deleteArticle(articleId: ID!, userId: ID!, userRole: String!, authorId: ID!): String
         approveArticle(articleId: ID!, userRole: String!): String
         # Categories
@@ -99,6 +100,7 @@ export const typeDefs = gql`
 	    text: String
 	    fontWeight: String
 	    textAlign: String
+        typename: String
     }
 
     type Metadata {

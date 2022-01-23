@@ -32,6 +32,7 @@ export const getSingleArticle = async (_: any, args: Args) => {
     const values: [string] = [slug];
 
     const article: ArticleType[] = await callSP({ procedure, values });
+    if(!article[0]) throw new Error("Article not found");
     return article[0];
 };
 
