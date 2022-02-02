@@ -3,12 +3,16 @@ import { SERVER_URL } from '../const/ServerURL';
 import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
 import merge from 'deepmerge';
 import isEqual from 'lodash/isEqual';
+import fetch from 'isomorphic-unfetch';
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
-export const httpLink = createHttpLink({ uri: SERVER_URL });
+export const httpLink = createHttpLink({ 
+    fetch,
+    uri: SERVER_URL
+});
 
 function createApolloClient() {
     return new ApolloClient({
