@@ -24,10 +24,9 @@ type Props = {
 export default function LoginPage({ error }: Props) {
     const { user, setUser, setToastInfo } = useContext(GlobalContext);
 
-    if (user !== null) return window.location.assign('/admin');
-
     useEffect(() => {
         if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
+        return
     }, []);
 
     const [loginUser, { loading }] = useMutation(LOGIN_USER, {
@@ -52,6 +51,8 @@ export default function LoginPage({ error }: Props) {
         validationSchema,
         onSubmit: (values) => loginUser({ variables: { ...values } })
     });
+
+    if (user !== null) return window.location.assign('/admin');
 
     return (
         <AdminLayout title="Login - ">

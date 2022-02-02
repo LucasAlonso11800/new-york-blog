@@ -56,7 +56,7 @@ export default function MainArticle(props: Props) {
                     case ArticleComponentNames.ARTICLE_SUBTITLE: return <ArticleSubtitle key={component.id} text={component.text} textAlign={component.textAlign === 'L' ? 'left' : 'center'} fontWeight={component.fontWeight} lineHeight={component.fontWeight === "400" ? '45px' : '32.5px'} />
                     case ArticleComponentNames.ARTICLE_TEXT: return <ArticleText key={component.id} text={component.text} />
                     case ArticleComponentNames.ARTICLE_TITLE: return <ArticleTitle key={component.id} text={component.text} />
-                    case ArticleComponentNames.IMAGE: return <Image key={component.id} src={fixFirebaseURL(component.image)} height="535" width="800" />
+                    case ArticleComponentNames.IMAGE: return <Image key={component.id} src={fixFirebaseURL(component.image)} height="535" width="800" alt="Section image"/>
                 }
             })}
             {createdAt ? <p className={classes.createdAt}>Posted on {formatDate(createdAt)}</p> : null}

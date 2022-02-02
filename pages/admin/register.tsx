@@ -24,8 +24,6 @@ type Props = {
 export default function RegisterPage({error}: Props) {
     const { user, setUser, setToastInfo } = useContext(GlobalContext);
 
-    if (user !== null) return window.location.assign('/admin');
-
     useEffect(() => {
         if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
     }, []);
@@ -57,6 +55,8 @@ export default function RegisterPage({error}: Props) {
         validationSchema,
         onSubmit: (values) => registerUser({ variables: { ...values } })
     });
+
+    if (user !== null) return window.location.assign('/admin');
 
     return (
         <AdminLayout title="Register - ">

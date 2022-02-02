@@ -30,7 +30,7 @@ export default function Aside() {
                 <h2 className={classes.title}>{title?.value}</h2>
                 {image?.value &&
                     <Link href="/about">
-                        <Image src={fixFirebaseURL(image.value)} width="400" height="400" />
+                        <Image src={fixFirebaseURL(image.value)} width="400" height="400" alt="About"/>
                     </Link>
                 }
             </section>

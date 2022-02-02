@@ -359,7 +359,7 @@ export default function EditArticle({ article, articleComponents, categories, co
                                 onClick={() => handleComponentAdd()}
                             />
                         </div>
-                        <button type="submit" className={classes.submitButton} disabled={loading}>Edit article "{article.title}"</button>
+                        <button type="submit" className={classes.submitButton} disabled={loading}>Edit article &quot;{article.title}&quot;</button>
                         {loading && <LoadingIcon />}
                     </div>
                     <div className={classes.options}>

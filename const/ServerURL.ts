@@ -1,1 +1,1 @@
-export const SERVER_URL: string = 'http://localhost:3000/api/graphql'
+export const SERVER_URL: string = 'https://lucasalonso-nyc-blog.netlify.app/api/graphql'

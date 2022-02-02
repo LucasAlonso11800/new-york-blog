@@ -67,7 +67,7 @@ export default function AdminPage({ categories, metadata, error }: Props) {
                     <h4 className={classes.subtitle}>Article management</h4>
                     <div className={classes.links}>
                         <button className={classes.button}>
-                            <Link href="/admin/article-list">Posted article's list</Link>
+                            <Link href="/admin/article-list">Posted article&apos;s list</Link>
                         </button>
                         <button className={classes.button}>
                             <Link href="/admin/article-queue">Article queue</Link>
