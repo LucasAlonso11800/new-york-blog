@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { SERVER_URL } from '../const/ServerURL';
 import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
 import merge from 'deepmerge';
 import isEqual from 'lodash/isEqual';
 
@@ -11,20 +10,10 @@ let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 export const httpLink = createHttpLink({ uri: SERVER_URL });
 
-export const authLink = setContext((_, { headers }) => {
-    const token = typeof window !== 'undefined' ? window.localStorage.getItem("token") : '';
-    return {
-        headers: {
-            ...headers,
-            Authorization: token ? `Bearer ${token}` : ''
-        }
-    }
-});
-
 function createApolloClient() {
     return new ApolloClient({
         ssrMode: typeof window === 'undefined',
-        link: authLink.concat(httpLink),
+        link: httpLink,
         cache: new InMemoryCache(),
         connectToDevTools: true
     })

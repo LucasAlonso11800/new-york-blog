@@ -1,1 +1,1 @@
-export const SERVER_URL: string = 'https://new-york-blog.vercel.app/api/graphql';
+export const SERVER_URL: string = '/api/graphql';
