@@ -1,1 +1,1 @@
-export const SERVER_URL: string = 'https://lucasalonso-nyc-blog.netlify.app/api/graphql'
+export const SERVER_URL: string = 'https://vercel.com/lucasalonsoe4c6/new-york-blog';
