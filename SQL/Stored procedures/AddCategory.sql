@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AddCategory`(
+CREATE  PROCEDURE `AddCategory`(
 	IN PCategoryName		VARCHAR(40),
     IN PCategoryPath		VARCHAR(40)
 )

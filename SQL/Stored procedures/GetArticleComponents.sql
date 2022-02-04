@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetArticleComponents`(
+CREATE  PROCEDURE `GetArticleComponents`(
 	IN	PArticleId		INT
 )
 BEGIN

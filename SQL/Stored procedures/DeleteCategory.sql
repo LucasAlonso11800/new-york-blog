@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteCategory`(
+CREATE  PROCEDURE `DeleteCategory`(
 	PCategoryId		INT
 )
 BEGIN

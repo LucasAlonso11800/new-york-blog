@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetMetadata`()
+CREATE  PROCEDURE `GetMetadata`()
 BEGIN
 	SELECT 
 		metadata_id 			AS id,

@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `RegisterUser`(
+CREATE  PROCEDURE `RegisterUser`(
     IN PUsername			VARCHAR(40),
 	IN PEmail				VARCHAR(100),
     IN PPassword			VARCHAR(255)

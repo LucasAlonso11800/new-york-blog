@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetMostVisitedArticles`(
+CREATE  PROCEDURE `GetMostVisitedArticles`(
 	IN PLimit					INT
 )
 BEGIN

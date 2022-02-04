@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetLatestArticles`(
+CREATE  PROCEDURE `GetLatestArticles`(
 	IN 	PStatus			VARCHAR(20)
 )
 BEGIN

@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `EditMetadata`(
+CREATE  PROCEDURE `EditMetadata`(
 	PMetadataId			INT,
     PMetadataName		VARCHAR(40),
     PMetadataValue		TEXT

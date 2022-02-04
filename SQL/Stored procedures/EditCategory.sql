@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `EditCategory`(
+CREATE  PROCEDURE `EditCategory`(
 	IN PCategoryId			INT,	
 	IN PCategoryName		VARCHAR(40),
     IN PCategoryPath		VARCHAR(40)

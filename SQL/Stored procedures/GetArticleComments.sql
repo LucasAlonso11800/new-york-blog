@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetArticleComments`(
+CREATE  PROCEDURE `GetArticleComments`(
 	IN PArticleId			INT
 )
 BEGIN

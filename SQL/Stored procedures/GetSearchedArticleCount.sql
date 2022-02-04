@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSearchedArticleCount`(
+CREATE  PROCEDURE `GetSearchedArticleCount`(
 	IN PSearch		VARCHAR(255)
 )
 BEGIN

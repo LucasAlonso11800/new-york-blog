@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCategories`()
+CREATE  PROCEDURE `GetCategories`()
 BEGIN
 	SELECT 
 		category_id AS id,

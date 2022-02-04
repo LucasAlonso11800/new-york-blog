@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSingleArticle`(
+CREATE  PROCEDURE `GetSingleArticle`(
 	IN PArticleSlug				VARCHAR(255)
 )
 BEGIN

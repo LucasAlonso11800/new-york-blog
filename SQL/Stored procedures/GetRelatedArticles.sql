@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetRelatedArticles`(
+CREATE  PROCEDURE `GetRelatedArticles`(
 	IN	PCategoryId				INT,
     IN 	PLimit					INT
 )

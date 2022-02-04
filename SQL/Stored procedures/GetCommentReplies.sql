@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCommentReplies`(
+CREATE  PROCEDURE `GetCommentReplies`(
 	IN PCommentId			INT
 )
 BEGIN

@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ChangeUserRole`(
+CREATE  PROCEDURE `ChangeUserRole`(
 	IN PUserId			INT,
     IN PUserRoleName	VARCHAR(20)
 )

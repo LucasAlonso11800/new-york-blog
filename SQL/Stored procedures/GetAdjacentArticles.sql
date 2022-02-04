@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAdjacentArticles`(
+CREATE  PROCEDURE `GetAdjacentArticles`(
 	PArticleId					INT
 )
 BEGIN

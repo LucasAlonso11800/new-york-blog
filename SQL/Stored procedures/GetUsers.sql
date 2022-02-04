@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetUsers`()
+CREATE  PROCEDURE `GetUsers`()
 BEGIN
 	SELECT 
 		user_id 				AS id,

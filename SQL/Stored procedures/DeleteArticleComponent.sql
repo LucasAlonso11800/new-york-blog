@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteArticleComponent`(
+CREATE  PROCEDURE `DeleteArticleComponent`(
 	IN	PArticleComponentId		INT
 )
 BEGIN

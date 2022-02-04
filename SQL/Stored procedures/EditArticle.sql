@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `EditArticle`(
+CREATE  PROCEDURE `EditArticle`(
 	IN 	PArticleId			INT,
 	IN	PTitle 				VARCHAR (255),
 	IN 	PCategoryId	 		INT,

@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetCategoryArticleCount`(
+CREATE  PROCEDURE `GetCategoryArticleCount`(
 	IN	PCategoryId			INT
 )
 BEGIN

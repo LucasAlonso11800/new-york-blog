@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AddComment`(
+CREATE  PROCEDURE `AddComment`(
 	IN PCommenter				VARCHAR(40),
 	IN PEmail					VARCHAR(255),
 	IN PBody					TEXT,

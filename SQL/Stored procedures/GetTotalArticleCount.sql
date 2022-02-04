@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetTotalArticleCount`()
+CREATE  PROCEDURE `GetTotalArticleCount`()
 BEGIN
 	SELECT COUNT(*) AS count FROM articles 
     WHERE article_article_status_id = (SELECT article_status_id 

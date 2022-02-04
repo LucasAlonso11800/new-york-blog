@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AddVisit`(
+CREATE  PROCEDURE `AddVisit`(
 	PArticleId 			INT
 )
 BEGIN

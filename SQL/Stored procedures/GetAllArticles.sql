@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllArticles`(
+CREATE  PROCEDURE `GetAllArticles`(
 	IN 	PArticleStatus 			VARCHAR(20)
 )
 BEGIN

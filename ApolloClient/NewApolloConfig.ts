@@ -18,7 +18,7 @@ function createApolloClient() {
         ssrMode: typeof window === 'undefined',
         link: httpLink,
         cache: new InMemoryCache(),
-        connectToDevTools: true
+        connectToDevTools: true,
     })
 }
 

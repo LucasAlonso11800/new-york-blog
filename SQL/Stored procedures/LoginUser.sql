@@ -1,5 +1,5 @@
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `LoginUser`(
+CREATE  PROCEDURE `LoginUser`(
 	IN PEmail			VARCHAR(100)
 )
 BEGIN
