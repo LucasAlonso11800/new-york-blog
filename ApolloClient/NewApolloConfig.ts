@@ -10,7 +10,7 @@ let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 export const httpLink = createHttpLink({ 
     fetch,
-    uri: 'https://nyc-blog.herokuapp.com/api/graphql'
+    uri: 'http://localhost:3000/api/graphql'
 });
 
 function createApolloClient() {
