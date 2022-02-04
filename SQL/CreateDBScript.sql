@@ -70,3 +70,10 @@ CREATE TABLE article_components (
     FOREIGN KEY(article_component_component_id) REFERENCES components(component_id),
     FOREIGN KEY(article_component_article_id) REFERENCES articles(article_id) ON DELETE CASCADE
 );
+
+CREATE TABLE metadata (
+    metadata_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    metadata_name VARCHAR(40) DEFAULT NULL,
+    metadata_description VARCHAR(255) DEFAULT NULL,
+    metadata_value VARCHAR(255) DEFAULT NULL
+);

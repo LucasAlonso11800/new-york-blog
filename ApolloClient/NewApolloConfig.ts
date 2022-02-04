@@ -10,7 +10,7 @@ let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 export const httpLink = createHttpLink({ 
     fetch,
-    uri: 'http://localhost:3000/api/graphql'
+    uri: 'https://nyc-blog.herokuapp.com/api/graphql'
 });
 
 function createApolloClient() {
@@ -18,7 +18,7 @@ function createApolloClient() {
         ssrMode: typeof window === 'undefined',
         link: httpLink,
         cache: new InMemoryCache(),
-        connectToDevTools: true,
+        connectToDevTools: true
     })
 }
 
