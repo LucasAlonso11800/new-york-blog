@@ -1,12 +1,14 @@
 import { any } from "cypress/types/bluebird";
 import { STORED_PROCEDURES } from "../../const/StoredProcedures";
 import { callSP } from "../../dbConfig";
+import { UserRoles } from "../../types/Types";
 import { formatId } from "../../utils/formatId";
 
 type Args = {
     categoryId: string | number
     categoryName: string
     categoryPath: string
+    userRole: string
 };
 
 export const addCategory = async (_: any, args: Args) => {
@@ -39,7 +41,9 @@ export const editCategory = async (_: any, args: Args) => {
 };
 
 export const deleteCategory = async (_: any, args: Args) => {
-    const { categoryId } = args;
+    const { categoryId, userRole } = args;
+
+    if (userRole !== UserRoles.ADMIN) throw new Error("You are not authorized to delete a category");
 
     const procedure: STORED_PROCEDURES = STORED_PROCEDURES.DELETE_CATEGORY;
     const values: [number] = [formatId(categoryId)];

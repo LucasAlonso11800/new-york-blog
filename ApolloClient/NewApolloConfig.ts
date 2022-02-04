@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { SERVER_URL } from '../const/ServerURL';
 import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
 import merge from 'deepmerge';
 import isEqual from 'lodash/isEqual';
@@ -11,7 +10,7 @@ let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 export const httpLink = createHttpLink({ 
     fetch,
-    uri: SERVER_URL
+    uri: 'https://nyc-blog.herokuapp.com/api/graphql'
 });
 
 function createApolloClient() {

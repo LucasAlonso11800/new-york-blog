@@ -123,8 +123,8 @@ export const EDIT_CATEGORY = gql`
 `;
 
 export const DELETE_CATEGORY = gql`
-    mutation DeleteCategory($categoryId: ID!){
-        deleteCategory(categoryId: $categoryId)
+    mutation DeleteCategory($categoryId: ID!, $userRole: String!){
+        deleteCategory(categoryId: $categoryId, userRole: $userRole)
     }
 `;
 

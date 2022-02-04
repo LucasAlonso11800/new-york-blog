@@ -45,7 +45,7 @@ export default function Modal({ category, metadata, setSelectedCategory, setSele
     const [file, setFile] = useState<Blob | Uint8Array | ArrayBuffer>();
     const [uploadingFile, setUploadingFile] = useState<boolean>(false);
 
-    const { modalInfo: { open, action, title }, setModalInfo, setToastInfo } = useContext(GlobalContext);
+    const { modalInfo: { open, action, title }, user, setModalInfo, setToastInfo } = useContext(GlobalContext);
     const isAnImage: boolean = metadata?.name === MetadataNames.ABOUT_IMAGE || metadata?.name === MetadataNames.HEADER_IMAGE || metadata?.name === MetadataNames.HEAD_ICON;
 
     const handleModalClose = () => {
@@ -116,7 +116,7 @@ export default function Modal({ category, metadata, setSelectedCategory, setSele
             switch (action) {
                 case ModalActions.ADD_CATEGORY: return callMutation({ variables: { categoryName: values.name, categoryPath: toKebabCase(values.path) } });
                 case ModalActions.EDIT_CATEGORY: return callMutation({ variables: { categoryId: values.id, categoryName: values.name, categoryPath: toKebabCase(values.path) } });
-                case ModalActions.DELETE_CATEGORY: return callMutation({ variables: { categoryId: values.id } });
+                case ModalActions.DELETE_CATEGORY: return callMutation({ variables: { categoryId: values.id, userRole: user?.roleName } });
                 case ModalActions.EDIT_METADATA: return handleMetadataSubmit(values, callMutation, file, setUploadingFile);
                 default: break
             };
