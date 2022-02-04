@@ -8,19 +8,17 @@ export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
-export const httpLink = createHttpLink({ 
-    fetch,
-    uri: 'https://nyc-blog.herokuapp.com/api/graphql'
-});
-
-function createApolloClient() {
+function createApolloClient() {    
     return new ApolloClient({
         ssrMode: typeof window === 'undefined',
-        link: httpLink,
+        link: createHttpLink({ 
+            fetch,
+            uri: 'https://nyc-blog.herokuapp.com/api/graphql'
+        }),
         cache: new InMemoryCache(),
         connectToDevTools: true
     })
-}
+};
 
 export function initializeApollo(initialState: NormalizedCacheObject | null = null) {
     const _apolloClient = apolloClient ?? createApolloClient();
