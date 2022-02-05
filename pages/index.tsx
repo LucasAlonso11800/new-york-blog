@@ -7,18 +7,26 @@ import ArticlePreview from '../components/ArticlePreview';
 import Pagination from '../components/Pagination';
 // GraphQL
 import { addApolloState, initializeApollo } from '../ApolloClient/NewApolloConfig';
-import { getCategories, getLatestArticles, getMetadata, getMostVisitedArticles } from '../ApolloClient/querys';
-import { ApolloError } from '@apollo/client'
+import { getCategories, getMetadata, getMostVisitedArticles, GET_LATEST_ARTICLES } from '../ApolloClient/querys';
+import { ApolloError, useQuery } from '@apollo/client'
 // Types
 import { ArticleStatus, ArticleType } from '../types/Types';
 
 type Props = {
-    articles: ArticleType[],
     error: ApolloError
 };
 
-export default function HomePage({ articles, error }: Props) {
+export default function HomePage({ error }: Props) {
     const { setToastInfo } = useContext(GlobalContext);
+
+    const { data } = useQuery(GET_LATEST_ARTICLES, {
+        variables: {
+            index: 1,
+            statusName: ArticleStatus.ACCEPTED
+        }
+    });
+
+    const articles: ArticleType[] = data?.getLatestArticles || [];
 
     useEffect(() => {
         if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
@@ -43,7 +51,6 @@ export default function HomePage({ articles, error }: Props) {
 export async function getStaticProps() {
     const client = initializeApollo();
     try {
-        const articles = await getLatestArticles(client, 1, ArticleStatus.ACCEPTED);
         await Promise.all([
             await getMostVisitedArticles(client),
             await getCategories(client),
@@ -51,9 +58,7 @@ export async function getStaticProps() {
         ]);
 
         return addApolloState(client, {
-            props: {
-                articles: articles.data.getLatestArticles
-            },
+            props: {},
             revalidate: 60 * 60 * 24
         });
     }
@@ -61,7 +66,6 @@ export async function getStaticProps() {
         console.log(JSON.stringify(err, null, 2));
         return addApolloState(client, {
             props: {
-                articles: [],
                 error: JSON.parse(JSON.stringify(err))
             }
         });
