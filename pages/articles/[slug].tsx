@@ -61,14 +61,10 @@ export async function getStaticPaths() {
     const articles = await getAllArticles(client, ArticleStatus.ACCEPTED);
 
     return {
-        paths: articles.data.getAllArticles.map((article: ArticleType) => {
-            return {
-                params: {
-                    slug: article.slug
-                }
-            }
-        }),
-        fallback: false
+        paths: articles.data.getAllArticles.map((article: ArticleType) => ({
+            params: { slug: article.slug }
+        })),
+        fallback: 'blocking'
     };
 
 };

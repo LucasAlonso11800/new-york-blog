@@ -8,13 +8,12 @@ export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
-function createApolloClient() {    
+const uri = process.env.NODE_ENV === 'production' ? 'https://nyc-blog.herokuapp.com/api/graphql' : 'http://localhost:3000/api/graphql';
+
+function createApolloClient() {
     return new ApolloClient({
         ssrMode: typeof window === 'undefined',
-        link: createHttpLink({ 
-            fetch,
-            uri: 'https://nyc-blog.herokuapp.com/api/graphql'
-        }),
+        link: createHttpLink({ fetch, uri }),
         cache: new InMemoryCache(),
         connectToDevTools: true
     })

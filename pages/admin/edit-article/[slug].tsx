@@ -24,11 +24,11 @@ import { storage } from '../../../const/FirebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // GraphQL
 import { addApolloState, initializeApollo } from '../../../ApolloClient/NewApolloConfig';
-import { getAllArticles, getArticleComponents, getCategories, getComponentsList, getMetadata, getSingleArticle, GET_ALL_ARTICLES, GET_LATEST_ARTICLES } from '../../../ApolloClient/querys';
+import { getAllArticles, getArticleComponents, getCategories, getComponentsList, getMetadata, getSingleArticle } from '../../../ApolloClient/querys';
 import { ApolloError, useMutation } from '@apollo/client';
 import { EDIT_ARTICLE } from '../../../ApolloClient/mutations';
 // Types
-import { ArticleComponentNames, ArticleComponentType, ArticleStatus, ArticleType, CategoryType, ComponentType, UserRoles } from '../../../types/Types';
+import { ArticleComponentNames, ArticleComponentType, ArticleStatus, ArticleType, CategoryType, ComponentType } from '../../../types/Types';
 
 type Props = {
     article: ArticleType
@@ -58,19 +58,7 @@ export default function EditArticle({ article, articleComponents, categories, co
     const [loading, setLoading] = useState<boolean>(false);
 
     const [editArticle] = useMutation(EDIT_ARTICLE, {
-        update(proxy, result) {
-            const data = proxy.readQuery({
-                query: GET_ALL_ARTICLES,
-                variables: { statusName: ArticleStatus.STAND_BY }
-            }) as any;
-
-            proxy.writeQuery({
-                query: GET_ALL_ARTICLES,
-                variables: { statusName: ArticleStatus.STAND_BY },
-                data: { getAllArticles: data ? [result.data.editArticle, ...data.getAllArticles.filter((art: ArticleType) => art.id !== article.id)] : [result.data.editArticle] }
-            });
-            window.location.assign('/admin/article-queue?editArticle="true"');
-        },
+        onCompleted: () => window.location.assign('/admin/article-queue?editArticle="true"'),
         onError: (err) => setToastInfo({ open: true, message: err.message, type: "error" })
     });
 
@@ -191,6 +179,11 @@ export default function EditArticle({ article, articleComponents, categories, co
         newImages[index] = { src: btoa(result as string), alt: alt ? alt : 'Default image' };
         setImages(newImages);
         if (index === 0) formik.setFieldValue('image', btoa(result as string));
+        if (index > 0){
+            const newComponents = [...formik.values.components];
+            newComponents[index].image = btoa(result as string);
+            formik.setFieldValue('components', newComponents);
+        }
     };
 
     const handleImg = (e: any, index: number) => {
@@ -213,7 +206,24 @@ export default function EditArticle({ article, articleComponents, categories, co
             <Main>
                 <form className={classes.form} onSubmit={formik.handleSubmit}>
                     <div className={classes.articleContainer}>
-                        <input className={classes.title} name="title" value={formik.values.title} onChange={formik.handleChange} />
+                        <input
+                            className={classes.title}
+                            name="title"
+                            value={formik.values.title}
+                            onChange={(e) => {
+                                if (e.target.value.length > 0) {
+                                    const formattedTitle = e.target.value
+                                        .split(" ")
+                                        .map(word => {
+                                            if (word.length > 0) return word[0].toUpperCase() + word.substring(1);
+                                            return "";
+                                        })
+                                        .join(" ");
+                                    return formik.setFieldValue('title', formattedTitle);
+                                };
+                                formik.setFieldValue('title', "")
+                            }}
+                        />
                         <ArticleMeta
                             categoryName={categories.find(cat => cat.id === formik.values.categoryId)?.name as string}
                             categoryPath={categories.find(cat => cat.id === formik.values.categoryId)?.path as string}

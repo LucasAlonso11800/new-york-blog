@@ -190,7 +190,8 @@
 }
 
 .submitButton:disabled {
-    background-color: rgba(217, 236, 246, 0.7);
+    background-color: rgba(217, 236, 246, 0.4);
+    cursor:auto;
 }   
 
 .error {

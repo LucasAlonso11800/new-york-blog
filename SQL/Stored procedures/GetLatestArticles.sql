@@ -1,6 +1,6 @@
 DELIMITER $$
 CREATE  PROCEDURE `GetLatestArticles`(
-	IN 	PStatus			VARCHAR(20)
+	IN 	PArticleStatus			VARCHAR(20)
 )
 BEGIN
 	SELECT         

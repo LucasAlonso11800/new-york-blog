@@ -24,6 +24,15 @@ footer.footer {
     }
 }
 
+.links {
+    display: flex;
+}
+.links a, .links p {
+    margin: 0 1rem;
+    min-width: max-content;
+    cursor: pointer;
+}
+
 .copyright {
     padding: 4px;
     text-align: right;

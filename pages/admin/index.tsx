@@ -33,7 +33,7 @@ export default function AdminPage({ categories, metadata, error }: Props) {
     useEffect(() => {
         if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
         if (window.location.search) {
-            setToastInfo({ open: true, message: `Succesfully logged in. Welcome back ${user?.username}`, type: 'success' });
+            setToastInfo({ open: true, message: `Succesfully logged in. Welcome ${user?.username}`, type: 'success' });
             window.history.pushState({}, "", window.location.pathname);
         };
     }, []);

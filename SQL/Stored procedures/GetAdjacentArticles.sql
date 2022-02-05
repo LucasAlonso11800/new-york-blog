@@ -31,7 +31,7 @@ BEGIN
     AND category_path != "about"
 	AND article_article_status_id = (SELECT article_status_id 
 										FROM article_statuses
-										WHERE article_status_name = PArticleStatus
+										WHERE article_status_name = "Accepted"
 									)
     ORDER BY article_id DESC
 	LIMIT 1

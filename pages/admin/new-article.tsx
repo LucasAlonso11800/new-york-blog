@@ -23,11 +23,11 @@ import { storage } from '../../const/FirebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // GraphQL
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
-import { getCategories, getComponentsList, getMetadata, GET_ALL_ARTICLES, GET_LATEST_ARTICLES } from '../../ApolloClient/querys';
+import { getCategories, getComponentsList, getMetadata } from '../../ApolloClient/querys';
 import { ApolloError, useMutation } from '@apollo/client';
 import { ADD_ARTICLE } from '../../ApolloClient/mutations';
 // Types
-import { ArticleComponentNames, ArticleStatus, CategoryType, ComponentType, UserRoles } from '../../types/Types';
+import { ArticleComponentNames, CategoryType, ComponentType, UserRoles } from '../../types/Types';
 
 type Props = {
     categories: CategoryType[]
@@ -55,29 +55,7 @@ export default function NewArticle({ categories, components, error }: Props) {
     const [loading, setLoading] = useState<boolean>(false);
 
     const [addArticle] = useMutation(ADD_ARTICLE, {
-        update(proxy, result) {
-            const statusName = user?.roleName === UserRoles.ADMIN ? ArticleStatus.ACCEPTED : ArticleStatus.STAND_BY;
-            const data = proxy.readQuery({
-                query: GET_ALL_ARTICLES,
-                variables: { statusName }
-            }) as any;
-
-            proxy.writeQuery({
-                query: GET_ALL_ARTICLES,
-                variables: { statusName },
-                data: { getAllArticles: data ? [result.data.addArticle[0], ...data.getAllArticles] : [result.data.addArticle[0]] }
-            });
-
-            if (user?.roleName === UserRoles.ADMIN) {
-                proxy.writeQuery({
-                    query: GET_LATEST_ARTICLES,
-                    variables: {
-                        index: 1,
-                        statusName: ArticleStatus.ACCEPTED
-                    },
-                    data: { getLatestArticles: result.data.addArticle }
-                });
-            };
+        onCompleted: () => {
             window.location.assign(user?.roleName === UserRoles.ADMIN ? '/admin/article-list?newArticle="true"' : '/admin/article-queue?newArticle="true"');
         },
         onError: (err) => setToastInfo({ open: true, message: err.message, type: "error" })
@@ -88,11 +66,6 @@ export default function NewArticle({ categories, components, error }: Props) {
         categoryId: yup.string().required("Please select a category"),
         image: yup.string().notOneOf([defaultImage], 'Please change the default image').required("Please add an image"),
         slug: yup.string().required("Please add a slug"),
-        components: yup.array().of(
-            yup.object({
-                image: yup.string().nullable().notOneOf([defaultImage], 'Please change the default image')
-            })
-        )
     });
 
     const formik = useFormik({
@@ -103,7 +76,7 @@ export default function NewArticle({ categories, components, error }: Props) {
             slug: 'your-new-article',
             components: [
                 {
-                    image: null,
+                    image: '',
                     componentId: components.find(component => component.name === ArticleComponentNames.ARTICLE_TITLE)?.id,
                     componentName: ArticleComponentNames.ARTICLE_TITLE,
                     order: 1,
@@ -123,6 +96,11 @@ export default function NewArticle({ categories, components, error }: Props) {
         },
         validationSchema,
         onSubmit: async (values) => {
+            if (formik.values.components.some(component => component.image === defaultImage)) {
+                formik.setStatus('No default images can be saved');
+                return
+            };
+            formik.setStatus(null);
             setLoading(true);
             const fileRef = ref(storage, `articles/${values.slug}/main.jpg`);
             await uploadBytes(fileRef, files[0]);
@@ -154,7 +132,7 @@ export default function NewArticle({ categories, components, error }: Props) {
             setLoading(false);
         }
     });
-
+    
     const handleComponentChange = (e: React.ChangeEvent<any>, index: number, componentName: ArticleComponentNames): void => {
         const components = [...formik.values.components];
         if (componentName !== ArticleComponentNames.IMAGE) {
@@ -214,6 +192,11 @@ export default function NewArticle({ categories, components, error }: Props) {
         newImages[index] = { src: btoa(result as string), alt: alt ? alt : 'Default image' };
         setImages(newImages);
         if (index === 0) formik.setFieldValue('image', btoa(result as string));
+        if (index > 0){
+            const newComponents = [...formik.values.components];
+            newComponents[index].image = btoa(result as string);
+            formik.setFieldValue('components', newComponents);
+        }
     };
 
     const handleImg = (e: any, index: number) => {
@@ -236,7 +219,24 @@ export default function NewArticle({ categories, components, error }: Props) {
             <Main>
                 <form className={classes.form} onSubmit={formik.handleSubmit}>
                     <div className={classes.articleContainer}>
-                        <input className={classes.title} name="title" value={formik.values.title} onChange={formik.handleChange} />
+                        <input
+                            className={classes.title}
+                            name="title"
+                            value={formik.values.title}
+                            onChange={(e) => {
+                                if (e.target.value.length > 0) {
+                                    const formattedTitle = e.target.value
+                                        .split(" ")
+                                        .map(word => {
+                                            if (word.length > 0) return word[0].toUpperCase() + word.substring(1);
+                                            return "";
+                                        })
+                                        .join(" ");
+                                    return formik.setFieldValue('title', formattedTitle);
+                                };
+                                formik.setFieldValue('title', "")
+                            }}
+                        />
                         <ArticleMeta
                             categoryName={categories.find(cat => cat.id === formik.values.categoryId)?.name as string}
                             categoryPath={categories.find(cat => cat.id === formik.values.categoryId)?.path as string}
@@ -255,7 +255,7 @@ export default function NewArticle({ categories, components, error }: Props) {
                         </div>
                         <input
                             style={{ display: "none" }}
-                            accept="image/png, image/jpeg, image/jpg"
+                            accept="image/png, image/jpeg, image/jpg, image/webp"
                             ref={imageRef}
                             onChange={(e) => handleImg(e, 0)}
                             type="file"
@@ -272,7 +272,7 @@ export default function NewArticle({ categories, components, error }: Props) {
                                     />
                                 );
                                 case ArticleComponentNames.ARTICLE_TEXT: return (
-                                    <section className={classes.component} key={index}> 
+                                    <section className={classes.component} key={index}>
                                         <textarea
                                             className={classes.text}
                                             value={component.text}
@@ -338,7 +338,7 @@ export default function NewArticle({ categories, components, error }: Props) {
                                         />
                                         <input
                                             style={{ display: "none" }}
-                                            accept="image/png, image/jpeg, image/jpg"
+                                            accept="image/png, image/jpeg, image/jpg, image/webp"
                                             id={`article-new-image${index}`}
                                             onChange={(e) => handleImg(e, index)}
                                             type="file"
@@ -414,6 +414,9 @@ export default function NewArticle({ categories, components, error }: Props) {
                             value={formik.values.slug}
                             onChange={(e) => formik.setFieldValue('slug', e.target.value.toLowerCase().replaceAll(' ', '-'))}
                         />
+                        {formik.status &&
+                            <p className={classes.error}>{formik.status}</p>
+                        }
                         {formik.touched.title && formik.errors.title &&
                             <p className={classes.error}>{formik.errors.title}</p>
                         }

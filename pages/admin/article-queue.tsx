@@ -65,7 +65,7 @@ export default function ArticleQueue({ categories, error }: Props) {
         ));
         setFilteredArticles(newArticles);
         setNumberOfPages(Math.ceil(newArticles.length / ARTICLE_LIST_LIMIT));
-    }, [page, numberOfPages, title, author, category, loading]);
+    }, [page, numberOfPages, title, author, category, loading, popupInfo]);
 
     const handlePageChange = (newPage: number) => {
         if (newPage > numberOfPages) return setPage(newPage);
@@ -90,6 +90,7 @@ export default function ArticleQueue({ categories, error }: Props) {
         update(proxy) {
             const allArticles = proxy.readQuery({ query: GET_ALL_ARTICLES, variables: { statusName: ArticleStatus.ACCEPTED } }) as any;
             const latestArticles = proxy.readQuery({ query: GET_LATEST_ARTICLES, variables: { index: 1, statusName: ArticleStatus.ACCEPTED } }) as any;
+            
             // All Accepted articles
             proxy.writeQuery({
                 query: GET_ALL_ARTICLES,
@@ -174,7 +175,7 @@ export default function ArticleQueue({ categories, error }: Props) {
                                                             fontSize={32}
                                                             onClick={async () => {
                                                                 setLoading(true);
-                                                                approveArticle({
+                                                                await approveArticle({
                                                                     variables: {
                                                                         articleId: article.id,
                                                                         userRole: user.roleName
@@ -280,7 +281,7 @@ export async function getStaticProps() {
             props: {
                 categories: categories.data.getCategories
             },
-            revalidate: 60 * 60
+            revalidate: 1
         });
     }
     catch (err) {

@@ -224,7 +224,7 @@ export async function getStaticProps() {
             props: {
                 categories: categories.data.getCategories
             },
-            revalidate: 60 * 60
+            revalidate: 1
         });
     }
     catch (err) {
