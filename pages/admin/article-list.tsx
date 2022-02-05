@@ -211,7 +211,7 @@ export default function ArticleList({ categories, error }: Props) {
     );
 };
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
     const client = initializeApollo();
     try {
         const [categories] = await Promise.all([
@@ -223,8 +223,7 @@ export async function getStaticProps() {
         return addApolloState(client, {
             props: {
                 categories: categories.data.getCategories
-            },
-            revalidate: 1
+            }
         });
     }
     catch (err) {

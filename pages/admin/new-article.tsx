@@ -23,11 +23,11 @@ import { storage } from '../../const/FirebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // GraphQL
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
-import { getCategories, getComponentsList, getMetadata } from '../../ApolloClient/querys';
+import { getCategories, getComponentsList, getMetadata, GET_LATEST_ARTICLES } from '../../ApolloClient/querys';
 import { ApolloError, useMutation } from '@apollo/client';
 import { ADD_ARTICLE } from '../../ApolloClient/mutations';
 // Types
-import { ArticleComponentNames, CategoryType, ComponentType, UserRoles } from '../../types/Types';
+import { ArticleComponentNames, ArticleStatus, CategoryType, ComponentType, UserRoles } from '../../types/Types';
 
 type Props = {
     categories: CategoryType[]
@@ -55,7 +55,17 @@ export default function NewArticle({ categories, components, error }: Props) {
     const [loading, setLoading] = useState<boolean>(false);
 
     const [addArticle] = useMutation(ADD_ARTICLE, {
-        onCompleted: () => {
+        update(proxy, result){
+            if (user?.roleName === UserRoles.ADMIN) {
+                proxy.writeQuery({
+                    query: GET_LATEST_ARTICLES,
+                    variables: {
+                        index: 1,
+                        statusName: ArticleStatus.ACCEPTED
+                    },
+                    data: { getLatestArticles: result.data.addArticle }
+                });
+            };
             window.location.assign(user?.roleName === UserRoles.ADMIN ? '/admin/article-list?newArticle="true"' : '/admin/article-queue?newArticle="true"');
         },
         onError: (err) => setToastInfo({ open: true, message: err.message, type: "error" })
