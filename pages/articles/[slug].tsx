@@ -10,8 +10,8 @@ import AdjacentArticles from '../../components/AdjacentArticles';
 import CommentForm from '../../components/CommentForm';
 import ExternalLinksSection from '../../components/ExternalLinksSection';
 // Querys
-import { getAdjacentArticles, getAllArticles, getArticleComments, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getRelatedArticles, getSingleArticle } from '../../ApolloClient/querys';
-import { ApolloError, useMutation } from '@apollo/client';
+import { getAdjacentArticles, getAllArticles, getArticleComponents, getCategories, getMetadata, getMostVisitedArticles, getRelatedArticles, getSingleArticle, GET_ARTICLE_COMMENTS } from '../../ApolloClient/querys';
+import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { addApolloState, initializeApollo } from '../../ApolloClient/NewApolloConfig';
 import { ADD_VISIT } from '../../ApolloClient/mutations';
 // Types
@@ -22,17 +22,21 @@ type Props = {
     relatedArticles: ArticleType[]
     adjacentArticles: ArticleType[]
     articleComponents: ArticleComponentType[]
-    comments: CommentType[]
     error: ApolloError
 };
 
-export default function ArticlePage({ article, relatedArticles, adjacentArticles, articleComponents, comments, error }: Props) {
+export default function ArticlePage({ article, relatedArticles, adjacentArticles, articleComponents, error }: Props) {
     const { setToastInfo } = useContext(GlobalContext);
     const [addVisit] = useMutation(ADD_VISIT);
 
     useEffect(() => {
         if (error) setToastInfo({ open: true, message: error.message, type: 'error' });
     }, []);
+
+    const { data } = useQuery(GET_ARTICLE_COMMENTS, {
+        variables: { articleId: article.id }
+    });
+    const comments: CommentType[] = data?.getArticleComments || [];
 
     useEffect(() => {
         addVisit({ variables: { articleId: article.id } });
@@ -78,11 +82,10 @@ type GetStaticPropsParams = {
 export async function getStaticProps({ params }: GetStaticPropsParams) {
     try {
         const article = await getSingleArticle(client, params.slug);
-        const [relatedArticles, adjacentArticles, articleComponents, comments] = await Promise.all([
+        const [relatedArticles, adjacentArticles, articleComponents] = await Promise.all([
             await getRelatedArticles(client, article.data.getSingleArticle.categoryId),
             await getAdjacentArticles(client, article.data.getSingleArticle.id),
             await getArticleComponents(client, article.data.getSingleArticle.id),
-            await getArticleComments(client, article.data.getSingleArticle.id),
             await getMostVisitedArticles(client),
             await getCategories(client),
             await getMetadata(client)
@@ -94,7 +97,6 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                 relatedArticles: relatedArticles.data.getRelatedArticles,
                 adjacentArticles: adjacentArticles.data.getAdjacentArticles,
                 articleComponents: articleComponents.data.getArticleComponents,
-                comments: comments.data.getArticleComments
             },
             revalidate: 60 * 60 * 24
         });
@@ -107,7 +109,6 @@ export async function getStaticProps({ params }: GetStaticPropsParams) {
                 relatedArticles: [],
                 adjacentArticles: [],
                 articleComponents: [],
-                comments: [],
                 error: JSON.parse(JSON.stringify(err))
             }
         });
