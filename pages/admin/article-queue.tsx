@@ -107,7 +107,7 @@ export default function ArticleQueue({ categories, error }: Props) {
             proxy.writeQuery({
                 query: GET_LATEST_ARTICLES,
                 variables: { index: 1, statusName: ArticleStatus.ACCEPTED },
-                data: { getLatestArticles: latestArticles ? [articles.find(article => article.id === popupInfo.articleId), ...latestArticles.getAllArticles] : [articles.find(article => article.id === popupInfo.articleId)] },
+                data: { getLatestArticles: [articles.find(article => article.id === popupInfo.articleId), ...latestArticles.getAllArticles] },
             });
             setPopupInfo({ text: "", articleId: "" });
         },
