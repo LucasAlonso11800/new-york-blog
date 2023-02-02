@@ -8,7 +8,7 @@ export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
-const uri = process.env.NODE_ENV === 'production' ? 'https://nyc-blog.herokuapp.com/api/graphql' : 'http://localhost:3000/api/graphql';
+const uri = process.env.NODE_ENV === 'production' ? 'https://new-york-blog.vercel.app/api/graphql' : 'http://localhost:3000/api/graphql';
 
 function createApolloClient() {
     return new ApolloClient({
